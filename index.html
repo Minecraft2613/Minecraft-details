@@ -20,8 +20,26 @@
       <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
       <p><strong>Status:</strong> <span id="status">Checking...</span></p>
       <p><strong>Version:</strong> Java 1.20.1</p>
-      <p><strong>Description:</strong> A survival Minecraft server with plugins, economy, PvP and custom maps!</p>
-    </section>
+      <div id="server-status">Checking server status...</div>
+<script>
+  const serverIP = "freemcserver.net"; // put your actual IP here
+
+  async function fetchServerStatus() {
+    const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+    const data = await res.json();
+
+    const statusDiv = document.getElementById("server-status");
+    if (!data.online) {
+      statusDiv.innerHTML = "🟥 Server is Offline";
+    } else {
+      statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
+    }
+  }
+
+  fetchServerStatus();
+  setInterval(fetchServerStatus, 60000); // update every 60 seconds
+</script>
+
 
     <section id="howtojoin">
       <h2>🎮 How to Join</h2>
