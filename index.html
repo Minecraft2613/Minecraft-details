@@ -21,20 +21,17 @@
       <p><strong>Version:</strong> Java 1.20.1</p>
       <div id="server-status">Checking server status...</div>
 <script>
-  const serverIP = "mc1524209.fmcs.cloud"; // put your actual IP here
-
+  const serverIP = "mc1524209.fmcs.cloud";
 
   async function fetchServerStatus() {
     const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
     const data = await res.json();
-
     const statusDiv = document.getElementById("server-status");
 
     if (!data.online) {
       statusDiv.innerHTML = "🟥 Server is Offline";
     } else {
       const motd = data.motd?.clean?.[0]?.toLowerCase() || "";
-
       if (motd.includes("starting")) {
         statusDiv.innerHTML = "🟨 Server is starting... will be online in ~5 minutes";
       } else if (motd.includes("maintenance")) {
@@ -46,11 +43,8 @@
   }
 
   fetchServerStatus();
-  setInterval(fetchServerStatus, 5000); // refresh every 60 seconds
+  setInterval(fetchServerStatus, 5000); // refresh every 5 seconds
 </script>
-</script>
-
-
     <section id="howtojoin">
       <h2>🎮 How to Join</h2>
       <ol>
