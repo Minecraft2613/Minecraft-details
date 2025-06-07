@@ -98,14 +98,9 @@
           statusDiv.innerHTML = "🟥 Server is Offline";
           startBtn.style.display = "inline-block";
         } else {
-          const motd = data.motd?.clean?.join(" ").toLowerCase() || "";
-          if (motd.includes("starting")) {
-            statusDiv.innerHTML = "🟨 Server is Starting...";
-          } else {
-            const online = data.players?.online || 0;
-            const max = data.players?.max || 0;
-            statusDiv.innerHTML = `🟩 Online - ${online}/${max} players`;
-          }
+          const online = data.players?.online || 0;
+          const max = data.players?.max || 0;
+          statusDiv.innerHTML = `🟩 Online - ${online}/${max} players`;
           startBtn.style.display = "none";
         }
       } catch (e) {
