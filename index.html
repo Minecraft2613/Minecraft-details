@@ -3,14 +3,35 @@
 <head>
   <title>My Minecraft Server</title>
   <style>
-    body { font-family: sans-serif; background: #111; color: white; margin: 0; padding: 0; }
-    header, footer { background: #222; padding: 20px; text-align: center; }
-    nav a { color: #0af; margin: 0 10px; text-decoration: none; }
-    main { padding: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: #222;
+      text-align: center;
+      padding: 20px;
+    }
+    nav a {
+      color: #0af;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    main {
+      padding: 20px;
+    }
     button {
-      background: #0af; color: white; padding: 10px 20px;
-      border: none; border-radius: 8px; font-size: 16px;
-      cursor: pointer; margin-top: 10px;
+      background-color: #0af;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -30,42 +51,9 @@
       <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
       <p><strong>Version:</strong> Java 1.20.1</p>
       <div id="server-status">Checking server status...</div>
-      <button id="start-server" style="display: none;" onclick="window.open('https://freemcserver.net/start/YOUR_START_LINK_HERE', '_blank')">🟢 Start Server</button>
-
-      <script>
-        const serverIP = "mc1524209.fmcs.cloud";
-
-        async function fetchServerStatus() {
-          try {
-            const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-            const data = await res.json();
-            const statusDiv = document.getElementById("server-status");
-            const startBtn = document.getElementById("start-server");
-
-            if (!data.online) {
-              statusDiv.innerHTML = "🟥 Server is Offline";
-              startBtn.style.display = "inline-block";
-            } else {
-              startBtn.style.display = "none";
-
-              const motd = (data.motd?.clean || []).join(" ").toLowerCase();
-
-              if (motd.includes("starting")) {
-                statusDiv.innerHTML = "🟨 Server is starting... please wait ~5 minutes";
-              } else {
-                const playersOnline = data.players?.online || 0;
-                const maxPlayers = data.players?.max || 0;
-                statusDiv.innerHTML = `🟩 Server is Online - ${playersOnline}/${maxPlayers} players online`;
-              }
-            }
-          } catch (error) {
-            document.getElementById("server-status").innerHTML = "⚠️ Error checking server status.";
-          }
-        }
-
-        fetchServerStatus();
-        setInterval(fetchServerStatus, 5000); // every 5 seconds
-      </script>
+      <button id="start-server" style="display: none;" onclick="window.open('https://freemcserver.net/start/YOUR-START-LINK', '_blank')">
+        🟢 Start Server
+      </button>
     </section>
 
     <section id="howtojoin">
@@ -74,7 +62,7 @@
         <li>Open Minecraft (Java Edition)</li>
         <li>Click "Multiplayer"</li>
         <li>Add Server: <strong>mc1524209.fmcs.cloud</strong></li>
-        <li>Join and have fun!</li>
+        <li>Join and enjoy!</li>
       </ol>
     </section>
 
@@ -88,5 +76,40 @@
   <footer>
     <p>&copy; 2025 My Minecraft Server. Powered by FreeMcServer.net</p>
   </footer>
+
+  <script>
+    const serverIP = "mc1524209.fmcs.cloud";
+
+    async function fetchServerStatus() {
+      try {
+        const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+        const data = await res.json();
+        const statusDiv = document.getElementById("server-status");
+        const startBtn = document.getElementById("start-server");
+
+        if (!data.online) {
+          statusDiv.innerHTML = "🟥 Server is Offline";
+          startBtn.style.display = "inline-block";
+        } else {
+          startBtn.style.display = "none";
+
+          const motd = (data.motd?.clean || []).join(" ").toLowerCase();
+
+          if (motd.includes("starting")) {
+            statusDiv.innerHTML = "🟨 Server is starting... please wait ~5 minutes";
+          } else {
+            const online = data.players?.online || 0;
+            const max = data.players?.max || 0;
+            statusDiv.innerHTML = `🟩 Server is Online - ${online}/${max} players online`;
+          }
+        }
+      } catch (e) {
+        document.getElementById("server-status").innerHTML = "⚠️ Error checking server status.";
+      }
+    }
+
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 5000); // refresh every 5 seconds
+  </script>
 </body>
 </html>
