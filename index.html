@@ -62,7 +62,7 @@
         <li>Open Minecraft (Java Edition)</li>
         <li>Click "Multiplayer"</li>
         <li>Add Server: <strong>mc1524209.fmcs.cloud</strong></li>
-        <li>Join and enjoy!</li>
+        <li>Join and have fun!</li>
       </ol>
     </section>
 
@@ -92,16 +92,9 @@
           startBtn.style.display = "inline-block";
         } else {
           startBtn.style.display = "none";
-
-          const motd = (data.motd?.clean || []).join(" ").toLowerCase();
-
-          if (motd.includes("starting")) {
-            statusDiv.innerHTML = "🟨 Server is starting... please wait ~5 minutes";
-          } else {
-            const online = data.players?.online || 0;
-            const max = data.players?.max || 0;
-            statusDiv.innerHTML = `🟩 Server is Online - ${online}/${max} players online`;
-          }
+          const online = data.players?.online || 0;
+          const max = data.players?.max || 0;
+          statusDiv.innerHTML = `🟩 Server is Online - ${online}/${max} players online`;
         }
       } catch (e) {
         document.getElementById("server-status").innerHTML = "⚠️ Error checking server status.";
