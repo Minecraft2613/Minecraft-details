@@ -1,34 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>My Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #111;
-      color: #f2f2f2;
-    }
-    header, footer {
-      background-color: #222;
-      padding: 20px;
-      text-align: center;
-    }
-    nav a {
-      margin: 0 10px;
-      color: #0ff;
-      text-decoration: none;
-    }
-    main {
-      padding: 20px;
-    }
-    section {
-      margin-bottom: 40px;
-    }
-    #server-status {
-      font-size: 1.2em;
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #111; color: #fff; }
+    header, footer { background: #222; padding: 20px; text-align: center; }
+    nav a { margin: 0 10px; color: #0af; text-decoration: none; }
+    main { padding: 20px; }
+    section { margin-bottom: 40px; }
+    button {
+      background-color: #0af;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
       margin-top: 10px;
     }
   </style>
@@ -49,35 +37,35 @@
       <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
       <p><strong>Version:</strong> Java 1.20.1</p>
       <div id="server-status">Checking server status...</div>
+      <button id="start-server" style="display: none;" onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">
+        🟢 Start Server
+      </button>
 
       <script>
         const serverIP = "mc1524209.fmcs.cloud";
 
         async function fetchServerStatus() {
-          try {
-            const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-            const data = await res.json();
-            const statusDiv = document.getElementById("server-status");
+          const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+          const data = await res.json();
+          const statusDiv = document.getElementById("server-status");
+          const startBtn = document.getElementById("start-server");
 
-            if (!data.online) {
-              statusDiv.innerHTML = "🟥 Server is Offline";
-              return;
-            }
-
+          if (!data.online) {
+            statusDiv.innerHTML = "🟥 Server is Offline";
+            startBtn.style.display = "inline-block";
+          } else {
+            startBtn.style.display = "none";
             const motd = (data.motd?.clean || []).join(" ").toLowerCase();
-
             if (motd.includes("starting")) {
-              statusDiv.innerHTML = "🟨 Server is starting... will be online in ~5 minutes";
+              statusDiv.innerHTML = "🟨 Server is starting... please wait ~5 minutes";
             } else {
               statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
             }
-          } catch (err) {
-            document.getElementById("server-status").innerHTML = "⚠️ Error fetching server status.";
           }
         }
 
         fetchServerStatus();
-        setInterval(fetchServerStatus, 5000); // refresh every 5 seconds
+        setInterval(fetchServerStatus, 5000); // update every 5 sec
       </script>
     </section>
 
