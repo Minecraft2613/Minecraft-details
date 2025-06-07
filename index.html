@@ -1,8 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>My Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #111;
+      color: #f2f2f2;
+    }
+    header, footer {
+      background-color: #222;
+      padding: 20px;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 10px;
+      color: #0ff;
+      text-decoration: none;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    #server-status {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -25,28 +54,32 @@
         const serverIP = "mc1524209.fmcs.cloud";
 
         async function fetchServerStatus() {
-          const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-          const data = await res.json();
-          const statusDiv = document.getElementById("server-status");
+          try {
+            const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+            const data = await res.json();
+            const statusDiv = document.getElementById("server-status");
 
-          if (!data.online) {
-            statusDiv.innerHTML = "🟥 Server is Offline";
-          } else {
-            const motd = data.motd?.clean?.[0]?.toLowerCase() || "";
+            if (!data.online) {
+              statusDiv.innerHTML = "🟥 Server is Offline";
+              return;
+            }
+
+            const motd = (data.motd?.clean || []).join(" ").toLowerCase();
+
             if (motd.includes("starting")) {
               statusDiv.innerHTML = "🟨 Server is starting... will be online in ~5 minutes";
-            } else if (motd.includes("maintenance")) {
-              statusDiv.innerHTML = "⚙️ Server is under maintenance";
             } else {
               statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
             }
+          } catch (err) {
+            document.getElementById("server-status").innerHTML = "⚠️ Error fetching server status.";
           }
         }
 
         fetchServerStatus();
-        setInterval(fetchServerStatus, 5000);
+        setInterval(fetchServerStatus, 5000); // refresh every 5 seconds
       </script>
-    </section> <!-- ✅ Closing tag added here -->
+    </section>
 
     <section id="howtojoin">
       <h2>🎮 How to Join</h2>
@@ -70,4 +103,3 @@
   </footer>
 </body>
 </html>
-  
