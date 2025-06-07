@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Minecraft Server</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🔥 My Minecraft Server</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#howtojoin">How to Join</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2>🌍 Server Info</h2>
+      <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
+      <p><strong>Status:</strong> <span id="status">Checking...</span></p>
+      <p><strong>Version:</strong> Java 1.20.1</p>
+      <p><strong>Description:</strong> A survival Minecraft server with plugins, economy, PvP and custom maps!</p>
+    </section>
+
+    <section id="howtojoin">
+      <h2>🎮 How to Join</h2>
+      <ol>
+        <li>Open Minecraft (Java Edition)</li>
+        <li>Click "Multiplayer"</li>
+        <li>Add Server: <strong>yourname.freemcserver.net</strong></li>
+        <li>Join and have fun!</li>
+      </ol>
+    </section>
+
+    <section id="contact">
+      <h2>📬 Contact</h2>
+      <p>Email: yourname@example.com</p>
+      <p>Discord: YourDiscord#0000</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Minecraft Server. Powered by FreeMcServer.net</p>
+  </footer>
+
+  <script>
+    // Optional: show "Online" message for now (you can replace with real status checker later)
+    document.getElementById("status").textContent = "Online ✅";
+  </script>
+</body>
+</html>
