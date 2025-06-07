@@ -5,20 +5,20 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #111;
-      color: white;
+      background-color: #121212;
+      color: #fff;
       margin: 0;
       padding: 0;
     }
     header, footer {
-      background-color: #222;
+      background-color: #1f1f1f;
       text-align: center;
       padding: 20px;
     }
     nav a {
       color: #0af;
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 15px;
     }
     main {
       padding: 20px;
@@ -28,10 +28,10 @@
       color: white;
       border: none;
       padding: 10px 20px;
-      border-radius: 8px;
       font-size: 16px;
-      cursor: pointer;
+      border-radius: 6px;
       margin-top: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -51,7 +51,7 @@
       <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
       <p><strong>Version:</strong> Java 1.20.1</p>
       <div id="server-status">Checking server status...</div>
-      <button id="start-server" style="display: none;" onclick="window.open('https://freemcserver.net/start/YOUR-START-LINK', '_blank')">
+      <button id="start-server" style="display: none;" onclick="window.open('https://freemcserver.net/start/YOUR-UNIQUE-START-LINK', '_blank')">
         🟢 Start Server
       </button>
     </section>
@@ -91,18 +91,19 @@
           statusDiv.innerHTML = "🟥 Server is Offline";
           startBtn.style.display = "inline-block";
         } else {
-          startBtn.style.display = "none";
           const online = data.players?.online || 0;
           const max = data.players?.max || 0;
-          statusDiv.innerHTML = `🟩 Server is Online - ${online}/${max} players online`;
+          statusDiv.innerHTML = `🟩 Server is Online - ${online}/${max} players`;
+          startBtn.style.display = "none";
         }
-      } catch (e) {
-        document.getElementById("server-status").innerHTML = "⚠️ Error checking server status.";
+      } catch (error) {
+        document.getElementById("server-status").textContent = "⚠️ Unable to fetch status.";
+        document.getElementById("start-server").style.display = "none";
       }
     }
 
     fetchServerStatus();
-    setInterval(fetchServerStatus, 5000); // refresh every 5 seconds
+    setInterval(fetchServerStatus, 5000);
   </script>
 </body>
 </html>
