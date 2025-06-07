@@ -1,41 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Minecraft Server</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #fff;
+      background-color: #111;
+      color: #eee;
       margin: 0;
       padding: 0;
     }
     header, footer {
-      background-color: #1f1f1f;
+      background-color: #222;
+      padding: 10px 20px;
       text-align: center;
-      padding: 20px;
     }
     nav a {
-      color: #0af;
+      color: #0ff;
+      margin: 0 10px;
       text-decoration: none;
-      margin: 0 15px;
     }
     main {
       padding: 20px;
     }
     button {
-      background-color: #0af;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #008CBA;
       color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 6px;
+      border-radius: 5px;
       margin-top: 10px;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #0077aa;
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>🔥 My Minecraft Server</h1>
     <nav>
@@ -51,9 +58,9 @@
       <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
       <p><strong>Version:</strong> Java 1.20.1</p>
       <div id="server-status">Checking server status...</div>
-      <button id="start-server" style="display: none;" onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">
-        🟢 Start Server
-      </button>
+      <a href="https://freemcserver.net/server/1524209" target="_blank">
+        <button id="start-server" style="display:none;">🟦 Start Server</button>
+      </a>
     </section>
 
     <section id="howtojoin">
@@ -61,7 +68,7 @@
       <ol>
         <li>Open Minecraft (Java Edition)</li>
         <li>Click "Multiplayer"</li>
-        <li>Add Server: <strong>mc1524209.fmcs.cloud</strong></li>
+        <li>Add Server: <strong>yourname.freemcserver.net</strong></li>
         <li>Join and have fun!</li>
       </ol>
     </section>
@@ -91,14 +98,18 @@
           statusDiv.innerHTML = "🟥 Server is Offline";
           startBtn.style.display = "inline-block";
         } else {
-          const online = data.players?.online || 0;
-          const max = data.players?.max || 0;
-          statusDiv.innerHTML = `🟩 Server is Online - ${online}/${max} players`;
+          const motd = data.motd?.clean?.join(" ").toLowerCase() || "";
+          if (motd.includes("starting")) {
+            statusDiv.innerHTML = "🟨 Server is Starting...";
+          } else {
+            const online = data.players?.online || 0;
+            const max = data.players?.max || 0;
+            statusDiv.innerHTML = `🟩 Online - ${online}/${max} players`;
+          }
           startBtn.style.display = "none";
         }
-      } catch (error) {
-        document.getElementById("server-status").textContent = "⚠️ Unable to fetch status.";
-        document.getElementById("start-server").style.display = "none";
+      } catch (e) {
+        document.getElementById("server-status").innerText = "⚠️ Error checking status.";
       }
     }
 
