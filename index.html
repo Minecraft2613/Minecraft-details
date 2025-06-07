@@ -23,16 +23,33 @@
 <script>
   const serverIP = "mc1524209.fmcs.cloud"; // put your actual IP here
 
+
   async function fetchServerStatus() {
     const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
     const data = await res.json();
 
     const statusDiv = document.getElementById("server-status");
+
     if (!data.online) {
       statusDiv.innerHTML = "🟥 Server is Offline";
     } else {
-      statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
+      const motd = data.motd?.clean?.[0]?.toLowerCase() || "";
+
+      if (motd.includes("starting")) {
+        statusDiv.innerHTML = "🟨 Server is starting... will be online in ~5 minutes";
+      } else if (motd.includes("maintenance")) {
+        statusDiv.innerHTML = "⚙️ Server is under maintenance";
+      } else {
+        statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
+      }
     }
+  }
+
+  fetchServerStatus();
+  setInterval(fetchServerStatus, 60000); // refresh every 60 seconds
+</script>
+
+
   }
 
   fetchServerStatus();
