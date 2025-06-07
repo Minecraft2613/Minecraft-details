@@ -20,37 +20,40 @@
       <p><strong>Server IP:</strong> mc1524209.fmcs.cloud</p>
       <p><strong>Version:</strong> Java 1.20.1</p>
       <div id="server-status">Checking server status...</div>
-<script>
-  const serverIP = "mc1524209.fmcs.cloud";
 
-  async function fetchServerStatus() {
-    const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-    const data = await res.json();
-    const statusDiv = document.getElementById("server-status");
+      <script>
+        const serverIP = "mc1524209.fmcs.cloud";
 
-    if (!data.online) {
-      statusDiv.innerHTML = "🟥 Server is Offline";
-    } else {
-      const motd = data.motd?.clean?.[0]?.toLowerCase() || "";
-      if (motd.includes("starting")) {
-        statusDiv.innerHTML = "🟨 Server is starting... will be online in ~5 minutes";
-      } else if (motd.includes("maintenance")) {
-        statusDiv.innerHTML = "⚙️ Server is under maintenance";
-      } else {
-        statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
-      }
-    }
-  }
+        async function fetchServerStatus() {
+          const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+          const data = await res.json();
+          const statusDiv = document.getElementById("server-status");
 
-  fetchServerStatus();
-  setInterval(fetchServerStatus, 5000); // refresh every 5 seconds
-</script>
+          if (!data.online) {
+            statusDiv.innerHTML = "🟥 Server is Offline";
+          } else {
+            const motd = data.motd?.clean?.[0]?.toLowerCase() || "";
+            if (motd.includes("starting")) {
+              statusDiv.innerHTML = "🟨 Server is starting... will be online in ~5 minutes";
+            } else if (motd.includes("maintenance")) {
+              statusDiv.innerHTML = "⚙️ Server is under maintenance";
+            } else {
+              statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
+            }
+          }
+        }
+
+        fetchServerStatus();
+        setInterval(fetchServerStatus, 5000);
+      </script>
+    </section> <!-- ✅ Closing tag added here -->
+
     <section id="howtojoin">
       <h2>🎮 How to Join</h2>
       <ol>
         <li>Open Minecraft (Java Edition)</li>
         <li>Click "Multiplayer"</li>
-        <li>Add Server: <strong>yourname.freemcserver.net</strong></li>
+        <li>Add Server: <strong>mc1524209.fmcs.cloud</strong></li>
         <li>Join and have fun!</li>
       </ol>
     </section>
@@ -65,10 +68,6 @@
   <footer>
     <p>&copy; 2025 My Minecraft Server. Powered by FreeMcServer.net</p>
   </footer>
-
-  <script>
-    // Optional: show "Online" message for now (you can replace with real status checker later)
-    document.getElementById("status").textContent = "Online ✅";
-  </script>
 </body>
 </html>
+  
