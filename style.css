@@ -1,168 +1,123 @@
 /* style.css */
-
-:root {
-  --bg-light: #f5f5f5;
-  --bg-dark: #121212;
-  --text-light: #333;
-  --text-dark: #eee;
-  --accent: #00ffcc;
-  --card-bg: #1f1f1f;
-  --transition: 0.3s ease-in-out;
-}
-
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  background: var(--bg-dark);
-  color: var(--text-dark);
-  transition: background var(--transition), color var(--transition);
+  background-color: #f4f4f4;
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-body.light {
-  background: var(--bg-light);
-  color: var(--text-light);
+body.dark {
+  background-color: #181818;
+  color: #eee;
 }
 
 header {
+  background: #333;
+  color: white;
   padding: 1rem;
-  background: var(--card-bg);
-  text-align: center;
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#theme-toggle {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  background: none;
-  border: none;
-  color: var(--accent);
-  font-size: 1.5rem;
-  cursor: pointer;
+nav a {
+  margin: 0 0.5rem;
+  color: white;
+  text-decoration: none;
 }
 
 main {
-  padding: 1rem;
-  max-width: 1000px;
-  margin: auto;
+  padding: 1.5rem;
 }
 
-#server-info, #plugin-tools {
+section {
   margin-bottom: 2rem;
 }
 
-#server-status, #player-list {
-  margin-top: 0.5rem;
-  font-weight: bold;
-}
-
-.search-filter {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-#search-input {
-  flex: 1;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: none;
-}
-
-#sort-select {
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: none;
-}
-
-.filter-controls {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.filter-controls button {
-  padding: 0.4rem 0.8rem;
-  border: none;
-  background: var(--accent);
-  color: black;
-  cursor: pointer;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.filter-controls button.active {
-  background: white;
-  color: black;
-}
-
-.plugin-grid {
+.plugin-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
 .plugin-card {
-  background: var(--card-bg);
+  border: 1px solid #ccc;
+  border-radius: 10px;
   padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  transition: transform var(--transition), background var(--transition);
-  position: relative;
-  overflow: hidden;
+  text-align: center;
+  background-color: white;
+  transition: transform 0.2s;
 }
 
-body.light .plugin-card {
-  background: white;
-  color: black;
+body.dark .plugin-card {
+  background-color: #282c34;
+  border-color: #444;
 }
 
 .plugin-card:hover {
-  transform: translateY(-5px);
+  transform: scale(1.03);
 }
 
-.plugin-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.plugin-card img {
+  width: 64px;
+  height: 64px;
 }
 
-.plugin-title {
-  font-size: 1.2rem;
-  font-weight: bold;
+.controls {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
-.plugin-category {
-  font-size: 0.9rem;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
+input[type="text"],
+select {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-.plugin-desc {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+.copy-btn {
+  padding: 0.3rem 0.6rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.plugin-download {
+.copy-btn:hover {
+  background-color: #0056b3;
+}
+
+.start-btn {
   display: inline-block;
-  padding: 0.4rem 0.6rem;
-  background: var(--accent);
-  color: black;
+  padding: 0.6rem 1rem;
+  background-color: #28a745;
+  color: white;
   text-decoration: none;
-  border-radius: 4px;
-  font-weight: bold;
+  border-radius: 6px;
+  margin-top: 1rem;
 }
 
 footer {
+  background: #222;
+  color: white;
   text-align: center;
   padding: 1rem;
-  background: var(--card-bg);
   margin-top: 2rem;
 }
 
-body.light footer {
-  background: #ddd;
-  color: #111;
+#theme-toggle {
+  padding: 0.5rem 1rem;
+  background: #555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#theme-toggle:hover {
+  background: #777;
 }
