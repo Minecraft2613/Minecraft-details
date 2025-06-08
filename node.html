@@ -1,33 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Node Information</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node Information - Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>🖥️ Node Info</h1>
+    <h1>🌐 Node Information</h1>
     <nav>
       <a href="index.html">Home</a>
-      <a href="plugins.html">Plugins</a>
     </nav>
   </header>
 
   <main>
     <section>
-      <h2>Server Node Details</h2>
-      <ul>
-        <li><strong>Node Name:</strong> Node 5</li>
-        <li><strong>IP Address:</strong> mc1524209.fmcs.cloud</li>
-        <li><strong>Location:</strong> Auto-assigned by FreeMcServer</li>
-        <li><strong>Provider:</strong> FreeMcServer.net</li>
-        <li><strong>Status:</strong> Automatically shown on the main page</li>
-      </ul>
+      <h2>🔌 Server Node Details</h2>
+      <p><strong>Java IP:</strong> mc1524209.fmcs.cloud
+        <button class="copy-btn" onclick="copyToClipboard('mc1524209.fmcs.cloud')">Copy</button>
+      </p>
+      <p><strong>Bedrock IP:</strong> mc1524209.fmcs.cloud:19132
+        <button class="copy-btn" onclick="copyToClipboard('mc1524209.fmcs.cloud:19132')">Copy</button>
+      </p>
+      <p><strong>Status:</strong> Shared Node on FreeMcServer.net</p>
+      <p><strong>Geyser:</strong> Supported (Java + Bedrock)</p>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 My Minecraft Server</p>
+    <p>&copy; 2025 My Minecraft Server - Node Page</p>
   </footer>
+
+  <script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied: " + text);
+      });
+    }
+  </script>
 </body>
 </html>
