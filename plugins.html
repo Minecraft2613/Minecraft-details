@@ -3,6 +3,28 @@
 <head>
   <title>Server Plugins</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .category {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 1em;
+    }
+    .plugin-item {
+      margin-left: 1em;
+      list-style: none;
+    }
+  </style>
+  <script>
+    function filterPlugins() {
+      const input = document.getElementById("plugin-filter");
+      const filter = input.value.toLowerCase();
+      const plugins = document.querySelectorAll(".plugin-item");
+      plugins.forEach(plugin => {
+        const text = plugin.textContent.toLowerCase();
+        plugin.style.display = text.includes(filter) ? "list-item" : "none";
+      });
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -15,21 +37,44 @@
 
   <main>
     <section>
-      <h2>Installed Plugins</h2>
+      <h2>Installed Plugins (Latest Versions)</h2>
+      <input type="text" id="plugin-filter" onkeyup="filterPlugins()" placeholder="Search plugins...">
+
+      <div class="category">🔧 Utility</div>
       <ul>
-        <li>SkinRestorer</li>
-        <li>ViaVersion</li>
-        <li>LuckPerms</li>
-        <li>Vault</li>
-        <li>CoreProtect</li>
-        <li>OnlineTime</li>
-        <li>PicoJobs</li>
-        <li>GSit</li>
-        <li>EconomyShopGUI</li>
-        <li>BeastLib</li>
-        <li>Geyser-Spigot</li>
-        <li>ViaBackwards</li>
-        <li>EssentialsX</li>
+        <li class="plugin-item">🎨 <strong>SkinRestorer</strong> – Show skins for cracked players (v14.2.12) - <a href="https://www.spigotmc.org/resources/skinrestorer.2124/" target="_blank">Download</a></li>
+        <li class="plugin-item">📦 <strong>ViaVersion</strong> – Allow newer clients on older servers (v4.9.2) - <a href="https://www.spigotmc.org/resources/viaversion.19254/" target="_blank">Download</a></li>
+        <li class="plugin-item">⏪ <strong>ViaBackwards</strong> – Allow older clients to join (v4.9.2) - <a href="https://www.spigotmc.org/resources/viabackwards.27448/" target="_blank">Download</a></li>
+        <li class="plugin-item">🌉 <strong>Geyser-Spigot</strong> – Bedrock client support (v2.2.1) - <a href="https://geysermc.org/download/" target="_blank">Download</a></li>
+      </ul>
+
+      <div class="category">🛡️ Permissions & Roles</div>
+      <ul>
+        <li class="plugin-item">🔒 <strong>LuckPerms</strong> – Permissions manager (v5.4.128) - <a href="https://luckperms.net/download" target="_blank">Download</a></li>
+        <li class="plugin-item">💰 <strong>Vault</strong> – Economy and permissions API (v1.7.1) - <a href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Download</a></li>
+      </ul>
+
+      <div class="category">💼 Economy & Jobs</div>
+      <ul>
+        <li class="plugin-item">💼 <strong>PicoJobs</strong> – In-game job system (v1.0.5) - <a href="https://www.spigotmc.org/resources/picojobs.81507/" target="_blank">Download</a></li>
+        <li class="plugin-item">🛒 <strong>EconomyShopGUI</strong> – GUI-based shop plugin (v4.7.1) - <a href="https://www.spigotmc.org/resources/economyshopgui.69927/" target="_blank">Download</a></li>
+      </ul>
+
+      <div class="category">📊 Monitoring & Logs</div>
+      <ul>
+        <li class="plugin-item">🕵️ <strong>CoreProtect</strong> – Block logging/rollback (v21.4) - <a href="https://www.spigotmc.org/resources/coreprotect.8631/" target="_blank">Download</a></li>
+        <li class="plugin-item">⏱️ <strong>OnlineTime</strong> – Track online time (v11.0.2) - <a href="https://www.spigotmc.org/resources/onlinetime.67088/" target="_blank">Download</a></li>
+      </ul>
+
+      <div class="category">🎮 Player Experience</div>
+      <ul>
+        <li class="plugin-item">🪑 <strong>GSit</strong> – Sit, lay, and crawl animations (v1.7.1) - <a href="https://www.spigotmc.org/resources/gsit-modern-sit-seat-and-chair-lay-and-crawl-plugin-1-13-1-20.62325/" target="_blank">Download</a></li>
+        <li class="plugin-item">📦 <strong>EssentialsX</strong> – Server commands & features (v2.20.1) - <a href="https://essentialsx.net/downloads.html" target="_blank">Download</a></li>
+      </ul>
+
+      <div class="category">📚 Libraries</div>
+      <ul>
+        <li class="plugin-item">🧬 <strong>BeastLib</strong> – Shared library for other plugins (v1.0.10) - <a href="https://www.spigotmc.org/resources/beastlib.79096/" target="_blank">Download</a></li>
       </ul>
     </section>
   </main>
