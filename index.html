@@ -1,60 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Minecraft Server</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Server Dashboard</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/a2e0bcbffd.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <header>
-    <img src="images/server-icon.png" alt="Server Icon" width="64" height="64">
-    <h1>🔥 My Minecraft Server</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="node.html">Node Info</a>
-      <a href="plugins.html">Plugins</a>
-    </nav>
+    <h1>🌍 Minecraft Server Dashboard</h1>
+    <button id="theme-toggle" title="Toggle Dark/Light Mode">
+      <i class="fas fa-moon"></i>
+    </button>
   </header>
 
   <main>
-    <section id="about">
-      <h2>🌍 Server Info</h2>
-      <p><strong>Java IP:</strong> mc1524209.fmcs.cloud</p>
-      <p><strong>Bedrock IP:</strong> mc1524209.fmcs.cloud (Port: 19132)</p>
-      <p><strong>Version:</strong> Java 1.20.1 + Bedrock (via Geyser)</p>
-      <div id="server-status">Checking server status...</div>
+    <section id="server-info">
+      <h2>Server Info</h2>
+      <p><strong>IP:</strong> mc1524209.fmcs.cloud</p>
+      <p><strong>Version:</strong> Java 1.20.1 / Bedrock Compatible</p>
+      <div id="server-status">Checking status...</div>
+      <div id="player-list">Loading players...</div>
     </section>
 
-    <section id="control">
-      <h2>🛠️ Control Panel</h2>
-      <div id="start-button-container"></div>
+    <section id="plugin-tools">
+      <div class="search-filter">
+        <input type="text" id="search-input" placeholder="Search plugins...">
+        <select id="sort-select">
+          <option value="az">Sort: A-Z</option>
+          <option value="za">Sort: Z-A</option>
+        </select>
+      </div>
+
+      <div class="filter-controls">
+        <button data-category="all" class="active">All</button>
+        <button data-category="admin">Admin</button>
+        <button data-category="economy">Economy</button>
+        <button data-category="utility">Utility</button>
+        <button data-category="gameplay">Gameplay</button>
+      </div>
+    </section>
+
+    <section id="plugins">
+      <div class="plugin-grid" id="plugin-list">
+        <!-- Plugins will be inserted here by JavaScript -->
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 My Minecraft Server. Powered by FreeMcServer.net</p>
+    <p>&copy; 2025 Minecraft Server by You. Powered by FreeMcServer.net</p>
   </footer>
 
-  <script>
-    const serverIP = "mc1524209.fmcs.cloud";
-
-    async function fetchServerStatus() {
-      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-      const data = await res.json();
-      const statusDiv = document.getElementById("server-status");
-      const startContainer = document.getElementById("start-button-container");
-
-      if (!data.online) {
-        statusDiv.innerHTML = "🟥 Server is Offline";
-        startContainer.innerHTML = `<a href="https://freemcserver.net/server/1524209" target="_blank" class="start-button">Start Server</a>`;
-      } else {
-        statusDiv.innerHTML = `🟩 Online - ${data.players.online}/${data.players.max} players online`;
-        startContainer.innerHTML = ""; // Remove start button
-      }
-    }
-
-    fetchServerStatus();
-    setInterval(fetchServerStatus, 5000);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
