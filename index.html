@@ -1,56 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minecraft Server Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Server Status</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://kit.fontawesome.com/a2e0bcbffd.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <header>
-    <h1>🌍 Minecraft Server Dashboard</h1>
-    <button id="theme-toggle" title="Toggle Dark/Light Mode">
-      <i class="fas fa-moon"></i>
-    </button>
+    <h1>🔥 My Minecraft Server</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#node">Node Info</a>
+      <a href="#plugins">Plugins</a>
+      <a href="#contact">Contact</a>
+      <button id="theme-toggle">Toggle Theme</button>
+    </nav>
   </header>
 
   <main>
-    <section id="server-info">
-      <h2>Server Info</h2>
-      <p><strong>IP:</strong> mc1524209.fmcs.cloud</p>
-      <p><strong>Version:</strong> Java 1.20.1 / Bedrock Compatible</p>
-      <div id="server-status">Checking status...</div>
-      <div id="player-list">Loading players...</div>
+    <!-- About Section -->
+    <section id="about">
+      <h2>🌍 Server Info</h2>
+      <p><strong>Java IP:</strong> mc1524209.fmcs.cloud</p>
+      <p><strong>Bedrock Port:</strong> 19132</p>
+      <p><strong>Version:</strong> Java 1.20.1 + Bedrock via Geyser</p>
+      <div id="server-status">Checking server status...</div>
+      <div id="start-server" style="display:none;">
+        <p>Server is offline. You can <a href="https://freemcserver.net/server/1524209" target="_blank">start the server here</a>.</p>
+      </div>
+      <div id="player-list"></div>
     </section>
 
-    <section id="plugin-tools">
-      <div class="search-filter">
-        <input type="text" id="search-input" placeholder="Search plugins...">
-        <select id="sort-select">
-          <option value="az">Sort: A-Z</option>
-          <option value="za">Sort: Z-A</option>
-        </select>
-      </div>
-
-      <div class="filter-controls">
-        <button data-category="all" class="active">All</button>
-        <button data-category="admin">Admin</button>
-        <button data-category="economy">Economy</button>
-        <button data-category="utility">Utility</button>
-        <button data-category="gameplay">Gameplay</button>
+    <!-- Node Information Section -->
+    <section id="node">
+      <h2>🖥️ Node Information</h2>
+      <div class="node">
+        <p><strong>Node IP:</strong> <span class="server-ip">mc1524209.fmcs.cloud</span>
+        <button class="copy-btn">Copy</button></p>
       </div>
     </section>
 
+    <!-- Plugins Section -->
     <section id="plugins">
-      <div class="plugin-grid" id="plugin-list">
-        <!-- Plugins will be inserted here by JavaScript -->
+      <h2>🔌 Installed Plugins</h2>
+      <input type="text" id="search" placeholder="Search plugins...">
+      <select id="category-filter">
+        <option value="all">All Categories</option>
+        <option value="essentials">Essentials</option>
+        <option value="economy">Economy</option>
+        <option value="jobs">Jobs</option>
+        <option value="permissions">Permissions</option>
+      </select>
+      <div class="plugin-list">
+        <div class="plugin-card" data-name="LuckPerms" data-category="permissions">
+          <h3>LuckPerms</h3>
+          <p>Powerful permission plugin</p>
+          <a href="https://luckperms.net/" target="_blank">Download</a>
+        </div>
+        <div class="plugin-card" data-name="Vault" data-category="economy">
+          <h3>Vault</h3>
+          <p>Economy API</p>
+          <a href="https://dev.bukkit.org/projects/vault" target="_blank">Download</a>
+        </div>
+        <div class="plugin-card" data-name="PicoJobs" data-category="jobs">
+          <h3>PicoJobs</h3>
+          <p>Job system for players</p>
+          <a href="https://www.spigotmc.org/resources/picojobs.86185/" target="_blank">Download</a>
+        </div>
+        <!-- Add more plugin cards as needed -->
       </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <h2>📬 Contact</h2>
+      <p>Email: yourname@example.com</p>
+      <p>Discord: YourDiscord#0000</p>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Minecraft Server by You. Powered by FreeMcServer.net</p>
+    <p>&copy; 2025 My Minecraft Server. Powered by FreeMcServer.net</p>
   </footer>
 
   <script src="script.js"></script>
