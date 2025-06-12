@@ -9,22 +9,50 @@
     html {
       scroll-behavior: smooth;
     }
+    body {
+      transition: background-color 0.5s, color 0.5s;
+    }
     @media (max-width: 600px) {
       nav a {
         display: block;
         margin: 10px 0;
       }
     }
+    .plugin-link {
+      float: right;
+      font-size: 0.9em;
+    }
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 12px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    li {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease-in-out;
+    }
+    li.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
+  <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
+
   <header>
     <h1>🔥 My Minecraft Server</h1>
     <nav>
       <a href="#about">About</a>
       <a href="#plugins">Plugins</a>
       <a href="#status">Status</a>
-      <a href="#start">Start Server</a>
     </nav>
   </header>
 
@@ -42,37 +70,29 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
-        <h3>🛠 Server is Offline - Start It Below</h3>
-        <input type="text" id="username-status" placeholder="Enter Username">
-        <button onclick="generateLinkFromStatus()">Generate Start Link</button>
-        <p id="start-link-status"></p>
+        <h3>🛠 Server is Offline</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>Start Server on FreeMcServer.net</button>
+        </a>
       </div>
-    </section>
-
-    <section id="start">
-      <h2>🔧 Start Server</h2>
-      <p>Enter your FreeMcServer Username:</p>
-      <input type="text" id="username" placeholder="e.g. ansh2613" autofocus>
-      <button onclick="generateLink()">Generate Start Link</button>
-      <p id="start-link"></p>
     </section>
 
     <section id="plugins">
       <h2>🔌 Plugins</h2>
-      <ul>
-        <li><a href="https://modrinth.com/plugin/skinrestorer" target="_blank">SkinRestorer</a></li>
-        <li><a href="https://modrinth.com/plugin/viaversion" target="_blank">ViaVersion</a></li>
-        <li><a href="https://modrinth.com/plugin/luckperms" target="_blank">LuckPerms</a></li>
-        <li><a href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Vault</a></li>
-        <li><a href="https://modrinth.com/plugin/coreprotect" target="_blank">CoreProtect</a></li>
-        <li><a href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">OnlineTime</a></li>
-        <li><a href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">PicoJobs</a></li>
-        <li><a href="https://modrinth.com/plugin/gsit" target="_blank">GSit</a></li>
-        <li><a href="https://modrinth.com/plugin/economyshopgui" target="_blank">EconomyShopGUI</a></li>
-        <li><a href="https://modrinth.com/plugin/beastlib" target="_blank">BeastLib</a></li>
-        <li><a href="https://modrinth.com/plugin/geyser" target="_blank">Geyser-Spigot</a></li>
-        <li><a href="https://modrinth.com/plugin/viabackwards" target="_blank">ViaBackwards</a></li>
-        <li><a href="https://modrinth.com/plugin/essentialsx" target="_blank">EssentialsX</a></li>
+      <ul id="plugin-list">
+        <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
+        <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
+        <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
+        <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
+        <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
+        <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
+        <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
+        <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
+        <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
+        <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
+        <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
+        <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
+        <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
       </ul>
     </section>
   </main>
@@ -105,32 +125,35 @@
     fetchServerStatus();
     setInterval(fetchServerStatus, 3000);
 
-    function generateLink() {
-      const username = document.getElementById("username").value.trim();
-      const linkDiv = document.getElementById("start-link");
-      if (username) {
-        linkDiv.innerHTML = `🔗 <a href="https://freemcserver.net/server/1524209/share/${username}" target="_blank">Start Server as ${username}</a>`;
-      } else {
-        linkDiv.innerHTML = "⚠️ Enter a valid username!";
-      }
-    }
-
-    function generateLinkFromStatus() {
-      const username = document.getElementById("username-status").value.trim();
-      const linkDiv = document.getElementById("start-link-status");
-      if (username) {
-        linkDiv.innerHTML = `🔗 <a href="https://freemcserver.net/server/1524209/share/${username}" target="_blank">Start Server as ${username}</a>`;
-      } else {
-        linkDiv.innerHTML = "⚠️ Enter a valid username!";
-      }
-    }
-
     function copyToClipboard(id) {
       const text = document.getElementById(id).innerText;
       navigator.clipboard.writeText(text).then(() => {
         alert("Copied: " + text);
       });
     }
+
+    function toggleTheme() {
+      const body = document.body;
+      if (body.style.backgroundColor === "#ffffff") {
+        body.style.backgroundColor = "#121212";
+        body.style.color = "#f0f0f0";
+      } else {
+        body.style.backgroundColor = "#ffffff";
+        body.style.color = "#000000";
+      }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll("#plugin-list li").forEach((el) => observer.observe(el));
   </script>
 </body>
 </html>
