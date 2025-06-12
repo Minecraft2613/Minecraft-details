@@ -145,14 +145,16 @@ async function fetchServerStatus() {
     return;
   }
 
-  if (!data.online) {
-    if (data.debug && data.debug.ping === false) {
-      statusDiv.innerHTML = "⛔ Server is Expired";
-    } else {
-      statusDiv.innerHTML = "🟥 Server is Offline";
-    }
+ if (!data.online) {
+  if (data.debug.ping === false) {
+    statusDiv.innerHTML = "🔴 Server is Expired";
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "none";  // 🔧 Hides the "Offline – Start It" box
+  } else {
+    statusDiv.innerHTML = "🟥 Server is Offline";
     playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
+
   } else {
     statusDiv.innerHTML = "🟩 Server is Online";
     playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
