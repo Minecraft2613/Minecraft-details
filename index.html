@@ -30,15 +30,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    #plugin-search {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background-color: #1f1f1f;
-      color: #f0f0f0;
-    }
   </style>
 </head>
 <body>
@@ -50,6 +41,7 @@
       <a href="#about">About</a>
       <a href="#plugins">Plugins</a>
       <a href="#status">Status</a>
+      <a href="#howtoplay">How To Play</a>
     </nav>
   </header>
 
@@ -58,7 +50,6 @@
       <h2>🌍 Server Info</h2>
       <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
       <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
-       <p><strong>Server port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
       <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
       <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
     </section>
@@ -68,14 +59,36 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
-        <h3>🛠 Server is Offline - Start It Below</h3>
-        <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
+        <h3>🛠 Server is Offline</h3>
+        <p><a href="https://freemcserver.net/server/1524209" target="_blank">▶️ Start the Server</a></p>
       </div>
+    </section>
+
+    <section id="howtoplay">
+      <h2>🎮 How to Play</h2>
+      <ul>
+        <li>First install Minecraft (Java Edition or Bedrock)</li>
+        <li>Open Minecraft</li>
+        <li>Create or Login into your account</li>
+        <li>Go to Multiplayer section</li>
+        <li>Add server information (given in Server IPs)</li>
+        <li>Join and play 🎉</li>
+      </ul>
+
+      <h2>🧭 How to Start Server (If It Is Offline)</h2>
+      <ul>
+        <li>Click on <strong>Start Server</strong> (it will open the server public page)</li>
+        <li>If it shows <strong>Offline</strong>, click on <strong>Start</strong> button</li>
+        <li>If it shows <strong>Expired</strong>, click on <strong>Renew</strong> button</li>
+        <li>Choose <strong>Normal Renew</strong></li>
+        <li>Sometimes it doesn’t ask for Normal Renew – just click <strong>Renew</strong> then <strong>Start</strong> again</li>
+        <li>⏳ Server will start in 5 minutes</li>
+      </ul>
     </section>
 
     <section id="plugins">
       <h2>🔌 Plugins</h2>
-      <input type="text" id="plugin-search" placeholder="Search plugins...">
+      <input type="text" id="plugin-search" placeholder="Search plugins..." onkeyup="filterPlugins()">
       <ul id="plugin-list">
         <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
         <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
@@ -110,7 +123,7 @@
 
       if (!data.online) {
         statusDiv.innerHTML = "🟥 Server is Offline";
-        playersDiv.innerHTML = "";
+        playersDiv.innerHTML = `👥 Start the server to allow players to join.`;
         offlineStart.style.display = "block";
       } else {
         statusDiv.innerHTML = "🟩 Server is Online";
@@ -140,16 +153,17 @@
       }
     }
 
-    const searchInput = document.getElementById("plugin-search");
-    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+    function filterPlugins() {
+      const input = document.getElementById('plugin-search');
+      const filter = input.value.toLowerCase();
+      const list = document.getElementById('plugin-list');
+      const items = list.getElementsByTagName('li');
 
-    searchInput.addEventListener("input", function () {
-      const filter = this.value.toLowerCase();
-      for (let li of pluginList) {
-        const text = li.textContent.toLowerCase();
-        li.style.display = text.includes(filter) ? "flex" : "none";
+      for (let i = 0; i < items.length; i++) {
+        const txt = items[i].innerText.toLowerCase();
+        items[i].style.display = txt.includes(filter) ? "flex" : "none";
       }
-    });
+    }
   </script>
 </body>
 </html>
