@@ -144,26 +144,28 @@ async function fetchServerStatus() {
     offlineStart.style.display = "block";
     return;
   }
-
- if (!data.online) {
-  if (data.debug.ping === false) {
+if (!data.online) {
+  if (data.debug && data.debug.ping === false) {
+    // Expired
     statusDiv.innerHTML = "🔴 Server is Expired";
     playersDiv.innerHTML = "";
-    offlineStart.style.display = "none";  // 🔧 Hides the "Offline – Start It" box
+    offlineStart.style.display = "none";   // Hide Start button
+    renewServer.style.display = "block";   // Show Renew button
   } else {
-    statusDiv.innerHTML = "🟥 Server is Offline";
+    // Offline
+    statusDiv.innerHTML = "🔴 Server is Offline - Start It Below";
     playersDiv.innerHTML = "";
-    offlineStart.style.display = "block";
-
-  } else {
-    statusDiv.innerHTML = "🟩 Server is Online";
-    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-    offlineStart.style.display = "none";
+    offlineStart.style.display = "block";  // Show Start button
+    renewServer.style.display = "none";    // Hide Renew button
   }
+} else {
+  // Online
+  statusDiv.innerHTML = "🟢 Server is Online";
+  playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+  offlineStart.style.display = "none";     // Hide Start button
+  renewServer.style.display = "none";      // Hide Renew button
 }
-
-   
-
+}
     fetchServerStatus();
     setInterval(fetchServerStatus, 3000);
 
