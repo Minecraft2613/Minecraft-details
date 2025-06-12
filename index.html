@@ -131,41 +131,48 @@
   <script>
     const serverIP = "mc1524209.fmcs.cloud";
 async function fetchServerStatus() {
-  const res = await fetch(`https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud`);
+  const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
   const data = await res.json();
+
   const statusDiv = document.getElementById("server-status");
   const playersDiv = document.getElementById("player-count");
   const offlineStart = document.getElementById("offline-start");
 
-  // Check if response is valid
-  if (!data || typeof data.online === "undefined") {
-    statusDiv.innerHTML = "⚠️ Error checking server status.";
-    playersDiv.innerHTML = "";
-    offlineStart.style.display = "block";
-    return;
-  }
-if (!data.online) {
-  if (data.debug && data.debug.ping === false) {
-    // Expired
-    statusDiv.innerHTML = "🔴 Server is Expired";
-    playersDiv.innerHTML = "";
-    offlineStart.style.display = "none";   // Hide Start button
-    renewServer.style.display = "block";   // Show Renew button
+  if (!data.online) {
+    // Check if the server is expired
+    const motdLines = data.motd?.raw || [];
+    const motdText = motdLines.join(" ").toLowerCase();
+    
+    if (motdText.includes("expired")) {
+      statusDiv.innerHTML = "⚠️ Server Expired";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <h3>⚠️ Server Expired - Renew Below</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>♻️ Renew Server</button>
+        </a>
+      `;
+      offlineStart.style.display = "block";
+    } else {
+      // Just offline
+      statusDiv.innerHTML = "🔴 Server is Offline";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <h3>🛠 Server is Offline - Start It Below</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>🔄 Start Server</button>
+        </a>
+      `;
+      offlineStart.style.display = "block";
+    }
   } else {
-    // Offline
-    statusDiv.innerHTML = "🔴 Server is Offline - Start It Below";
-    playersDiv.innerHTML = "";
-    offlineStart.style.display = "block";  // Show Start button
-    renewServer.style.display = "none";    // Hide Renew button
+    // Online
+    statusDiv.innerHTML = "🟢 Server is Online";
+    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+    offlineStart.style.display = "none";
   }
-} else {
-  // Online
-  statusDiv.innerHTML = "🟢 Server is Online";
-  playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-  offlineStart.style.display = "none";     // Hide Start button
-  renewServer.style.display = "none";      // Hide Renew button
 }
-}
+
     fetchServerStatus();
     setInterval(fetchServerStatus, 3000);
 
