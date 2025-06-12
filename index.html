@@ -130,27 +130,37 @@
 
   <script>
     const serverIP = "mc1524209.fmcs.cloud";
+async function fetchServerStatus() {
+  const res = await fetch(`https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud`);
+  const data = await res.json();
+  const statusDiv = document.getElementById("server-status");
+  const playersDiv = document.getElementById("player-count");
+  const offlineStart = document.getElementById("offline-start");
 
-    async function fetchServerStatus() {
-      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-      const data = await res.json();
-      const statusDiv = document.getElementById("server-status");
-      const playersDiv = document.getElementById("player-count");
-      const offlineStart = document.getElementById("offline-start");
+  // Check if response is valid
+  if (!data || typeof data.online === "undefined") {
+    statusDiv.innerHTML = "⚠️ Error checking server status.";
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "block";
+    return;
+  }
 
-if (!data.online) {
-  let expiredGuess = !data.debug || !data.debug.ping;
-  statusDiv.innerHTML = expiredGuess ? "⚠️ Server Expired or Stopped" : "🟥 Server is Offline";
-  playersDiv.innerHTML = "";
-  offlineStart.style.display = "block";
+  if (!data.online) {
+    if (data.debug && data.debug.ping === false) {
+      statusDiv.innerHTML = "⛔ Server is Expired";
+    } else {
+      statusDiv.innerHTML = "🟥 Server is Offline";
+    }
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "block";
+  } else {
+    statusDiv.innerHTML = "🟩 Server is Online";
+    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+    offlineStart.style.display = "none";
+  }
 }
 
-      } else {
-        statusDiv.innerHTML = "🟩 Server is Online";
-        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-        offlineStart.style.display = "none";
-      }
-    }
+   
 
     fetchServerStatus();
     setInterval(fetchServerStatus, 3000);
