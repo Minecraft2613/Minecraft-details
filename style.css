@@ -1,196 +1,108 @@
-/* Reset & Base */
-* {
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #121212;
-  color: #f0f0f0;
-  font-family: 'Segoe UI', sans-serif;
-  line-height: 1.6;
-  padding: 20px;
-  transition: background 0.4s, color 0.4s;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 header {
-  background: #1e1e1e;
-  padding: 20px;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  padding: 1rem;
   text-align: center;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  margin-bottom: 20px;
-}
-
-header h1 {
-  color: #00ffe1;
-  font-size: 2.4rem;
-  animation: glow 2s infinite ease-in-out;
-}
-
-@keyframes glow {
-  0%, 100% { text-shadow: 0 0 10px #00ffe1; }
-  50% { text-shadow: 0 0 20px #00ffe1, 0 0 30px #00ffe1; }
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 nav {
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 nav a {
-  margin: 0 15px;
-  color: #ccc;
+  margin: 0 10px;
   text-decoration: none;
+  color: #80d8ff;
   font-weight: bold;
   transition: color 0.3s;
 }
 
 nav a:hover {
-  color: #00ffe1;
+  color: #ffffff;
 }
 
-/* Section Style */
+main {
+  padding: 2rem;
+}
+
 section {
+  margin-bottom: 3rem;
+  padding: 1rem;
   background: #1e1e1e;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-  transition: transform 0.3s ease, background 0.3s;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
 }
 
-section:hover {
-  transform: scale(1.01);
-}
-
-/* Heading */
-h2 {
-  color: #00ffe1;
-  margin-bottom: 10px;
-}
-
-/* Plugin List */
-ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-li {
-  background: #292929;
-  margin: 5px 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  transition: background 0.2s, transform 0.2s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeUp 0.6s ease forwards;
-}
-
-li:hover {
-  background: #383838;
-  transform: translateY(-2px);
-}
-
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Link button */
-.plugin-link {
-  font-size: 0.9em;
-  color: #00ccff;
-  text-decoration: none;
-}
-
-.plugin-link:hover {
-  text-decoration: underline;
-}
-
-/* Copy & Start Buttons */
 button {
-  background-color: #00ffe1;
-  color: #000;
-  padding: 6px 14px;
+  padding: 8px 14px;
+  background-color: #03dac6;
   border: none;
-  border-radius: 8px;
+  color: #000;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #00ccb3;
+  background-color: #00bfa5;
 }
 
-input[type="text"] {
-  background-color: #2a2a2a;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 8px;
-}
-
-/* Server Status */
-#server-status {
-  font-size: 1.2rem;
-  margin-top: 8px;
-}
-
-#start-link a {
-  color: #00ffcc;
-  font-weight: bold;
-}
-
-/* Footer */
 footer {
   text-align: center;
-  padding: 15px;
-  font-size: 0.9em;
-  color: #999;
+  padding: 1rem;
+  background-color: #101010;
+  color: #888;
+  font-size: 0.9rem;
 }
 
-a {
-  color: #00ccff;
+input[type='text'] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 400px;
 }
 
-a:hover {
-  text-decoration: underline;
+ul {
+  list-style: none;
+  padding-left: 0;
 }
 
-/* Toggle Button */
-.toggle-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #444;
-  color: white;
-  padding: 8px 14px;
+li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #2b2b2b;
   border-radius: 8px;
-  border: none;
-  z-index: 1000;
-  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  nav a {
-    display: block;
-    margin: 10px 0;
-  }
+li:hover {
+  transform: scale(1.01);
+  background-color: #333;
+}
 
-  li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.plugin-link {
+  color: #80cbc4;
+  text-decoration: none;
+}
 
-  .plugin-link {
-    margin-top: 5px;
-  }
+.plugin-link:hover {
+  text-decoration: underline;
 }
