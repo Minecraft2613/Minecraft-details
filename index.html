@@ -6,145 +6,88 @@
   <title>My Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    html {
-      scroll-behavior: smooth;
+    h3.subtitle {
+      color: #03dac6;
+      margin-top: 2rem;
     }
-    @media (max-width: 600px) {
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 6px 12px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    .instructions {
+      padding-left: 1rem;
+      line-height: 1.6;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
-  <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
-
   <header>
-    <h1>🔥 My Minecraft Server</h1>
+    <h1><span style="filter: drop-shadow(0 0 8px #00e5ff);">🔥 My Minecraft Server</span></h1>
     <nav>
       <a href="#about">About</a>
       <a href="#plugins">Plugins</a>
       <a href="#status">Status</a>
+      <a href="#start">Start Server</a>
     </nav>
   </header>
 
   <main>
-    <section id="about">
+    <section id="info">
       <h2>🌍 Server Info</h2>
-      <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
-      <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
+      <p><strong>Java IP:</strong> mc1524209.fmcs.cloud <button onclick="navigator.clipboard.writeText('mc1524209.fmcs.cloud')">📋 Copy</button></p>
+      <p><strong>Bedrock IP:</strong> mc1524209.fmcs.cloud <button onclick="navigator.clipboard.writeText('mc1524209.fmcs.cloud')">📋 Copy</button></p>
       <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
       <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
     </section>
 
     <section id="status">
       <h2>📊 Server Status</h2>
-      <div id="server-status">Checking status...</div>
-      <div id="player-count"></div>
-      <div id="offline-start" style="display: none;">
-        <p>🛠 Server is Offline — <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Start the Server</button></a></p>
+      <p>🔴 Server is Offline</p>
+      <p>
+        <strong>👨‍🔧 Server is Offline — Start it below</strong><br>
+        🧍 Players Online: <em><a href="https://freemcserver.net/server/1524209" target="_blank">Start the server to see</a></em><br><br>
+        <button onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">Start Server</button>
+      </p>
+
+      <h3 class="subtitle">📘 How to Play</h3>
+      <div class="instructions">
+        <ul>
+          <li>1. First install Minecraft</li>
+          <li>2. Open Minecraft</li>
+          <li>3. Create/Login into your account</li>
+          <li>4. Go to Multiplayer section</li>
+          <li>5. Add server information (see Server Info above)</li>
+          <li>6. Join and play 🎮</li>
+        </ul>
       </div>
-      <h3>🎮 How to Play</h3>
-      <ul>
-        <li>First install Minecraft</li>
-        <li>Open Minecraft</li>
-        <li>Create/Login into your account</li>
-        <li>Go to Multiplayer section</li>
-        <li>Add server information (given in server IPs)</li>
-        <li>Join and play</li>
-      </ul>
-      <h3>🕹️ How to Start Server (If Offline)</h3>
-      <ul>
-        <li>Click on Start Server (opens the public server page)</li>
-        <li>If it shows offline, click the Start button</li>
-        <li>If it shows expired, click Renew button</li>
-        <li>Choose Normal Renew</li>
-        <li>If it doesn't ask for renew type, just click Renew</li>
-        <li>Then click Start button — Server will start in 5 mins</li>
-      </ul>
+
+      <h3 class="subtitle">🚀 How to Start Server If It Is Offline</h3>
+      <div class="instructions">
+        <ul>
+          <li>1. Click on <strong>Start Server</strong> above (opens server public page)</li>
+          <li>2. If it shows <strong>Offline</strong>, click the <strong>Start</strong> button</li>
+          <li>3. If it shows <strong>Expired</strong>, click the <strong>Renew</strong> button</li>
+          <li>4. Choose <strong>Normal Renew</strong></li>
+          <li>5. If Normal Renew doesn’t appear, click <strong>Renew</strong> then click <strong>Start</strong></li>
+          <li>6. Server will start in about 5 minutes</li>
+        </ul>
+      </div>
     </section>
 
     <section id="plugins">
-      <h2>🔌 Plugins</h2>
+      <h2>🧪 Plugins</h2>
       <ul>
-        <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
-        <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
-        <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
-        <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
-        <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
-        <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
-        <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
-        <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
-        <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
-        <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
-        <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
-        <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
-        <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
+        <li><a class="plugin-link" href="#">SkinRestorer</a></li>
+        <li><a class="plugin-link" href="#">ViaVersion</a></li>
+        <li><a class="plugin-link" href="#">LuckPerms</a></li>
+        <li><a class="plugin-link" href="#">Vault</a></li>
+        <li><a class="plugin-link" href="#">CoreProtect</a></li>
+        <li><a class="plugin-link" href="#">OnlineTime</a></li>
+        <li><a class="plugin-link" href="#">PicoJobs</a></li>
+        <li><a class="plugin-link" href="#">GSit</a></li>
       </ul>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
+    <p>&copy; 2025 My Minecraft Server. All rights reserved.</p>
   </footer>
-
-  <script>
-    const serverIP = "mc1524209.fmcs.cloud";
-
-    async function fetchServerStatus() {
-      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-      const data = await res.json();
-      const statusDiv = document.getElementById("server-status");
-      const playersDiv = document.getElementById("player-count");
-      const offlineStart = document.getElementById("offline-start");
-
-      if (!data.online) {
-        statusDiv.innerHTML = "🟥 Server is Offline";
-        playersDiv.innerHTML = `👥 Start the server to see player count.`;
-        offlineStart.style.display = "block";
-      } else {
-        statusDiv.innerHTML = "🟩 Server is Online";
-        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-        offlineStart.style.display = "none";
-      }
-    }
-
-    fetchServerStatus();
-    setInterval(fetchServerStatus, 3000);
-
-    function copyToClipboard(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
-      });
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      if (body.style.backgroundColor === "#ffffff") {
-        body.style.backgroundColor = "#121212";
-        body.style.color = "#f0f0f0";
-      } else {
-        body.style.backgroundColor = "#ffffff";
-        body.style.color = "#000000";
-      }
-    }
-  </script>
 </body>
 </html>
