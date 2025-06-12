@@ -30,39 +30,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    body {
-      background-color: #121212;
-      color: #f0f0f0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      animation: fadeIn 1s ease-in;
-    }
-    header, main, footer {
-      animation: fadeSlideIn 1s ease-in;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .subsection-title {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #ffa500;
-      text-shadow: 1px 1px 2px #000;
-    }
-    .instructions-list {
-      padding-left: 20px;
-      list-style-type: square;
-      margin-bottom: 20px;
-    }
-    #offline-start a {
-      color: #00d4ff;
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
@@ -91,11 +58,10 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
-        <h3>🛠 Server is Offline - <a href="https://freemcserver.net/server/1524209" target="_blank">Start the Server</a></h3>
+        <p>🛠 Server is Offline — <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Start the Server</button></a></p>
       </div>
-
-      <div class="subsection-title">🎮 How to Play</div>
-      <ul class="instructions-list">
+      <h3>🎮 How to Play</h3>
+      <ul>
         <li>First install Minecraft</li>
         <li>Open Minecraft</li>
         <li>Create/Login into your account</li>
@@ -103,15 +69,14 @@
         <li>Add server information (given in server IPs)</li>
         <li>Join and play</li>
       </ul>
-
-      <div class="subsection-title">🕹️ How to Start Server (If Offline)</div>
-      <ul class="instructions-list">
-        <li>Click on <strong>Start the Server</strong> (opens server public page)</li>
-        <li>If it shows <strong>Offline</strong>, click on <strong>Start</strong> button</li>
-        <li>If it shows <strong>Expired</strong>, click on <strong>Renew</strong> button</li>
-        <li>Choose <strong>Normal Renew</strong>. Sometimes it directly shows <strong>Renew</strong>, click that</li>
-        <li>Then click on <strong>Start</strong> button</li>
-        <li>Server will start in 5 mins</li>
+      <h3>🕹️ How to Start Server (If Offline)</h3>
+      <ul>
+        <li>Click on Start Server (opens the public server page)</li>
+        <li>If it shows offline, click the Start button</li>
+        <li>If it shows expired, click Renew button</li>
+        <li>Choose Normal Renew</li>
+        <li>If it doesn't ask for renew type, just click Renew</li>
+        <li>Then click Start button — Server will start in 5 mins</li>
       </ul>
     </section>
 
@@ -151,7 +116,7 @@
 
       if (!data.online) {
         statusDiv.innerHTML = "🟥 Server is Offline";
-        playersDiv.innerHTML = `👥 Server is Offline - <a href='https://freemcserver.net/server/1524209' target='_blank'>Start the Server</a>`;
+        playersDiv.innerHTML = `👥 Start the server to see player count.`;
         offlineStart.style.display = "block";
       } else {
         statusDiv.innerHTML = "🟩 Server is Online";
