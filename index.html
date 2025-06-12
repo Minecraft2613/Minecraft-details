@@ -5,6 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    @media (max-width: 600px) {
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+    .plugin-link {
+      float: right;
+      font-size: 0.9em;
+    }
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 12px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      animation: fadeIn 1s ease-in;
+    }
+    header, main, footer {
+      animation: fadeSlideIn 1s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .subsection-title {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ffa500;
+      text-shadow: 1px 1px 2px #000;
+    }
+    .instructions-list {
+      padding-left: 20px;
+      list-style-type: square;
+      margin-bottom: 20px;
+    }
+    #offline-start a {
+      color: #00d4ff;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
@@ -32,28 +91,27 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
-        <h3>🛠 Server is Offline</h3>
-        <p><a href="https://freemcserver.net/server/1524209" target="_blank">🔗 Start the Server</a></p>
+        <h3>🛠 Server is Offline - <a href="https://freemcserver.net/server/1524209" target="_blank">Start the Server</a></h3>
       </div>
 
-      <div class="subsection-title">🕹️ How to Play</div>
+      <div class="subsection-title">🎮 How to Play</div>
       <ul class="instructions-list">
         <li>First install Minecraft</li>
         <li>Open Minecraft</li>
         <li>Create/Login into your account</li>
         <li>Go to Multiplayer section</li>
-        <li>Add server information (given in Server IPs)</li>
-        <li>Join and play!</li>
+        <li>Add server information (given in server IPs)</li>
+        <li>Join and play</li>
       </ul>
 
-      <div class="subsection-title">⚙️ How to Start Server (If Offline)</div>
+      <div class="subsection-title">🕹️ How to Start Server (If Offline)</div>
       <ul class="instructions-list">
-        <li>Click on "Start Server" (it opens the public page)</li>
-        <li>If it shows offline, click on the Start button</li>
-        <li>If it shows expired, click on the Renew button</li>
-        <li>Choose "Normal Renew"</li>
-        <li>If not shown, click Renew then Start</li>
-        <li>Server will start in 5 minutes</li>
+        <li>Click on <strong>Start the Server</strong> (opens server public page)</li>
+        <li>If it shows <strong>Offline</strong>, click on <strong>Start</strong> button</li>
+        <li>If it shows <strong>Expired</strong>, click on <strong>Renew</strong> button</li>
+        <li>Choose <strong>Normal Renew</strong>. Sometimes it directly shows <strong>Renew</strong>, click that</li>
+        <li>Then click on <strong>Start</strong> button</li>
+        <li>Server will start in 5 mins</li>
       </ul>
     </section>
 
@@ -93,7 +151,7 @@
 
       if (!data.online) {
         statusDiv.innerHTML = "🟥 Server is Offline";
-        playersDiv.innerHTML = `👥 0 Players - <a href='https://freemcserver.net/server/1524209' target='_blank'>Start the Server</a>`;
+        playersDiv.innerHTML = `👥 Server is Offline - <a href='https://freemcserver.net/server/1524209' target='_blank'>Start the Server</a>`;
         offlineStart.style.display = "block";
       } else {
         statusDiv.innerHTML = "🟩 Server is Online";
