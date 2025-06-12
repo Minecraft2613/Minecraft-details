@@ -138,10 +138,13 @@
       const playersDiv = document.getElementById("player-count");
       const offlineStart = document.getElementById("offline-start");
 
-      if (!data.online) {
-        statusDiv.innerHTML = "🟥 Server is Offline";
-        playersDiv.innerHTML = "";
-        offlineStart.style.display = "block";
+if (!data.online) {
+  let expiredGuess = !data.debug || !data.debug.ping;
+  statusDiv.innerHTML = expiredGuess ? "⚠️ Server Expired or Stopped" : "🟥 Server is Offline";
+  playersDiv.innerHTML = "";
+  offlineStart.style.display = "block";
+}
+
       } else {
         statusDiv.innerHTML = "🟩 Server is Online";
         playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
