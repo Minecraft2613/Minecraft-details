@@ -5,41 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    @media (max-width: 600px) {
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 6px 12px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #plugin-search {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background-color: #1f1f1f;
-      color: #f0f0f0;
-    }
-  </style>
 </head>
 <body>
   <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
@@ -67,15 +32,34 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
-        <h3>🛠 Server is Offline - Start It Below</h3>
-        <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
+        <h3>🛠 Server is Offline</h3>
+        <p><a href="https://freemcserver.net/server/1524209" target="_blank">🔗 Start the Server</a></p>
       </div>
+
+      <div class="subsection-title">🕹️ How to Play</div>
+      <ul class="instructions-list">
+        <li>First install Minecraft</li>
+        <li>Open Minecraft</li>
+        <li>Create/Login into your account</li>
+        <li>Go to Multiplayer section</li>
+        <li>Add server information (given in Server IPs)</li>
+        <li>Join and play!</li>
+      </ul>
+
+      <div class="subsection-title">⚙️ How to Start Server (If Offline)</div>
+      <ul class="instructions-list">
+        <li>Click on "Start Server" (it opens the public page)</li>
+        <li>If it shows offline, click on the Start button</li>
+        <li>If it shows expired, click on the Renew button</li>
+        <li>Choose "Normal Renew"</li>
+        <li>If not shown, click Renew then Start</li>
+        <li>Server will start in 5 minutes</li>
+      </ul>
     </section>
 
     <section id="plugins">
       <h2>🔌 Plugins</h2>
-      <input type="text" id="plugin-search" placeholder="Search plugins...">
-      <ul id="plugin-list">
+      <ul>
         <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
         <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
         <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
@@ -109,7 +93,7 @@
 
       if (!data.online) {
         statusDiv.innerHTML = "🟥 Server is Offline";
-        playersDiv.innerHTML = "";
+        playersDiv.innerHTML = `👥 0 Players - <a href='https://freemcserver.net/server/1524209' target='_blank'>Start the Server</a>`;
         offlineStart.style.display = "block";
       } else {
         statusDiv.innerHTML = "🟩 Server is Online";
@@ -138,17 +122,6 @@
         body.style.color = "#000000";
       }
     }
-
-    const searchInput = document.getElementById("plugin-search");
-    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-
-    searchInput.addEventListener("input", function () {
-      const filter = this.value.toLowerCase();
-      for (let li of pluginList) {
-        const text = li.textContent.toLowerCase();
-        li.style.display = text.includes(filter) ? "flex" : "none";
-      }
-    });
   </script>
 </body>
 </html>
