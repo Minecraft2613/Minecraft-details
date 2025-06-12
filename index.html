@@ -9,9 +9,6 @@
     html {
       scroll-behavior: smooth;
     }
-    body {
-      transition: background-color 0.5s, color 0.5s;
-    }
     @media (max-width: 600px) {
       nav a {
         display: block;
@@ -33,14 +30,14 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    li {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease-in-out;
-    }
-    li.visible {
-      opacity: 1;
-      transform: translateY(0);
+    #plugin-search {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background-color: #1f1f1f;
+      color: #f0f0f0;
     }
   </style>
 </head>
@@ -61,7 +58,7 @@
       <h2>🌍 Server Info</h2>
       <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
       <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
-      <p><strong>Server port:</strong> <span id="server port">47112</span> <button onclick="copyToClipboard('server port')">📋 Copy</button></p>
+       <p><strong>Server Port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
       <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
       <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
     </section>
@@ -71,15 +68,14 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
-        <h3>🛠 Server is Offline</h3>
-        <a href="https://freemcserver.net/server/1524209" target="_blank">
-          <button>Start Server on FreeMcServer.net</button>
-        </a>
+        <h3>🛠 Server is Offline - Start It Below</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
       </div>
     </section>
 
     <section id="plugins">
       <h2>🔌 Plugins</h2>
+      <input type="text" id="plugin-search" placeholder="Search plugins...">
       <ul id="plugin-list">
         <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
         <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
@@ -144,17 +140,16 @@
       }
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
+    const searchInput = document.getElementById("plugin-search");
+    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
 
-    document.querySelectorAll("#plugin-list li").forEach((el) => observer.observe(el));
+    searchInput.addEventListener("input", function () {
+      const filter = this.value.toLowerCase();
+      for (let li of pluginList) {
+        const text = li.textContent.toLowerCase();
+        li.style.display = text.includes(filter) ? "flex" : "none";
+      }
+    });
   </script>
 </body>
 </html>
