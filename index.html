@@ -4,29 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Minecraft Server</title>
-  <link rel="stylesheet" href="style.css"/>
   <style>
-    html { scroll-behavior: smooth; }
     body {
       background-color: #121212;
       color: #f0f0f0;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0 20px;
+    }
+    header, footer {
+      text-align: center;
+      padding: 1em 0;
     }
     nav a {
       margin: 0 10px;
-      color: #00ffff;
+      color: #4fc3f7;
       text-decoration: none;
     }
-    @media (max-width: 600px) {
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
+    section {
+      margin: 2em 0;
     }
     .toggle-btn {
       position: absolute;
@@ -39,6 +35,10 @@
       border-radius: 8px;
       cursor: pointer;
     }
+    .plugin-link {
+      float: right;
+      font-size: 0.9em;
+    }
     #plugin-search {
       width: 100%;
       margin-bottom: 15px;
@@ -48,31 +48,49 @@
       background-color: #1f1f1f;
       color: #f0f0f0;
     }
-    #minecraft-details {
+    #main-content {
       display: none;
+    }
+    #username-section {
+      text-align: center;
+      margin-top: 50px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 250px;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4fc3f7;
+      color: black;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
 
-  <header>
-    <h1>🔥 My Minecraft Server</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#plugins">Plugins</a>
-      <a href="#status">Status</a>
-    </nav>
-  </header>
+  <div id="username-section">
+    <h2>🔐 Enter Your FreeMcServer Username</h2>
+    <input type="text" id="freemc-username" placeholder="Your FreeMcServer Username" />
+    <button onclick="submitUsername()">Continue</button>
+  </div>
 
-  <main>
-    <section id="auth-section">
-      <h2>🧑 Enter FreeMcServer Username</h2>
-      <input type="text" id="username-input" placeholder="Enter your FreeMcServer username">
-      <button onclick="submitUsername()">Submit</button>
-    </section>
+  <div id="main-content">
+    <header>
+      <h1>🔥 My Minecraft Server</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#plugins">Plugins</a>
+        <a href="#status">Status</a>
+      </nav>
+    </header>
 
-    <div id="minecraft-details">
+    <main>
       <section id="about">
         <h2>🌍 Server Info</h2>
         <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
@@ -122,57 +140,80 @@
         <h2>🎮 How to Play</h2>
         <ol>
           <li>Open Minecraft (Java or Bedrock Edition).</li>
-          <li>Click <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
-          <li>Enter IP: <strong>mc1524209.fmcs.cloud</strong></li>
+          <li>Click on <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
+          <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
           <li>For Bedrock: Use Port <strong>47112</strong></li>
-          <li>Click <strong>Join Server</strong> and play!</li>
+          <li>Click <strong>Join Server</strong> and start playing!</li>
         </ol>
       </section>
 
       <section id="how-to-start">
         <h2>🛠 How to Start Server if Offline</h2>
         <ol>
-          <li>Click <strong>"Open FreeMcServer Page"</strong>.</li>
-          <li>Login and press <strong>Start</strong>.</li>
-          <li>Wait 10–30 seconds and refresh this page.</li>
+          <li>Click the <strong>"Open FreeMcServer Page"</strong> button in the Server Status section.</li>
+          <li>Login to your FreeMcServer account.</li>
+          <li>Click <strong>“Start”</strong> to power up the server.</li>
+          <li>Wait 10–30 seconds for the server to fully boot up.</li>
+          <li>Come back and refresh this page to check the status!</li>
         </ol>
       </section>
-    </div>
-  </main>
+    </main>
 
-  <footer>
-    <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
-  </footer>
+    <footer>
+      <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
+    </footer>
+  </div>
 
   <script>
-    const serverIP = "mc1524209.fmcs.cloud";
-    async function fetchServerStatus() {
-      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-      const data = await res.json();
-      const statusDiv = document.getElementById("server-status");
-      const playersDiv = document.getElementById("player-count");
-      const offlineStart = document.getElementById("offline-start");
+    const webhookURL = "https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ"; // <- Replace this with your Discord webhook URL
 
-      if (!data || typeof data.online === "undefined") {
-        statusDiv.innerHTML = "⚠️ Error checking server status.";
-        playersDiv.innerHTML = "";
-        offlineStart.style.display = "block";
+    function submitUsername() {
+      const username = document.getElementById("freemc-username").value.trim();
+      if (!username) {
+        alert("⚠️ Please enter your FreeMcServer username!");
         return;
       }
 
-      if (!data.online) {
-        statusDiv.innerHTML = "🔴 Server is Offline - Start It Below";
-        playersDiv.innerHTML = "";
-        offlineStart.style.display = "block";
-      } else {
-        statusDiv.innerHTML = "🟢 Server is Online";
-        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-        offlineStart.style.display = "none";
-      }
+      // Send username to Discord
+      fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: `📥 FreeMcServer Username submitted: **${username}**` })
+      });
+
+      document.getElementById("username-section").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
     }
 
+    function fetchServerStatus() {
+      fetch("https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud")
+        .then(res => res.json())
+        .then(data => {
+          const statusDiv = document.getElementById("server-status");
+          const playersDiv = document.getElementById("player-count");
+          const offlineStart = document.getElementById("offline-start");
+
+          if (!data || typeof data.online === "undefined") {
+            statusDiv.innerHTML = "⚠️ Error checking server status.";
+            playersDiv.innerHTML = "";
+            offlineStart.style.display = "block";
+            return;
+          }
+
+          if (!data.online) {
+            statusDiv.innerHTML = "🔴 Server is Offline";
+            playersDiv.innerHTML = "";
+            offlineStart.style.display = "block";
+          } else {
+            statusDiv.innerHTML = "🟢 Server is Online";
+            playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+            offlineStart.style.display = "none";
+          }
+        });
+    }
+
+    setInterval(fetchServerStatus, 5000);
     fetchServerStatus();
-    setInterval(fetchServerStatus, 3000);
 
     function copyToClipboard(id) {
       const text = document.getElementById(id).innerText;
@@ -183,46 +224,22 @@
 
     function toggleTheme() {
       const body = document.body;
-      if (body.style.backgroundColor === "#ffffff") {
+      if (body.style.backgroundColor === "white") {
         body.style.backgroundColor = "#121212";
         body.style.color = "#f0f0f0";
       } else {
-        body.style.backgroundColor = "#ffffff";
-        body.style.color = "#000000";
+        body.style.backgroundColor = "white";
+        body.style.color = "black";
       }
     }
 
-    const searchInput = document.getElementById("plugin-search");
-    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-
-    if (searchInput) {
-      searchInput.addEventListener("input", function () {
-        const filter = this.value.toLowerCase();
-        for (let li of pluginList) {
-          const text = li.textContent.toLowerCase();
-          li.style.display = text.includes(filter) ? "flex" : "none";
-        }
-      });
-    }
-
-    function submitUsername() {
-      const username = document.getElementById("username-input").value.trim();
-      if (!username) {
-        alert("❌ Please enter your FreeMcServer username.");
-        return;
+    document.getElementById("plugin-search").addEventListener("input", function () {
+      const filter = this.value.toLowerCase();
+      const plugins = document.getElementById("plugin-list").getElementsByTagName("li");
+      for (let li of plugins) {
+        li.style.display = li.textContent.toLowerCase().includes(filter) ? "block" : "none";
       }
-
-      // Show Minecraft server details
-      document.getElementById("minecraft-details").style.display = "block";
-      document.getElementById("auth-section").style.display = "none";
-
-      // Send to Discord Webhook
-      fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `🧑 New visitor username: **${username}**` })
-      });
-    }
+    });
   </script>
 </body>
 </html>
