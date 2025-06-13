@@ -154,92 +154,111 @@
       <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
     </footer>
   </div>
+<script>
+// ✅ TOGGLE THIS TO TRUE WHEN UPDATING
+const updateMode = true; // change to false when update is over
 
-  <script>
-    // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
-    const updateMode = true; // 🔁 Set true to lock site for all except 'Ansh_2613'
-    const allowedUsername = "Ansh_2613";
+const allowedUsername = "Ansh_2613"; // optional, not shown to users
 
-    let storedUser = localStorage.getItem("freemc_username");
+const loginForm = document.getElementById("login-form");
+const loginSection = document.getElementById("login-section");
+const mainContent = document.getElementById("main-content");
 
-    if (!storedUser) {
-      const username = prompt("Enter your FreeMcServer Username:");
-      if (!username) {
-        alert("Username required!");
-        location.reload();
-      } else {
-        storedUser = username;
-        localStorage.setItem("freemc_username", username);
-      }
-    }
+// Handle login form
+loginForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  if (!username) {
+    alert("Please enter a username.");
+    return;
+  }
 
-    if (updateMode && storedUser !== allowedUsername) {
-      document.body.innerHTML = `
-        <div style="text-align:center; padding:60px;">
-          <h2>🚧 Site is Updating</h2>
-          <p>This site is currently being updated.</p>
-          <p>Only <strong>${allowedUsername}</strong> can access during updates.</p>
-          <p>Please check back later.</p>
-        </div>`;
-      throw new Error("Site locked during update.");
-    }
+  localStorage.setItem("freemc_username", username);
 
-    const serverIP = "mc1524209.fmcs.cloud";
-    async function fetchServerStatus() {
-      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-      const data = await res.json();
-      const statusDiv = document.getElementById("server-status");
-      const playersDiv = document.getElementById("player-count");
-      const offlineStart = document.getElementById("offline-start");
+  if (updateMode) {
+    document.body.innerHTML = `
+      <div style="text-align:center; padding:60px;">
+        <h2>🚧 Website is Currently Under Update</h2>
+        <p>Please come back later.</p>
+      </div>`;
+    return;
+  }
 
-      if (!data || typeof data.online === "undefined") {
-        statusDiv.innerHTML = "⚠️ Error checking server status.";
-        playersDiv.innerHTML = "";
-        offlineStart.style.display = "block";
-        return;
-      }
+  loginSection.style.display = "none";
+  mainContent.style.display = "block";
+});
 
-      if (!data.online) {
-        statusDiv.innerHTML = "🔴 Server is Offline";
-        playersDiv.innerHTML = "";
-        offlineStart.style.display = "block";
-      } else {
-        statusDiv.innerHTML = "🟢 Server is Online";
-        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-        offlineStart.style.display = "none";
-      }
-    }
-    fetchServerStatus();
-    setInterval(fetchServerStatus, 3000);
+// Show content if already logged in and not updating
+window.addEventListener("DOMContentLoaded", () => {
+  const storedUsername = localStorage.getItem("freemc_username");
+  if (storedUsername && !updateMode) {
+    loginSection.style.display = "none";
+    mainContent.style.display = "block";
+  }
+});
 
-    function copyToClipboard(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
-      });
-    }
+// Server Status Script
+const serverIP = "mc1524209.fmcs.cloud";
+async function fetchServerStatus() {
+  const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+  const data = await res.json();
+  const statusDiv = document.getElementById("server-status");
+  const playersDiv = document.getElementById("player-count");
+  const offlineStart = document.getElementById("offline-start");
 
-    function toggleTheme() {
-      const body = document.body;
-      if (body.style.backgroundColor === "#ffffff") {
-        body.style.backgroundColor = "#121212";
-        body.style.color = "#f0f0f0";
-      } else {
-        body.style.backgroundColor = "#ffffff";
-        body.style.color = "#000000";
-      }
-    }
+  if (!data || typeof data.online === "undefined") {
+    statusDiv.innerHTML = "⚠️ Error checking server status.";
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "block";
+    return;
+  }
 
-    const searchInput = document.getElementById("plugin-search");
-    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+  if (!data.online) {
+    statusDiv.innerHTML = "🔴 Server is Offline";
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "block";
+  } else {
+    statusDiv.innerHTML = "🟢 Server is Online";
+    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+    offlineStart.style.display = "none";
+  }
+}
+fetchServerStatus();
+setInterval(fetchServerStatus, 3000);
 
-    searchInput.addEventListener("input", function () {
-      const filter = this.value.toLowerCase();
-      for (let li of pluginList) {
-        const text = li.textContent.toLowerCase();
-        li.style.display = text.includes(filter) ? "flex" : "none";
-      }
-    });
-  </script>
+// Copy-to-Clipboard
+function copyToClipboard(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Copied: " + text);
+  });
+}
+
+// Theme Toggle
+function toggleTheme() {
+  const body = document.body;
+  if (body.style.backgroundColor === "#ffffff") {
+    body.style.backgroundColor = "#121212";
+    body.style.color = "#f0f0f0";
+  } else {
+    body.style.backgroundColor = "#ffffff";
+    body.style.color = "#000000";
+  }
+}
+
+// Plugin Search Filter
+const searchInput = document.getElementById("plugin-search");
+const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+
+searchInput.addEventListener("input", function () {
+  const filter = this.value.toLowerCase();
+  for (let li of pluginList) {
+    const text = li.textContent.toLowerCase();
+    li.style.display = text.includes(filter) ? "flex" : "none";
+  }
+});
+</script>
+
+
 </body>
 </html>
