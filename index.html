@@ -73,12 +73,17 @@
 </head>
 <body>
   <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
+<div id="username-section">
+  <h2>🔐 Enter Your FreeMcServer Username</h2>
+  <input type="text" id="freemc-username" placeholder="Your FreeMcServer Username" />
+  <button onclick="submitUsername()">Continue</button>
+  <p style="margin-top: 1em;">
+    Don’t have a FreeMcServer account?
+    <a href="https://freemcserver.net" target="_blank" style="color: #4fc3f7; text-decoration: underline;">Create one</a> and come back!
+  </p>
+</div>
 
-  <div id="username-section">
-    <h2>🔐 Enter Your FreeMcServer Username</h2>
-    <input type="text" id="freemc-username" placeholder="Your FreeMcServer Username" />
-    <button onclick="submitUsername()">Continue</button>
-  </div>
+ 
 
   <div id="main-content">
     <header>
