@@ -156,31 +156,37 @@
   </div>
 
   <script>
-    const allowedUsers = ["Ansh_2613"];
+    <script>
+// ✅ TOGGLE THIS TO TRUE WHEN UPDATING
+const updateMode = false; // change to true to lock for others
+const allowedUsername = "Ansh_2613";
 
-    document.getElementById("login-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const username = document.getElementById("username").value.trim();
+// Get stored username or ask for it
+let storedUser = localStorage.getItem("freemc_username");
 
-      if (username) {
-        fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ content: `🔑 Username Login: ${username}` })
-        });
+if (!storedUser) {
+  const username = prompt("Enter your FreeMcServer Username:");
+  if (!username) {
+    alert("Username required!");
+    location.reload();
+  } else {
+    storedUser = username;
+    localStorage.setItem("freemc_username", username);
+  }
+}
 
-        if (allowedUsers.includes(username)) {
-          document.getElementById("login-section").style.display = "none";
-          document.getElementById("main-content").style.display = "block";
-        } else {
-          alert("⚠️ This username is not authorized while server is updating.");
-        }
-      } else {
-        alert("Please enter a valid username.");
-      }
-    });
+// 🚧 Update Mode Check
+if (updateMode && storedUser !== allowedUsername) {
+  document.body.innerHTML = `
+    <div style="text-align:center; padding:60px;">
+      <h2>🚧 Site is Updating</h2>
+      <p>This site is currently being updated.</p>
+      <p>Only <strong>${allowedUsername}</strong> can access during updates.</p>
+      <p>Please check back later.</p>
+    </div>`;
+  throw new Error("Site locked during update.");
+}
+
 
     const serverIP = "mc1524209.fmcs.cloud";
     async function fetchServerStatus() {
