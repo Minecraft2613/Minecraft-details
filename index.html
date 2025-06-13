@@ -1,24 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Minecraft Server</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
     @media (max-width: 600px) {
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
+      nav a { display: block; margin: 10px 0; }
     }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
+    .plugin-link { float: right; font-size: 0.9em; }
     .toggle-btn {
       position: absolute;
       top: 20px;
@@ -58,14 +50,7 @@
       <h2>🌍 Server Info</h2>
       <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
       <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
-       <p><strong>Server port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
-      <p>
-  <strong>Quick Join (Bedrock):</strong>
-  <a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112">
-    <button>📲 Connect with Bedrock</button>
-  </a>
-</p>
-
+      <p><strong>Server port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
       <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
       <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
     </section>
@@ -74,20 +59,23 @@
       <h2>📊 Server Status</h2>
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
-      <div id="offline-start" style="display: none;">
-    <div id="renew-div" style="display: none;">
-  <h3>❌ Server Expired - Renew Below</h3>
-  <a href="https://freemcserver.net/server/1524209" target="_blank"><button>🔁 Renew Server</button></a>
-</div>
 
+      <div id="offline-start" style="display: none;">
         <h3>🛠 Server is Offline - Start It Below</h3>
-        <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
+        <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Start Server</button></a>
+      </div>
+
+      <div id="renew-div" style="display: none;">
+        <h3 id="renew-message">❌ Server is expired. Please renew it.</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>🔁 Renew Server</button>
+        </a>
       </div>
     </section>
 
     <section id="plugins">
       <h2>🔌 Plugins</h2>
-      <input type="text" id="plugin-search" placeholder="Search plugins...">
+      <input type="text" id="plugin-search" placeholder="Search plugins..." />
       <ul id="plugin-list">
         <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
         <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
@@ -105,111 +93,83 @@
       </ul>
     </section>
   </main>
-<section id="how-to-play">
-  <h2>🎮 How to Play</h2>
-  <p>Follow these steps to join the Minecraft server:</p>
-  <ol>
-    <li>Open Minecraft (Java or Bedrock Edition).</li>
-    <li>Click on <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
-    <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
-    <li>For Bedrock: Use Port <strong>47112</strong></li>
-    <li>Click <strong>Join Server</strong> and start playing!</li>
-  </ol>
-</section>
-
-<section id="how-to-start">
-  <h2>🛠 How to Start Server if Offline</h2>
-  <p>If the server is offline:</p>
-  <ol>
-    <li>Click the <strong>"Open FreeMcServer Page"</strong> button in the Server Status section.</li>
-    <li>Login to your FreeMcServer account.</li>
-    <li>Click <strong>“Start”</strong> to power up the server.</li>
-    <li>Wait 10–30 seconds for the server to fully boot up.</li>
-    <li>Come back and refresh this page to check the status!</li>
-  </ol>
-</section>
 
   <footer>
     <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
   </footer>
-<script>
-  const serverIP = "mc1524209.fmcs.cloud";
 
-  async function fetchServerStatus() {
-    try {
-      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-      const data = await res.json();
+  <script>
+    const serverIP = "mc1524209.fmcs.cloud";
 
-      const statusDiv = document.getElementById("server-status");
-      const playersDiv = document.getElementById("player-count");
-      const offlineStart = document.getElementById("offline-start");
-      const renewDiv = document.getElementById("renew-div");
+    async function fetchServerStatus() {
+      try {
+        const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+        const data = await res.json();
 
-      const motdText = (data.motd?.clean || []).join(" ").toLowerCase();
-      const isExpired = data.debug?.ping === false || motdText.includes("expired");
+        const statusDiv = document.getElementById("server-status");
+        const playersDiv = document.getElementById("player-count");
+        const offlineStart = document.getElementById("offline-start");
+        const renewDiv = document.getElementById("renew-div");
+        const renewMessage = document.getElementById("renew-message");
 
-      if (!data.online) {
-        if (isExpired) {
-          statusDiv.innerHTML = "❌ Server Expired";
-          playersDiv.innerHTML = "";
-          renewDiv.style.display = "block";
-          offlineStart.style.display = "none";
+        const motdText = (data.motd?.clean || []).join(" ").toLowerCase();
+        const isExpired = data.debug?.ping === false || motdText.includes("expired");
+
+        if (!data.online) {
+          if (isExpired) {
+            statusDiv.innerHTML = "❌ Server is expired. Please renew it.";
+            playersDiv.innerHTML = "";
+            renewDiv.style.display = "block";
+            offlineStart.style.display = "none";
+          } else {
+            statusDiv.innerHTML = "🟥 Server is Offline";
+            playersDiv.innerHTML = "";
+            offlineStart.style.display = "block";
+            renewDiv.style.display = "none";
+          }
         } else {
-          statusDiv.innerHTML = "🟥 Server is Offline";
-          playersDiv.innerHTML = "";
-          offlineStart.style.display = "block";
+          statusDiv.innerHTML = "🟢 Server is Online";
+          playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+          offlineStart.style.display = "none";
           renewDiv.style.display = "none";
         }
-      } else {
-        statusDiv.innerHTML = "🟢 Server is Online";
-        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-        offlineStart.style.display = "none";
-        renewDiv.style.display = "none";
+      } catch (err) {
+        console.error("Error fetching status:", err);
+        document.getElementById("server-status").innerHTML = "⚠️ Unable to check server status.";
       }
-
-    } catch (err) {
-      console.error("Failed to fetch server status:", err);
-      document.getElementById("server-status").innerHTML = "⚠️ Error checking status";
     }
-  }
 
-  // Copy IP to clipboard
-  function copyToClipboard(id) {
-    const text = document.getElementById(id).innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Copied: " + text);
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied: " + text);
+      });
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      if (body.style.backgroundColor === "#ffffff") {
+        body.style.backgroundColor = "#121212";
+        body.style.color = "#f0f0f0";
+      } else {
+        body.style.backgroundColor = "#ffffff";
+        body.style.color = "#000000";
+      }
+    }
+
+    const searchInput = document.getElementById("plugin-search");
+    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+
+    searchInput.addEventListener("input", function () {
+      const filter = this.value.toLowerCase();
+      for (let li of pluginList) {
+        const text = li.textContent.toLowerCase();
+        li.style.display = text.includes(filter) ? "flex" : "none";
+      }
     });
-  }
 
-  // Toggle dark/light theme
-  function toggleTheme() {
-    const body = document.body;
-    if (body.style.backgroundColor === "#ffffff") {
-      body.style.backgroundColor = "#121212";
-      body.style.color = "#f0f0f0";
-    } else {
-      body.style.backgroundColor = "#ffffff";
-      body.style.color = "#000000";
-    }
-  }
-
-  // Search plugin filter
-  const searchInput = document.getElementById("plugin-search");
-  const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-
-  searchInput.addEventListener("input", function () {
-    const filter = this.value.toLowerCase();
-    for (let li of pluginList) {
-      const text = li.textContent.toLowerCase();
-      li.style.display = text.includes(filter) ? "flex" : "none";
-    }
-  });
-
-  // Run on load
-  fetchServerStatus();
-  setInterval(fetchServerStatus, 3000);
-</script>
-
-
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 3000);
+  </script>
 </body>
 </html>
