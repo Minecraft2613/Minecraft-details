@@ -127,83 +127,82 @@
   <footer>
     <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
   </footer>
+<script>
+  const serverIP = "mc1524209.fmcs.cloud";
 
-  <script>
-    const serverIP = "mc1524209.fmcs.cloud";
-async function fetchServerStatus() {
-  const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-  const data = await res.json();
+  async function fetchServerStatus() {
+    const statusDiv = document.getElementById("server-status");
+    const playersDiv = document.getElementById("player-count");
+    const offlineStart = document.getElementById("offline-start");
+    const renewDiv = document.getElementById("renew");
 
-  const statusDiv = document.getElementById("server-status");
-  const playersDiv = document.getElementById("player-count");
-  const offlineStart = document.getElementById("offline-start");
+    try {
+      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+      const data = await res.json();
 
-  if (!data.online) {
-    // Check if the server is expired
-    const motdLines = data.motd?.raw || [];
-    const motdText = motdLines.join(" ").toLowerCase();
-    
-    if (motdText.includes("expired")) {
-      statusDiv.innerHTML = "⚠️ Server Expired";
-      playersDiv.innerHTML = "";
-      offlineStart.innerHTML = `
-        <h3>⚠️ Server Expired - Renew Below</h3>
-        <a href="https://freemcserver.net/server/1524209" target="_blank">
-          <button>♻️ Renew Server</button>
-        </a>
-      `;
-      offlineStart.style.display = "block";
-    } else {
-      // Just offline
-      statusDiv.innerHTML = "🔴 Server is Offline";
-      playersDiv.innerHTML = "";
-      offlineStart.innerHTML = `
-        <h3>🛠 Server is Offline - Start It Below</h3>
-        <a href="https://freemcserver.net/server/1524209" target="_blank">
-          <button>🔄 Start Server</button>
-        </a>
-      `;
-      offlineStart.style.display = "block";
-    }
-  } else {
-    // Online
-    statusDiv.innerHTML = "🟢 Server is Online";
-    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-    offlineStart.style.display = "none";
-  }
-}
+      if (!data.online) {
+        const motdText = (data.motd?.clean || []).join(" ").toLowerCase();
 
-    fetchServerStatus();
-    setInterval(fetchServerStatus, 3000);
-
-    function copyToClipboard(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
-      });
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      if (body.style.backgroundColor === "#ffffff") {
-        body.style.backgroundColor = "#121212";
-        body.style.color = "#f0f0f0";
+        if (motdText.includes("expired") || data.debug?.ping === false) {
+          // Server is expired
+          statusDiv.innerHTML = "❌ Server Expired";
+          playersDiv.innerHTML = "";
+          renewDiv.style.display = "block";
+          offlineStart.style.display = "none";
+        } else {
+          // Server is offline
+          statusDiv.innerHTML = "🟥 Server is Offline";
+          playersDiv.innerHTML = "";
+          offlineStart.style.display = "block";
+          renewDiv.style.display = "none";
+        }
       } else {
-        body.style.backgroundColor = "#ffffff";
-        body.style.color = "#000000";
+        // Server is online
+        statusDiv.innerHTML = "🟩 Server is Online";
+        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+        offlineStart.style.display = "none";
+        renewDiv.style.display = "none";
       }
+    } catch (err) {
+      statusDiv.innerHTML = "⚠️ Error checking status";
+      playersDiv.innerHTML = "";
+      offlineStart.style.display = "none";
+      renewDiv.style.display = "none";
     }
+  }
 
-    const searchInput = document.getElementById("plugin-search");
-    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+  fetchServerStatus();
+  setInterval(fetchServerStatus, 5000);
 
-    searchInput.addEventListener("input", function () {
-      const filter = this.value.toLowerCase();
-      for (let li of pluginList) {
-        const text = li.textContent.toLowerCase();
-        li.style.display = text.includes(filter) ? "flex" : "none";
-      }
+  function copyToClipboard(id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copied: " + text);
     });
-  </script>
+  }
+
+  function toggleTheme() {
+    const body = document.body;
+    if (body.style.backgroundColor === "#ffffff") {
+      body.style.backgroundColor = "#121212";
+      body.style.color = "#f0f0f0";
+    } else {
+      body.style.backgroundColor = "#ffffff";
+      body.style.color = "#000000";
+    }
+  }
+
+  const searchInput = document.getElementById("plugin-search");
+  const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+
+  searchInput.addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    for (let li of pluginList) {
+      const text = li.textContent.toLowerCase();
+      li.style.display = text.includes(filter) ? "flex" : "none";
+    }
+  });
+</script>
+
 </body>
 </html>
