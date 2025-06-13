@@ -191,11 +191,14 @@ loginForm.addEventListener("submit", function (e) {
 // Show content if already logged in and not updating
 window.addEventListener("DOMContentLoaded", () => {
   const storedUsername = localStorage.getItem("freemc_username");
-  if (storedUsername && !updateMode) {
+  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
+
+  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
     loginSection.style.display = "none";
     mainContent.style.display = "block";
   }
 });
+
 
 // Server Status Script
 const serverIP = "mc1524209.fmcs.cloud";
