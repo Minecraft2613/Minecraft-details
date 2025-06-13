@@ -3,127 +3,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minecraft Server Status</title>
+  <title>My Minecraft Server</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      background-color: #121212;
-      color: #f0f0f0;
-      font-family: 'Segoe UI', sans-serif;
-      padding: 20px;
+    html {
+      scroll-behavior: smooth;
     }
-
-    header {
-      text-align: center;
-      padding: 20px;
-      background: #1e1e1e;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      margin-bottom: 20px;
+    @media (max-width: 600px) {
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
     }
-
-    header h1 {
-      font-size: 2rem;
-      color: #00ffe1;
-      animation: glow 2s infinite ease-in-out;
+    .plugin-link {
+      float: right;
+      font-size: 0.9em;
     }
-
-    @keyframes glow {
-      0%, 100% { text-shadow: 0 0 10px #00ffe1; }
-      50% { text-shadow: 0 0 20px #00ffe1, 0 0 30px #00ffe1; }
-    }
-
-    section {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      margin-bottom: 20px;
-    }
-
-    #server-status {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    #player-count {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-
-    #renew-section {
-      background-color: #292929;
-      padding: 15px;
-      border-radius: 10px;
-      display: none;
-    }
-
-    button {
-      background-color: #00ffe1;
-      color: #000;
-      padding: 10px 20px;
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 12px;
+      background-color: #444;
+      color: #fff;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
     }
-
-    button:hover {
-      background-color: #00ccb3;
+    #plugin-search {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background-color: #1f1f1f;
+      color: #f0f0f0;
     }
   </style>
 </head>
 <body>
+  <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
+
   <header>
-    <h1>Server Status: mc1524209.fmcs.cloud</h1>
+    <h1>🔥 My Minecraft Server</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#plugins">Plugins</a>
+      <a href="#status">Status</a>
+    </nav>
   </header>
 
-  <section>
-    <div id="server-status">Checking status...</div>
-    <div id="player-count"></div>
+  <main>
+    <section id="about">
+      <h2>🌍 Server Info</h2>
+      <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
+      <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
+      <p><strong>Port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
+      <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
+      <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
+    </section>
 
-    <div id="renew-section">
-      <p>❌ Server is expired. Please renew it.</p>
-      <button onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">Renew Server</button>
-    </div>
-  </section>
+    <section id="status">
+      <h2>📊 Server Status</h2>
+      <div id="server-status">Checking status...</div>
+      <div id="player-count"></div>
+    </section>
+
+    <section id="plugins">
+      <h2>🔌 Plugins</h2>
+      <input type="text" id="plugin-search" placeholder="Search plugins..." />
+      <ul id="plugin-list">
+        <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
+        <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
+        <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
+        <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
+        <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
+        <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
+        <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
+        <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
+        <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
+        <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
+        <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
+        <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
+        <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
+  </footer>
 
   <script>
+    const serverIP = "mc1524209.fmcs.cloud";
+
     async function fetchServerStatus() {
-      const statusDiv = document.getElementById("server-status");
-      const playerDiv = document.getElementById("player-count");
-      const renewDiv = document.getElementById("renew-section");
-
       try {
-        const res = await fetch("https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud");
+        const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
         const data = await res.json();
+        const statusDiv = document.getElementById("server-status");
+        const playersDiv = document.getElementById("player-count");
 
-        const motd = (data.motd?.clean?.join(" ") || "").toLowerCase();
-        const pingOK = data.online === true && data.debug?.ping === true;
-        const expired = motd.includes("expired") || (data.online === false && data.debug?.ping === false);
-
-        if (pingOK) {
-          statusDiv.innerHTML = "🟢 Server is Online";
-          playerDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players Online`;
-          renewDiv.style.display = "none";
-        } else if (expired) {
-          statusDiv.innerHTML = "❌ Server is Expired";
-          playerDiv.innerHTML = "";
-          renewDiv.style.display = "block";
+        if (!data.online) {
+          statusDiv.innerHTML = "🟥 Server is Offline";
+          playersDiv.innerHTML = "";
         } else {
-          statusDiv.innerHTML = "🔴 Server is Offline";
-          playerDiv.innerHTML = "";
-          renewDiv.style.display = "none";
+          statusDiv.innerHTML = "🟩 Server is Online";
+          playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
         }
-      } catch (error) {
-        statusDiv.innerHTML = "⚠️ Error fetching server status.";
-        playerDiv.innerHTML = "";
-        renewDiv.style.display = "none";
+      } catch (e) {
+        document.getElementById("server-status").innerText = "⚠️ Error fetching status";
       }
     }
 
     fetchServerStatus();
-    setInterval(fetchServerStatus, 5000); // Refresh every 5 seconds
+    setInterval(fetchServerStatus, 5000);
+
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied: " + text);
+      });
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      if (body.style.backgroundColor === "#ffffff") {
+        body.style.backgroundColor = "#121212";
+        body.style.color = "#f0f0f0";
+      } else {
+        body.style.backgroundColor = "#ffffff";
+        body.style.color = "#000000";
+      }
+    }
+
+    const searchInput = document.getElementById("plugin-search");
+    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+
+    searchInput.addEventListener("input", function () {
+      const filter = this.value.toLowerCase();
+      for (let li of pluginList) {
+        const text = li.textContent.toLowerCase();
+        li.style.display = text.includes(filter) ? "flex" : "none";
+      }
+    });
   </script>
 </body>
 </html>
