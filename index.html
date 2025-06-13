@@ -1,69 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minecraft Server</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div class="container">
-    <section id="status">
-      <h2>📁 Server Status</h2>
-      <p id="server-status"><span class="dot red"></span> Server is Offline</p>
-      <button onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">Start Server</button>
-    </section>
+  <div id="content">
+    <header>
+      <h1>🌐 Server Status</h1>
+      <p id="server-status"><span class="status-dot red"></span> Server is Offline</p>
+      <button class="start-btn" onclick="window.open('https://freemcserver.net/server/1524209')">Open FreeMcServer Page</button>
+    </header>
 
     <section id="plugins">
-      <h2>🔎 Plugins</h2>
-      <input type="text" placeholder="Search plugins..." onkeyup="filterPlugins(this.value)" />
+      <h2>🔌 Plugins</h2>
+      <input type="text" id="search" placeholder="Search plugins..." />
       <ul id="plugin-list">
-        <li>SkinRestorer <a href="#">Details ↗</a></li>
-        <li>ViaVersion <a href="#">Details ↗</a></li>
-        <li>LuckPerms <a href="#">Details ↗</a></li>
-        <li>Vault <a href="#">Details ↗</a></li>
-        <li>CoreProtect <a href="#">Details ↗</a></li>
-        <li>OnlineTime <a href="#">Details ↗</a></li>
-        <li>PicoJobs <a href="#">Details ↗</a></li>
-        <li>GSit <a href="#">Details ↗</a></li>
-        <li>EconomyShopGUI <a href="#">Details ↗</a></li>
-        <li>BeastLib <a href="#">Details ↗</a></li>
-        <li>Geyser-Spigot <a href="#">Details ↗</a></li>
-        <li>ViaBackwards <a href="#">Details ↗</a></li>
-        <li>EssentialsX <a href="#">Details ↗</a></li>
+        <li>SkinRestorer <a href="plugins.html#SkinRestorer">Details ↗</a></li>
+        <li>ViaVersion <a href="plugins.html#ViaVersion">Details ↗</a></li>
+        <li>LuckPerms <a href="plugins.html#LuckPerms">Details ↗</a></li>
+        <li>Vault <a href="plugins.html#Vault">Details ↗</a></li>
+        <li>CoreProtect <a href="plugins.html#CoreProtect">Details ↗</a></li>
+        <li>OnlineTime <a href="plugins.html#OnlineTime">Details ↗</a></li>
+        <li>PicoJobs <a href="plugins.html#PicoJobs">Details ↗</a></li>
+        <li>GSit <a href="plugins.html#GSit">Details ↗</a></li>
+        <li>EconomyShopGUI <a href="plugins.html#EconomyShopGUI">Details ↗</a></li>
+        <li>BeastLib <a href="plugins.html#BeastLib">Details ↗</a></li>
+        <li>Geyser-Spigot <a href="plugins.html#Geyser-Spigot">Details ↗</a></li>
+        <li>ViaBackwards <a href="plugins.html#ViaBackwards">Details ↗</a></li>
+        <li>EssentialsX <a href="plugins.html#EssentialsX">Details ↗</a></li>
       </ul>
     </section>
 
-    <section id="how-to-play">
+    <section>
       <h2>🎮 How to Play</h2>
       <ol>
-        <li>Open Minecraft (Java or Bedrock Edition)</li>
-        <li>Click on <strong>Multiplayer → Add Server</strong></li>
+        <li>Open Minecraft (Java or Bedrock Edition). Bedrock users click <strong>Connect with Bedrock</strong>.</li>
+        <li>Click on <strong>Multiplayer → Add Server</strong>.</li>
         <li>Enter the Server IP: <code>mc1524209.fmcs.cloud</code></li>
-        <li>For both: Use Port <strong>47112</strong></li>
+        <li>For Java & Bedrock: Use Port <code>47112</code></li>
         <li>Click <strong>Join Server</strong> and start playing!</li>
-        <li>(Bedrock users: click on <strong>Connect with Bedrock</strong>)</li>
       </ol>
     </section>
 
-    <section id="start-server">
+    <section>
       <h2>⚙️ How to Start Server if Offline</h2>
       <ol>
-        <li>Click the <strong>Start</strong> button above</li>
-        <li>It will open the FreeMcServer public page</li>
-        <li>Scroll down the page</li>
-        <li>If it shows <strong>Start</strong>, click on it</li>
-        <li>If it shows <strong>Stop/Expire in __ mins</strong>, it means it's starting</li>
-        <li>If it shows <strong>Expire</strong>, click <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">Renew</a> then repeat from Step 3</li>
-        <li>Wait 5 minutes</li>
-        <li>Then follow the How to Play steps above</li>
+        <li>Click the <strong>Start</strong> button above.</li>
+        <li>It will open the FreeMcServer public page.</li>
+        <li>Scroll down.</li>
+        <li>If it shows <strong>Stop</strong> or <strong>Expire in __ mins</strong>, it means the server is starting/started.</li>
+        <li>If it shows <strong>Start</strong>, click it.</li>
+        <li>If it shows <strong>Expire</strong>, click this: <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">Renew Button</a>, then follow step 4.</li>
+        <li>Wait 5 minutes.</li>
+        <li>Follow the <strong>How to Play</strong> section above.</li>
       </ol>
     </section>
   </div>
 
+  <div style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+    <label><input type="checkbox" id="update-toggle"> Maintenance Mode</label>
+  </div>
+
   <script>
-    const updateMode = false; // true to lock, false to unlock
+    let updateMode = localStorage.getItem("update_mode") === "true";
     const allowedUsername = "Ansh_2613";
+
+    document.getElementById("update-toggle").checked = updateMode;
+
+    document.getElementById("update-toggle").addEventListener("change", function () {
+      updateMode = this.checked;
+      localStorage.setItem("update_mode", updateMode);
+      location.reload();
+    });
 
     let storedUser = localStorage.getItem("freemc_username");
     if (!storedUser) {
@@ -79,21 +92,16 @@
 
     if (updateMode && storedUser !== allowedUsername) {
       document.body.innerHTML = `
-        <div style="text-align:center;padding:60px">
+        <div style="text-align:center; padding:60px;">
           <h2>🚧 Site is Updating</h2>
           <p>This site is currently being updated.</p>
           <p>Only <strong>${allowedUsername}</strong> can access during updates.</p>
           <p>Please check back later.</p>
-        </div>`;
+        </div>
+      `;
       throw new Error("Site locked during update.");
-    }
-
-    function filterPlugins(search) {
-      const items = document.querySelectorAll("#plugin-list li");
-      items.forEach((li) => {
-        li.style.display = li.textContent.toLowerCase().includes(search.toLowerCase()) ? "" : "none";
-      });
     }
   </script>
 </body>
+
 </html>
