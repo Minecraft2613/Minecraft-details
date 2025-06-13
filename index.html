@@ -75,6 +75,11 @@
       <div id="server-status">Checking status...</div>
       <div id="player-count"></div>
       <div id="offline-start" style="display: none;">
+    <div id="renew-div" style="display: none;">
+  <h3>❌ Server Expired - Renew Below</h3>
+  <a href="https://freemcserver.net/server/1524209" target="_blank"><button>🔁 Renew Server</button></a>
+</div>
+
         <h3>🛠 Server is Offline - Start It Below</h3>
         <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
       </div>
@@ -131,49 +136,44 @@
   const serverIP = "mc1524209.fmcs.cloud";
 
   async function fetchServerStatus() {
-    const statusDiv = document.getElementById("server-status");
-    const playersDiv = document.getElementById("player-count");
-    const offlineStart = document.getElementById("offline-start");
-    const renewDiv = document.getElementById("renew");
-
     try {
       const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
       const data = await res.json();
 
-      if (!data.online) {
-        const motdText = (data.motd?.clean || []).join(" ").toLowerCase();
+      const statusDiv = document.getElementById("server-status");
+      const playersDiv = document.getElementById("player-count");
+      const offlineStart = document.getElementById("offline-start");
+      const renewDiv = document.getElementById("renew-div");
 
-        if (motdText.includes("expired") || data.debug?.ping === false) {
-          // Server is expired
+      const motdText = (data.motd?.clean || []).join(" ").toLowerCase();
+      const isExpired = data.debug?.ping === false || motdText.includes("expired");
+
+      if (!data.online) {
+        if (isExpired) {
           statusDiv.innerHTML = "❌ Server Expired";
           playersDiv.innerHTML = "";
           renewDiv.style.display = "block";
           offlineStart.style.display = "none";
         } else {
-          // Server is offline
           statusDiv.innerHTML = "🟥 Server is Offline";
           playersDiv.innerHTML = "";
           offlineStart.style.display = "block";
           renewDiv.style.display = "none";
         }
       } else {
-        // Server is online
-        statusDiv.innerHTML = "🟩 Server is Online";
+        statusDiv.innerHTML = "🟢 Server is Online";
         playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
         offlineStart.style.display = "none";
         renewDiv.style.display = "none";
       }
+
     } catch (err) {
-      statusDiv.innerHTML = "⚠️ Error checking status";
-      playersDiv.innerHTML = "";
-      offlineStart.style.display = "none";
-      renewDiv.style.display = "none";
+      console.error("Failed to fetch server status:", err);
+      document.getElementById("server-status").innerHTML = "⚠️ Error checking status";
     }
   }
 
-  fetchServerStatus();
-  setInterval(fetchServerStatus, 5000);
-
+  // Copy IP to clipboard
   function copyToClipboard(id) {
     const text = document.getElementById(id).innerText;
     navigator.clipboard.writeText(text).then(() => {
@@ -181,6 +181,7 @@
     });
   }
 
+  // Toggle dark/light theme
   function toggleTheme() {
     const body = document.body;
     if (body.style.backgroundColor === "#ffffff") {
@@ -192,6 +193,7 @@
     }
   }
 
+  // Search plugin filter
   const searchInput = document.getElementById("plugin-search");
   const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
 
@@ -202,7 +204,12 @@
       li.style.display = text.includes(filter) ? "flex" : "none";
     }
   });
+
+  // Run on load
+  fetchServerStatus();
+  setInterval(fetchServerStatus, 3000);
 </script>
+
 
 </body>
 </html>
