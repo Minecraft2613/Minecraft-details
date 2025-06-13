@@ -5,189 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Minecraft Server Status</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: #121212;
+      background-color: #121212;
       color: #f0f0f0;
       font-family: 'Segoe UI', sans-serif;
       padding: 20px;
     }
-    header, section {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    }
-    h1 {
-      font-size: 2.4rem;
-      color: #00ffe1;
+
+    header {
       text-align: center;
+      padding: 20px;
+      background: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #00ffe1;
       animation: glow 2s infinite ease-in-out;
     }
+
     @keyframes glow {
       0%, 100% { text-shadow: 0 0 10px #00ffe1; }
       50% { text-shadow: 0 0 20px #00ffe1, 0 0 30px #00ffe1; }
     }
-    nav {
-      text-align: center;
-      margin: 15px 0;
+
+    section {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
     }
-    nav a {
-      margin: 0 10px;
-      color: #ccc;
-      text-decoration: none;
-      font-weight: bold;
+
+    #server-status {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
     }
-    nav a:hover { color: #00ffe1; }
-    ul { list-style: none; padding: 0; }
-    li {
-      background: #292929;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 8px;
+
+    #player-count {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
     }
-    li:hover { background: #383838; }
+
+    #renew-section {
+      background-color: #292929;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+    }
+
     button {
       background-color: #00ffe1;
       color: #000;
-      padding: 6px 14px;
-      margin-left: 5px;
+      padding: 10px 20px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
+      transition: background-color 0.3s;
     }
-    button:hover { background-color: #00ccb3; }
-    #plugin-search {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background-color: #1f1f1f;
-      color: #f0f0f0;
-    }
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9em;
-      color: #999;
-    }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
-    .status-box {
-      font-size: 1.2rem;
-      margin: 10px 0;
-    }
-    #renew-btn {
-      background-color: #ff4444;
-      color: white;
-      margin-top: 10px;
+
+    button:hover {
+      background-color: #00ccb3;
     }
   </style>
 </head>
 <body>
-
-  <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
-
   <header>
-    <h1>🔥 My Minecraft Server</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#status">Status</a>
-      <a href="#plugins">Plugins</a>
-    </nav>
+    <h1>Server Status: mc1524209.fmcs.cloud</h1>
   </header>
 
-  <section id="about">
-    <h2>🌍 Server Info</h2>
-    <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span>
-      <button onclick="copyToClipboard('java-ip')">📋 Copy</button>
-    </p>
-    <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span>
-      <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button>
-    </p>
-    <p><strong>Port:</strong> <span id="server-port">47112</span>
-      <button onclick="copyToClipboard('server-port')">📋 Copy</button>
-    </p>
-    <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
-    <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">Visit</a></p>
-  </section>
-
-  <section id="status">
-    <h2>📊 Server Status</h2>
-    <div id="server-status" class="status-box">Checking status...</div>
+  <section>
+    <div id="server-status">Checking status...</div>
     <div id="player-count"></div>
-    <div id="renew-section" style="display: none;">
+
+    <div id="renew-section">
       <p>❌ Server is expired. Please renew it.</p>
-      <a href="https://freemcserver.net/server/1524209" target="_blank">
-        <button id="renew-btn">Renew Server</button>
-      </a>
+      <button onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">Renew Server</button>
     </div>
   </section>
 
-  <section id="howtoplay">
-    <h2>🎮 How to Play</h2>
-    <p>1. Open Minecraft Java or Bedrock.</p>
-    <p>2. Go to Multiplayer → Add Server.</p>
-    <p>3. Enter <strong>mc1524209.fmcs.cloud</strong> as the IP.</p>
-    <p>4. Port for Bedrock: <strong>47112</strong></p>
-    <p>5. Save and connect!</p>
-  </section>
-
-  <section id="plugins">
-    <h2>🔌 Plugins</h2>
-    <input type="text" id="plugin-search" placeholder="Search plugins..."/>
-    <ul id="plugin-list">
-      <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
-      <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
-      <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
-      <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
-      <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
-      <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
-      <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
-      <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
-      <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
-      <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
-      <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
-      <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
-      <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
-    </ul>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 My Minecraft Server | Powered by <a href="https://freemcserver.net" target="_blank">FreeMcServer</a></p>
-  </footer>
-
   <script>
-    const serverIP = "mc1524209.fmcs.cloud";
-
     async function fetchServerStatus() {
+      const statusDiv = document.getElementById("server-status");
+      const playerDiv = document.getElementById("player-count");
+      const renewDiv = document.getElementById("renew-section");
+
       try {
-        const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+        const res = await fetch("https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud");
         const data = await res.json();
 
-        const statusDiv = document.getElementById("server-status");
-        const playerDiv = document.getElementById("player-count");
-        const renewDiv = document.getElementById("renew-section");
+        const motd = (data.motd?.clean?.join(" ") || "").toLowerCase();
+        const pingOK = data.online === true && data.debug?.ping === true;
+        const expired = motd.includes("expired") || (data.online === false && data.debug?.ping === false);
 
-        if (data.online && data.debug?.ping === true) {
+        if (pingOK) {
           statusDiv.innerHTML = "🟢 Server is Online";
-          playerDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} players`;
+          playerDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players Online`;
           renewDiv.style.display = "none";
-        } else if (
-          !data.online &&
-          (data.motd?.clean?.join(" ").toLowerCase().includes("expired") || data.debug?.ping === false)
-        ) {
-          statusDiv.innerHTML = "⚠️ Server is Expired";
+        } else if (expired) {
+          statusDiv.innerHTML = "❌ Server is Expired";
           playerDiv.innerHTML = "";
           renewDiv.style.display = "block";
         } else {
@@ -195,42 +115,15 @@
           playerDiv.innerHTML = "";
           renewDiv.style.display = "none";
         }
-      } catch (err) {
-        document.getElementById("server-status").innerText = "❌ Error fetching server status";
+      } catch (error) {
+        statusDiv.innerHTML = "⚠️ Error fetching server status.";
+        playerDiv.innerHTML = "";
+        renewDiv.style.display = "none";
       }
     }
 
     fetchServerStatus();
-    setInterval(fetchServerStatus, 5000);
-
-    function copyToClipboard(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
-      });
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      if (body.style.backgroundColor === "white") {
-        body.style.backgroundColor = "#121212";
-        body.style.color = "#f0f0f0";
-      } else {
-        body.style.backgroundColor = "white";
-        body.style.color = "#000000";
-      }
-    }
-
-    const searchInput = document.getElementById("plugin-search");
-    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-
-    searchInput.addEventListener("input", function () {
-      const filter = this.value.toLowerCase();
-      for (let li of pluginList) {
-        const text = li.textContent.toLowerCase();
-        li.style.display = text.includes(filter) ? "flex" : "none";
-      }
-    });
+    setInterval(fetchServerStatus, 5000); // Refresh every 5 seconds
   </script>
 </body>
 </html>
