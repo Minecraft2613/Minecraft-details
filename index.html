@@ -156,7 +156,6 @@
   </div>
 
   <script>
-    <script>
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
 const updateMode = false; // change to true to lock for others
 const allowedUsername = "Ansh_2613";
@@ -172,8 +171,6 @@ if (!storedUser) {
   } else {
     storedUser = username;
     localStorage.setItem("freemc_username", username);
-  }
-}
 
 // 🚧 Update Mode Check
 if (updateMode && storedUser !== allowedUsername) {
