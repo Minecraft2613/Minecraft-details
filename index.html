@@ -172,6 +172,18 @@ loginForm.addEventListener("submit", function (e) {
     alert("Please enter a username.");
     return;
   }
+// Send username to Discord webhook
+fetch("YOUR_DISCORD_WEBHOOK_URL_HERE", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+  })
+}).catch(error => {
+  console.error("Webhook failed:", error);
+});
 
   localStorage.setItem("freemc_username", username);
 
