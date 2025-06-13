@@ -5,153 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Minecraft Server</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0f0f0f;
-      color: #fff;
-    }
-
-    header {
-      background: #1f1f1f;
-      color: #00ffe1;
-      padding: 20px;
-      text-align: center;
-      font-size: 2rem;
-      text-shadow: 0 0 10px #00ffe1;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .section {
-      background: #1c1c1c;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    .status.green { color: #00ff90; }
-    .status.red { color: #ff5555; }
-
-    button {
-      background: #00ffe1;
-      color: #000;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    a {
-      color: #00ffe1;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
+    body { background: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
+    h1, h2 { text-align: center; }
+    .green { color: #0f0; }
+    .red { color: #f55; }
+    .section { background: #222; padding: 20px; margin: 20px auto; max-width: 640px; border-radius: 8px; }
+    button { background: #0ff; color: #000; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
-<header>🔥 My Minecraft Server</header>
+  <h1>🔥 My Minecraft Server</h1>
 
-<div class="container">
-  <!-- Server Info -->
-  <div class="section">
-    <h2>🌐 Server Info</h2>
-    <p><strong>Java IP:</strong> mc1524209.fmcs.cloud</p>
-    <p><strong>Bedrock IP:</strong> mc1524209.fmcs.cloud</p>
-    <p><strong>Port:</strong> 47112</p>
-    <p><strong>Version:</strong> Java 1.20.1 + Bedrock (via Geyser)</p>
-    <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">freemcserver.net/server/1524209</a></p>
-    <p><a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112"><button>📱 Join Bedrock Server</button></a></p>
-  </div>
-
-  <!-- Server Status -->
-  <div class="section">
+  <div class="section" id="statusSection">
     <h2>📊 Server Status</h2>
     <div id="statusDiv">Checking status...</div>
     <div id="playersDiv"></div>
-
-    <div id="offlineStart" class="hidden">
-      <a href="https://freemcserver.net/server/1524209" target="_blank"><button>🔁 Start Server</button></a>
+    <div id="startDiv" class="hidden">
+      <button onclick="window.open('https://freemcserver.net/server/1524209','_blank')">🔄 Start Server</button>
     </div>
-
-    <div id="expiredRenew" class="hidden">
-      <a href="https://freemcserver.net/server/1524209" target="_blank"><button>💡 Renew Server</button></a>
+    <div id="renewDiv" class="hidden">
+      <button onclick="window.open('https://freemcserver.net/server/1524209','_blank')">♻️ Renew Server</button>
     </div>
   </div>
 
-  <!-- Plugins -->
-  <div class="section">
-    <h2>🔌 Plugins</h2>
-    <ul>
-      <li>SkinRestorer</li>
-      <li>ViaVersion</li>
-      <li>LuckPerms</li>
-      <li>Vault</li>
-      <li>CoreProtect</li>
-      <li>OnlineTime</li>
-      <li>PicoJobs</li>
-      <li>GSit</li>
-      <li>EconomyShopGUI</li>
-      <li>BeastLib</li>
-      <li>Geyser-Spigot</li>
-      <li>ViaBackwards</li>
-      <li>EssentialsX</li>
-    </ul>
-  </div>
-</div>
+  <script>
+    const serverIP = "mc1524209.fmcs.cloud";
 
-<script>
-const statusDiv = document.getElementById("statusDiv");
-const playersDiv = document.getElementById("playersDiv");
-const offlineStart = document.getElementById("offlineStart");
-const expiredRenew = document.getElementById("expiredRenew");
+    async function fetchStatus() {
+      const statusDiv = document.getElementById("statusDiv");
+      const playersDiv = document.getElementById("playersDiv");
+      const startDiv = document.getElementById("startDiv");
+      const renewDiv = document.getElementById("renewDiv");
 
-async function fetchStatus() {
-  try {
-    const res = await fetch("https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud");
-    const data = await res.json();
-    const motd = data.motd?.clean?.join(" ").toLowerCase();
+      try {
+        const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+        const data = await res.json();
 
-    if (motd.includes("expired")) {
-      statusDiv.innerHTML = '<span class="status red">❌ Server is expired. Please renew it.</span>';
-      playersDiv.innerHTML = "";
-      offlineStart.style.display = "none";
-      expiredRenew.style.display = "block";
-    } else if (!data.online) {
-      statusDiv.innerHTML = '<span class="status red">🔴 Server is offline</span>';
-      playersDiv.innerHTML = "";
-      offlineStart.style.display = "block";
-      expiredRenew.style.display = "none";
-    } else {
-      statusDiv.innerHTML = '<span class="status green">🟢 Server is online</span>';
-      playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} players online`;
-      offlineStart.style.display = "none";
-      expiredRenew.style.display = "none";
+        const motd = (data.motd?.clean?.join(" ") || "").toLowerCase();
+        const pingOK = data.online === true;
+        const hasPing = data.debug && data.debug.ping !== false;
+        const isExpired = motd.includes("expired") || (!hasPing && !pingOK);
+
+        if (pingOK) {
+          // ONLINE
+          statusDiv.innerHTML = '<span class="green">🟢 Server is Online</span>';
+          playersDiv.innerText = `👥 ${data.players.online}/${data.players.max} players`;
+          startDiv.classList.add("hidden");
+          renewDiv.classList.add("hidden");
+
+        } else if (isExpired) {
+          // EXPIRED
+          statusDiv.innerHTML = '<span class="red">❌ Server is expired. Please renew it.</span>';
+          playersDiv.innerText = "";
+          startDiv.classList.add("hidden");
+          renewDiv.classList.remove("hidden");
+
+        } else {
+          // OFFLINE (ping OK but server offline)
+          statusDiv.innerHTML = '<span class="red">🔴 Server is Offline</span>';
+          playersDiv.innerText = "";
+          startDiv.classList.remove("hidden");
+          renewDiv.classList.add("hidden");
+        }
+
+      } catch (err) {
+        statusDiv.innerHTML = '⚠️ Error fetching status.';
+        playersDiv.innerText = "";
+        startDiv.classList.add("hidden");
+        renewDiv.classList.add("hidden");
+        console.error(err);
+      }
     }
 
-  } catch (e) {
-    statusDiv.innerHTML = "⚠️ Error getting server status.";
-    console.error(e);
-  }
-}
-
-fetchStatus();
-setInterval(fetchStatus, 3000);
-</script>
+    fetchStatus();
+    setInterval(fetchStatus, 5000);
+  </script>
 
 </body>
 </html>
