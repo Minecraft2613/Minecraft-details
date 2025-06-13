@@ -1,28 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Minecraft Server</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      background-color: #121212;
-      color: #f0f0f0;
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0 20px;
+    html {
+      scroll-behavior: smooth;
     }
-    header, footer {
-      text-align: center;
-      padding: 1em 0;
+    @media (max-width: 600px) {
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
     }
-    nav a {
-      margin: 0 10px;
-      color: #4fc3f7;
-      text-decoration: none;
-    }
-    section {
-      margin: 2em 0;
+    .plugin-link {
+      margin-left: 10px;
+      font-size: 0.9em;
     }
     .toggle-btn {
       position: absolute;
@@ -35,10 +30,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
     #plugin-search {
       width: 100%;
       margin-bottom: 15px;
@@ -48,177 +39,128 @@
       background-color: #1f1f1f;
       color: #f0f0f0;
     }
-    #main-content {
-      display: none;
-    }
-    #username-section {
-      text-align: center;
-      margin-top: 50px;
-    }
-    input[type="text"] {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 250px;
-    }
-    button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      background-color: #4fc3f7;
-      color: black;
-      cursor: pointer;
+    #plugin-list li {
+      margin: 6px 0;
     }
   </style>
 </head>
 <body>
   <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
-<div id="username-section">
-  <h2>🔐 Enter Your FreeMcServer Username</h2>
-  <input type="text" id="freemc-username" placeholder="Your FreeMcServer Username" />
-  <button onclick="submitUsername()">Continue</button>
-  <p style="margin-top: 1em;">
-    Don’t have a FreeMcServer account?
-    <a href="https://freemcserver.net" target="_blank" style="color: #4fc3f7; text-decoration: underline;">Create one</a> and come back!
-  </p>
-</div>
 
- 
+  <header>
+    <h1>🔥 My Minecraft Server</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#plugins">Plugins</a>
+      <a href="#status">Status</a>
+    </nav>
+  </header>
 
-  <div id="main-content">
-    <header>
-      <h1>🔥 My Minecraft Server</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#plugins">Plugins</a>
-        <a href="#status">Status</a>
-      </nav>
-    </header>
+  <main>
+    <section id="about">
+      <h2>🌍 Server Info</h2>
+      <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
+      <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
+      <p><strong>Server port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
+      <p>
+        <strong>Quick Join (Bedrock):</strong>
+        <a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112">
+          <button>📲 Connect with Bedrock</button>
+        </a>
+      </p>
+      <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
+      <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
+    </section>
 
-    <main>
-      <section id="about">
-        <h2>🌍 Server Info</h2>
-        <p><strong>Java IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
-        <p><strong>Bedrock IP:</strong> <span id="bedrock-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('bedrock-ip')">📋 Copy</button></p>
-        <p><strong>Server port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
-        <p>
-          <strong>Quick Join (Bedrock):</strong>
-          <a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112">
-            <button>📲 Connect with Bedrock</button>
-          </a>
-        </p>
-        <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
-        <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
-      </section>
+    <section id="status">
+      <h2>📊 Server Status</h2>
+      <div id="server-status">Checking status...</div>
+      <div id="player-count"></div>
+      <div id="offline-start" style="display: none;">
+        <h3>🛠 Server is Offline - Start It Below</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
+      </div>
+    </section>
 
-      <section id="status">
-        <h2>📊 Server Status</h2>
-        <div id="server-status">Checking status...</div>
-        <div id="player-count"></div>
-        <div id="offline-start" style="display: none;">
-          <h3>🛠 Server is Offline - Start It Below</h3>
-          <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Open FreeMcServer Page</button></a>
-        </div>
-      </section>
+    <section id="plugins">
+      <h2>🔌 Plugins</h2>
+      <input type="text" id="plugin-search" placeholder="Search plugins...">
+      <ul id="plugin-list">
+        <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
+        <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
+        <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
+        <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
+        <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
+        <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
+        <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
+        <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
+        <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
+        <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
+        <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
+        <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
+        <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
+      </ul>
+    </section>
 
-      <section id="plugins">
-        <h2>🔌 Plugins</h2>
-        <input type="text" id="plugin-search" placeholder="Search plugins...">
-        <ul id="plugin-list">
-          <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
-          <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
-          <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
-          <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
-          <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
-          <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
-          <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
-          <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
-          <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
-          <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
-          <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
-          <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
-          <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
-        </ul>
-      </section>
+    <section id="how-to-play">
+      <h2>🎮 How to Play</h2>
+      <ol>
+        <li>Open Minecraft (Java or Bedrock Edition). Bedrock users click on <strong>Connect with Bedrock</strong> button.</li>
+        <li>Click on <strong>Multiplayer → Add Server</strong>.</li>
+        <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
+        <li>Port for both Java and Bedrock: <strong>47112</strong></li>
+        <li>Click <strong>Join Server</strong> and start playing!</li>
+      </ol>
+    </section>
 
-      <section id="how-to-play">
-        <h2>🎮 How to Play</h2>
-        <ol>
-          <li>Open Minecraft (Java or Bedrock Edition).</li>
-          <li>Click on <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
-          <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
-          <li>For Bedrock: Use Port <strong>47112</strong></li>
-          <li>Click <strong>Join Server</strong> and start playing!</li>
-        </ol>
-      </section>
+    <section id="how-to-start">
+      <h2>🛠 How to Start Server if Offline</h2>
+      <ol>
+        <li>Click the <strong>Start</strong> button.</li>
+        <li>It will open the FreeMcServer public page.</li>
+        <li>Scroll down.</li>
+        <li>If it shows <strong>Stop</strong> and <strong>Expire in __ mins</strong>, it means the server is starting or already started.</li>
+        <li>If it shows <strong>Start</strong>, click on it.</li>
+        <li>If it shows <strong>Expired</strong>, click this <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">Renew Button</a>.</li>
+        <li>Then repeat from Step 4 above.</li>
+        <li>Wait around 5 minutes.</li>
+        <li>Follow the <strong>How to Play</strong> steps.</li>
+      </ol>
+    </section>
+  </main>
 
-      <section id="how-to-start">
-        <h2>🛠 How to Start Server if Offline</h2>
-        <ol>
-          <li>Click the <strong>"Open FreeMcServer Page"</strong> button in the Server Status section.</li>
-          <li>Login to your FreeMcServer account.</li>
-          <li>Click <strong>“Start”</strong> to power up the server.</li>
-          <li>Wait 10–30 seconds for the server to fully boot up.</li>
-          <li>Come back and refresh this page to check the status!</li>
-        </ol>
-      </section>
-    </main>
-
-    <footer>
-      <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
-    </footer>
-  </div>
+  <footer>
+    <p>&copy; 2025 My Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
+  </footer>
 
   <script>
-    const webhookURL = "https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ"; // <- Replace this with your Discord webhook URL
+    const serverIP = "mc1524209.fmcs.cloud";
+    async function fetchServerStatus() {
+      const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+      const data = await res.json();
+      const statusDiv = document.getElementById("server-status");
+      const playersDiv = document.getElementById("player-count");
+      const offlineStart = document.getElementById("offline-start");
 
-    function submitUsername() {
-      const username = document.getElementById("freemc-username").value.trim();
-      if (!username) {
-        alert("⚠️ Please enter your FreeMcServer username!");
+      if (!data || typeof data.online === "undefined") {
+        statusDiv.innerHTML = "⚠️ Error checking server status.";
+        playersDiv.innerHTML = "";
+        offlineStart.style.display = "block";
         return;
       }
 
-      // Send username to Discord
-      fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `📥 FreeMcServer Username submitted: **${username}**` })
-      });
-
-      document.getElementById("username-section").style.display = "none";
-      document.getElementById("main-content").style.display = "block";
+      if (!data.online) {
+        statusDiv.innerHTML = "🔴 Server is Offline - Start It Below";
+        playersDiv.innerHTML = "";
+        offlineStart.style.display = "block";
+      } else {
+        statusDiv.innerHTML = "🟢 Server is Online";
+        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+        offlineStart.style.display = "none";
+      }
     }
-
-    function fetchServerStatus() {
-      fetch("https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud")
-        .then(res => res.json())
-        .then(data => {
-          const statusDiv = document.getElementById("server-status");
-          const playersDiv = document.getElementById("player-count");
-          const offlineStart = document.getElementById("offline-start");
-
-          if (!data || typeof data.online === "undefined") {
-            statusDiv.innerHTML = "⚠️ Error checking server status.";
-            playersDiv.innerHTML = "";
-            offlineStart.style.display = "block";
-            return;
-          }
-
-          if (!data.online) {
-            statusDiv.innerHTML = "🔴 Server is Offline";
-            playersDiv.innerHTML = "";
-            offlineStart.style.display = "block";
-          } else {
-            statusDiv.innerHTML = "🟢 Server is Online";
-            playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-            offlineStart.style.display = "none";
-          }
-        });
-    }
-
-    setInterval(fetchServerStatus, 5000);
     fetchServerStatus();
+    setInterval(fetchServerStatus, 3000);
 
     function copyToClipboard(id) {
       const text = document.getElementById(id).innerText;
@@ -229,20 +171,23 @@
 
     function toggleTheme() {
       const body = document.body;
-      if (body.style.backgroundColor === "white") {
+      if (body.style.backgroundColor === "#ffffff") {
         body.style.backgroundColor = "#121212";
         body.style.color = "#f0f0f0";
       } else {
-        body.style.backgroundColor = "white";
-        body.style.color = "black";
+        body.style.backgroundColor = "#ffffff";
+        body.style.color = "#000000";
       }
     }
 
-    document.getElementById("plugin-search").addEventListener("input", function () {
+    const searchInput = document.getElementById("plugin-search");
+    const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+
+    searchInput.addEventListener("input", function () {
       const filter = this.value.toLowerCase();
-      const plugins = document.getElementById("plugin-list").getElementsByTagName("li");
-      for (let li of plugins) {
-        li.style.display = li.textContent.toLowerCase().includes(filter) ? "block" : "none";
+      for (let li of pluginList) {
+        const text = li.textContent.toLowerCase();
+        li.style.display = text.includes(filter) ? "list-item" : "none";
       }
     });
   </script>
