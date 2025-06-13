@@ -156,15 +156,37 @@
   </div>
 <script>
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
-const updateMode = false; // change to false when update is over
+const updateMode = true; // change to false when site is live
 
-const allowedUsername = "Ansh_2613"; // optional, not shown to users
+// 🔗 Your Discord Webhook URL (replace this!)
+const webhookURL = "https://discord.com/api/webhooks/your_webhook_url_here";
 
-const loginForm = document.getElementById("login-form");
+// DOM references
 const loginSection = document.getElementById("login-section");
 const mainContent = document.getElementById("main-content");
+const loginForm = document.getElementById("login-form");
 
-// Handle login form
+// 🚀 Function to send username to Discord
+function sendToDiscord(username) {
+  fetch(webhookURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: `🧑 New Login: **${username}** just accessed the Minecraft site.`
+    })
+  }).catch((err) => console.error("Webhook failed:", err));
+}
+
+// 🧾 Check local storage or ask for username
+let storedUser = localStorage.getItem("freemc_username");
+if (storedUser) {
+  handleLogin(storedUser);
+} else {
+  loginSection.style.display = "block";
+  mainContent.style.display = "none";
+}
+
+// 💡 Handle login form submit
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const username = document.getElementById("username").value.trim();
@@ -174,7 +196,12 @@ loginForm.addEventListener("submit", function (e) {
   }
 
   localStorage.setItem("freemc_username", username);
+  sendToDiscord(username);
+  handleLogin(username);
+});
 
+// 🔐 Show site or lock page based on update mode
+function handleLogin(username) {
   if (updateMode) {
     document.body.innerHTML = `
       <div style="text-align:center; padding:60px;">
@@ -186,18 +213,9 @@ loginForm.addEventListener("submit", function (e) {
 
   loginSection.style.display = "none";
   mainContent.style.display = "block";
-});
+}
 
-// Show content if already logged in and not updating
-window.addEventListener("DOMContentLoaded", () => {
-  const storedUsername = localStorage.getItem("freemc_username");
-  if (storedUsername && !updateMode) {
-    loginSection.style.display = "none";
-    mainContent.style.display = "block";
-  }
-});
-
-// Server Status Script
+// 🌐 Server Status Checker
 const serverIP = "mc1524209.fmcs.cloud";
 async function fetchServerStatus() {
   const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
@@ -226,7 +244,7 @@ async function fetchServerStatus() {
 fetchServerStatus();
 setInterval(fetchServerStatus, 3000);
 
-// Copy-to-Clipboard
+// 📋 Copy to clipboard
 function copyToClipboard(id) {
   const text = document.getElementById(id).innerText;
   navigator.clipboard.writeText(text).then(() => {
@@ -234,7 +252,7 @@ function copyToClipboard(id) {
   });
 }
 
-// Theme Toggle
+// 🌗 Toggle Theme
 function toggleTheme() {
   const body = document.body;
   if (body.style.backgroundColor === "#ffffff") {
@@ -246,10 +264,9 @@ function toggleTheme() {
   }
 }
 
-// Plugin Search Filter
+// 🔍 Plugin search filter
 const searchInput = document.getElementById("plugin-search");
 const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-
 searchInput.addEventListener("input", function () {
   const filter = this.value.toLowerCase();
   for (let li of pluginList) {
@@ -258,7 +275,6 @@ searchInput.addEventListener("input", function () {
   }
 });
 </script>
-
 
 </body>
 </html>
