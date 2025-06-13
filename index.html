@@ -187,14 +187,15 @@ fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN
 
   localStorage.setItem("freemc_username", username);
 
-  if (updateMode) {
-    document.body.innerHTML = `
-      <div style="text-align:center; padding:60px;">
-        <h2>🚧 Website is Currently Under Update</h2>
-        <p>Please come back later.</p>
-      </div>`;
-    return;
-  }
+ if (updateMode && username !== allowedUsername) {
+  document.body.innerHTML = `
+    <div style="text-align:center; padding:60px;">
+      <h2>🚧 Website is Currently Under Update</h2>
+      <p>Please come back later.</p>
+    </div>`;
+  return;
+}
+
 
   loginSection.style.display = "none";
   mainContent.style.display = "block";
