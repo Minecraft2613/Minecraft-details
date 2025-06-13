@@ -156,7 +156,7 @@
   </div>
 <script>
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
-const updateMode = true; // change to false when update is over
+const updateMode = false; // change to false when update is over
 
 const allowedUsername = "Ansh_2613"; // optional, not shown to users
 
@@ -173,7 +173,7 @@ loginForm.addEventListener("submit", function (e) {
     return;
   }
 // Send username to Discord webhook
-fetch("YOUR_DISCORD_WEBHOOK_URL_HERE", {
+fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
