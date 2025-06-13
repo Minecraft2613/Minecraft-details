@@ -3,41 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Minecraft Server</title>
+  <title>Minecraft Server</title>
   <style>
-    body { background: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
-    h1, h2 { text-align: center; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #121212;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    header {
+      background: #1e1e1e;
+      padding: 20px;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      color: #00ffe1;
+      font-size: 2.4rem;
+      animation: glow 2s infinite ease-in-out;
+    }
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 10px #00ffe1; }
+      50% { text-shadow: 0 0 20px #00ffe1, 0 0 30px #00ffe1; }
+    }
+
+    section {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease;
+    }
+
+    section:hover { transform: scale(1.01); }
+
+    h2 {
+      color: #00ffe1;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      background: #292929;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    li:hover { background: #383838; }
+
+    button {
+      background-color: #00ffe1;
+      color: #000;
+      padding: 8px 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button:hover { background-color: #00ccb3; }
+
     .green { color: #0f0; }
     .red { color: #f55; }
-    .section { background: #222; padding: 20px; margin: 20px auto; max-width: 640px; border-radius: 8px; }
-    button { background: #0ff; color: #000; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    .status-box { font-size: 1.2rem; margin-top: 10px; }
     .hidden { display: none; }
+    footer { text-align: center; padding: 15px; font-size: 0.9em; color: #999; }
   </style>
 </head>
 <body>
 
-  <h1>🔥 My Minecraft Server</h1>
+  <header>
+    <h1>🌐 My Minecraft Server</h1>
+  </header>
 
-  <div class="section" id="statusSection">
+  <section id="status-section">
     <h2>📊 Server Status</h2>
-    <div id="statusDiv">Checking status...</div>
-    <div id="playersDiv"></div>
-    <div id="startDiv" class="hidden">
-      <button onclick="window.open('https://freemcserver.net/server/1524209','_blank')">🔄 Start Server</button>
+    <div id="status-box" class="status-box">Checking status...</div>
+    <div id="players-box"></div>
+    <div id="start-button" class="hidden">
+      <button onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">🔄 Start Server</button>
     </div>
-    <div id="renewDiv" class="hidden">
-      <button onclick="window.open('https://freemcserver.net/server/1524209','_blank')">♻️ Renew Server</button>
+    <div id="renew-button" class="hidden">
+      <button onclick="window.open('https://freemcserver.net/server/1524209', '_blank')">♻️ Renew Server</button>
     </div>
-  </div>
+    <div>
+      <button onclick="location.href='minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:19132'">🎮 Connect (Bedrock)</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>📝 Server Description</h2>
+    <p>This is a FreeMcServer-powered Minecraft Java and Bedrock server running 24/7. Play survival, use shops, and enjoy cool plugins!</p>
+  </section>
+
+  <section>
+    <h2>🔌 Plugins Installed</h2>
+    <ul>
+      <li>EssentialsX</li>
+      <li>LuckPerms</li>
+      <li>GSit</li>
+      <li>PicoJobs</li>
+      <li>EconomyShopGUI</li>
+      <li>Vault</li>
+      <li>SkinRestorer</li>
+      <li>Geyser-Spigot</li>
+      <li>ViaVersion</li>
+    </ul>
+  </section>
+
+  <footer>Made with ❤️ using GitHub Pages · FreeMcServer.net Integration</footer>
 
   <script>
     const serverIP = "mc1524209.fmcs.cloud";
 
-    async function fetchStatus() {
-      const statusDiv = document.getElementById("statusDiv");
-      const playersDiv = document.getElementById("playersDiv");
-      const startDiv = document.getElementById("startDiv");
-      const renewDiv = document.getElementById("renewDiv");
+    async function fetchServerStatus() {
+      const statusBox = document.getElementById("status-box");
+      const playersBox = document.getElementById("players-box");
+      const startBtn = document.getElementById("start-button");
+      const renewBtn = document.getElementById("renew-button");
 
       try {
         const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
@@ -50,37 +149,37 @@
 
         if (pingOK) {
           // ONLINE
-          statusDiv.innerHTML = '<span class="green">🟢 Server is Online</span>';
-          playersDiv.innerText = `👥 ${data.players.online}/${data.players.max} players`;
-          startDiv.classList.add("hidden");
-          renewDiv.classList.add("hidden");
+          statusBox.innerHTML = '<span class="green">🟢 Server is Online</span>';
+          playersBox.innerText = `👥 Players Online: ${data.players.online}/${data.players.max}`;
+          startBtn.classList.add("hidden");
+          renewBtn.classList.add("hidden");
 
         } else if (isExpired) {
           // EXPIRED
-          statusDiv.innerHTML = '<span class="red">❌ Server is expired. Please renew it.</span>';
-          playersDiv.innerText = "";
-          startDiv.classList.add("hidden");
-          renewDiv.classList.remove("hidden");
+          statusBox.innerHTML = '<span class="red">❌ Server is expired. Please renew it.</span>';
+          playersBox.innerText = "";
+          startBtn.classList.add("hidden");
+          renewBtn.classList.remove("hidden");
 
         } else {
-          // OFFLINE (ping OK but server offline)
-          statusDiv.innerHTML = '<span class="red">🔴 Server is Offline</span>';
-          playersDiv.innerText = "";
-          startDiv.classList.remove("hidden");
-          renewDiv.classList.add("hidden");
+          // OFFLINE
+          statusBox.innerHTML = '<span class="red">🔴 Server is Offline</span>';
+          playersBox.innerText = "";
+          startBtn.classList.remove("hidden");
+          renewBtn.classList.add("hidden");
         }
 
-      } catch (err) {
-        statusDiv.innerHTML = '⚠️ Error fetching status.';
-        playersDiv.innerText = "";
-        startDiv.classList.add("hidden");
-        renewDiv.classList.add("hidden");
-        console.error(err);
+      } catch (error) {
+        statusBox.innerHTML = '⚠️ Error fetching server status.';
+        playersBox.innerText = "";
+        startBtn.classList.add("hidden");
+        renewBtn.classList.add("hidden");
+        console.error(error);
       }
     }
 
-    fetchStatus();
-    setInterval(fetchStatus, 5000);
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 60000); // every 60 seconds
   </script>
 
 </body>
