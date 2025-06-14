@@ -288,6 +288,36 @@ window.addEventListener("DOMContentLoaded", () => {
 
   plugins.forEach(plugin => pluginList.appendChild(plugin));
 });
+  document.getElementById("contact-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("contact-name").value.trim();
+  const message = document.getElementById("contact-message").value.trim();
+  const status = document.getElementById("contact-status");
+
+  if (!name || !message) {
+    status.textContent = "❗ Please fill in both fields.";
+    return;
+  }
+
+  fetch("YOUR_DISCORD_WEBHOOK_URL_HERE", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: `📩 **New Contact Form Message**\n👤 Name: \`${name}\`\n📝 Message: ${message}\n⏰ Time: ${new Date().toLocaleString()}`
+    })
+  })
+    .then(() => {
+      status.style.color = "#42f56c";
+      status.textContent = "✅ Message sent successfully!";
+      document.getElementById("contact-form").reset();
+    })
+    .catch(() => {
+      status.style.color = "red";
+      status.textContent = "❌ Failed to send message. Please try again.";
+    });
+});
+
 
 </script>
 
