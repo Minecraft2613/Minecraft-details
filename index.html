@@ -300,6 +300,43 @@ window.addEventListener("DOMContentLoaded", () => {
 
   plugins.forEach(plugin => pluginList.appendChild(plugin));
 });
+<script>
+// CONTACT FORM: Send message to Discord webhook
+document.getElementById("contact-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("contact-name").value.trim();
+  const message = document.getElementById("contact-message").value.trim();
+  const status = document.getElementById("contact-status");
+
+  if (!name || !message) {
+    status.innerText = "⚠️ Please fill in all fields.";
+    return;
+  }
+
+  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      content: `📨 New contact message from **${name}**:\n\n${message}`
+    })
+  })
+  .then(res => {
+    if (res.ok) {
+      status.innerText = "✅ Message sent successfully!";
+      document.getElementById("contact-form").reset();
+    } else {
+      status.innerText = "❌ Failed to send. Try again later.";
+    }
+  })
+  .catch(error => {
+    console.error("Contact form error:", error);
+    status.innerText = "❌ Error sending message.";
+  });
+});
+</script>
 
 
 </script>
