@@ -1,186 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Minecraft Server</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Server</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #f0f0f0;
-      padding: 20px;
+    html {
+      scroll-behavior: smooth;
     }
-    .hidden { display: none; }
-    .center { text-align: center; }
-    .blink-red {
-      animation: blink-red 1s step-start 0s infinite;
-      color: red;
+    @media (max-width: 600px) {
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
     }
-    @keyframes blink-red {
-      50% { opacity: 0; }
+    .plugin-link {
+      float: right;
+      font-size: 0.9em;
     }
-    #server-status { font-weight: bold; }
-    input, textarea {
-      width: 100%; padding: 10px; margin-top: 10px;
-      background: #1f1f1f; color: #fff; border: 1px solid #444;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #333;
-      color: white;
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 12px;
+      background-color: #444;
+      color: #fff;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 10px;
-      border-radius: 5px;
+    }
+    #plugin-search {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background-color: #1f1f1f;
+      color: #f0f0f0;
+    }
+    #login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 300px;
+      margin: 50px auto;
+    }
+    #login-section {
+      text-align: center;
+    }
+    #main-content {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
 
-<div id="login-section">
-  <h2>Enter Username to Continue</h2>
-  <input type="text" id="usernameInput" placeholder="Enter your FreeMcServer Username" />
-  <label>
-    <input type="checkbox" id="agreeRules" /> I agree to the rules
+  <section id="login-section">
+    <h2>🔐 Login Required</h2>
+    <p>Enter your FreeMcServer username to access the site:</p>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Enter username" required>
+      <div style="margin-top: 20px;">
+  <label style="font-size: 0.95em;">
+    <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
+    I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
   </label>
-  <p id="usernameWarning" class="blink-red hidden">⚠ Username required</p>
-  <p id="termsWarning" class="blink-red hidden">⚠ Please agree to the rules</p>
-  <button onclick="submitLogin()">Continue</button>
 </div>
 
-<div id="main-content" class="hidden">
-  <h1>Welcome to the Server Panel</h1>
-  <p>Username: <strong id="storedUsername"></strong></p>
-  <p>Server Status: <span id="server-status">Checking...</span></p>
-  <p id="motd-display"></p>
-  <div id="expire-section" class="hidden">
-    <p class="blink-red">🚫 Server Expired!</p>
-    <a href="https://freemcserver.net/server/1524209/start" target="_blank">
-      <button>Renew Server</button>
-    </a>
-  </div>
-
-  <h2>Plugins</h2>
-  <input type="text" id="pluginSearch" placeholder="Search plugins..." oninput="filterPlugins()"/>
-  <ul id="pluginList"></ul>
-
-  <h2>Contact</h2>
-  <form id="contact-form">
-    <input type="text" id="contact-name" placeholder="Your name" required />
-    <textarea id="contact-message" placeholder="Your message" required></textarea>
-    <button type="submit">Send</button>
-  </form>
-
-  <button onclick="toggleTheme()">Toggle Theme</button>
-</div>
+<button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
 
 <script>
-  const updateMode = false;
-  const adminName = 'Ansh_2613';
-  const webhookURL = "YOUR_DISCORD_WEBHOOK";
-
-  function submitLogin() {
-    const username = document.getElementById('usernameInput').value.trim();
-    const agreed = document.getElementById('agreeRules').checked;
-
-    document.getElementById('usernameWarning').classList.toggle('hidden', username !== "");
-    document.getElementById('termsWarning').classList.toggle('hidden', agreed);
-
-    if (!username || !agreed) return;
-
-    localStorage.setItem('username', username);
-    sendToWebhook(`🟢 New login: **${username}**`);
-    verifyAccess(username);
+  function toggleLogin() {
+    const checkbox = document.getElementById('agreeCheck');
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.disabled = !checkbox.checked;
   }
-
-  function verifyAccess(username) {
-    if (updateMode && username !== adminName) {
-      alert("🚧 Website is under maintenance.");
-      return;
-    }
-    document.getElementById('login-section').classList.add('hidden');
-    document.getElementById('main-content').classList.remove('hidden');
-    document.getElementById('storedUsername').textContent = username;
-    checkServerStatus();
-    loadPlugins();
-  }
-
-  function checkServerStatus() {
-    fetch("https://api.mcstatus.io/v2/status/java/mc1524209.fmcs.cloud")
-      .then(res => res.json())
-      .then(data => {
-        const statusEl = document.getElementById("server-status");
-        const motd = data.motd?.clean?.[0] || "";
-        document.getElementById("motd-display").textContent = `MOTD: ${motd}`;
-
-        if (data.online) {
-          statusEl.textContent = "Online ✅";
-          statusEl.style.color = "lightgreen";
-        } else if (motd.toLowerCase().includes("expire") || motd.toLowerCase().includes("renew")) {
-          statusEl.textContent = "Expired ❌";
-          statusEl.style.color = "red";
-          document.getElementById("expire-section").classList.remove("hidden");
-        } else {
-          statusEl.textContent = "Offline ❌";
-          statusEl.style.color = "orange";
-        }
-      })
-      .catch(() => {
-        document.getElementById("server-status").textContent = "Error checking status";
-      });
-  }
-
-  function sendToWebhook(message) {
-    fetch(webhookURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: message })
-    });
-  }
-
-  document.getElementById("contact-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const name = document.getElementById("contact-name").value;
-    const message = document.getElementById("contact-message").value;
-    sendToWebhook(`📩 **Contact Form**\nName: ${name}\nMessage: ${message}`);
-    alert("Message sent!");
-    this.reset();
-  });
-
-  function loadPlugins() {
-    const plugins = [
-      "SkinRestorer", "ViaVersion", "LuckPerms", "Vault", "CoreProtect",
-      "OnlineTime", "PicoJobs", "GSit", "EconomyShopGUI", "BeastLib",
-      "Geyser-Spigot", "ViaBackwards", "EssentialsX"
-    ];
-    const list = document.getElementById("pluginList");
-    list.innerHTML = "";
-    plugins.forEach(p => {
-      const li = document.createElement("li");
-      li.textContent = p;
-      list.appendChild(li);
-    });
-  }
-
-  function filterPlugins() {
-    const search = document.getElementById("pluginSearch").value.toLowerCase();
-    const items = document.querySelectorAll("#pluginList li");
-    items.forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(search) ? "" : "none";
-    });
-  }
-
-  function toggleTheme() {
-    const dark = document.body.style.backgroundColor === "rgb(18, 18, 18)";
-    document.body.style.backgroundColor = dark ? "#ffffff" : "#121212";
-    document.body.style.color = dark ? "#000000" : "#f0f0f0";
-  }
-
-  window.onload = () => {
-    const stored = localStorage.getItem("username");
-    if (stored) verifyAccess(stored);
-  };
 </script>
+    </form> 
+    <p>Don't have a FreeMcServer account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a> and return to enter your username.</p>
+
+  </section>
+
+  <div id="main-content">
+    <header>
+      <h1>🔥 Minecraft Server</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#plugins">Plugins</a>
+        <a href="#status">Status</a>
+        <a href="#how-to-play">How to Join</a>
+        <a href="#how-to-start">How to Start Server</a>
+        <a href="#contact-">Contact us</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="about">
+        <h2>🌍 Server Info</h2>
+        <p><strong>Java & Bedrock IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
+        <p><strong>Port:</strong> <span id="server-port">47112</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
+        <p>
+          <strong>Quick Join (Bedrock):</strong>
+          <a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112">
+            <button>📲 Connect with Bedrock</button>
+          </a>
+        </p>
+        <p><strong>Version:</strong> Java 1.20.1 / Bedrock (via Geyser)</p>
+        <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
+      </section>
+
+      <section id="status">
+        <h2>📊 Server Status</h2>
+        <div id="server-status">Checking status...</div>
+        <div id="player-count"></div>
+        <div id="offline-start" style="display: none;">
+          <h3>🛠 Server is Offline</h3>
+          <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Start Server</button></a>
+        </div>
+      </section>
+
+      <section id="plugins">
+        <h2>🔌 Plugins</h2>
+        <input type="text" id="plugin-search" placeholder="Search plugins...">
+        <ul id="plugin-list">
+          <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
+          <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
+          <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
+          <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
+          <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
+          <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
+          <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
+          <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
+          <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
+          <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
+          <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
+          <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
+          <li>EssentialsX <a class="plugin-link" href="https://modrinth.com/plugin/essentialsx" target="_blank">Details ↗</a></li>
+          <li>Floodgate<a class="plugin-link" href="https://hangar.papermc.io/GeyserMC/Floodgate" target="_blank">Details ↗</a></li>
+          <li>HalfPlayerSleep<a class="plugin-link" href="https://www.spigotmc.org/resources/halfserversleep.85606/" target="_blank">Details ↗</a></li>
+        </ul>
+      </section>
+
+      <section id="how-to-play">
+        <h2>🎮 How to Join The Server</h2>
+        <ol>
+          <li>Open Minecraft (Bedrock users click on the Connect with Bedrock button above).</li>
+          <li>Click on <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
+          <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
+          <li>Use Port: <strong>47112</strong> (Java & Bedrock)</li>
+          <li>Click <strong>Join Server</strong> and enjoy!</li>
+        </ol>
+      </section>
+
+      <section id="how-to-start">
+        <h2>🛠 How to Start Server if Offline  Or Expired</h2>
+        <ol>
+          <li>Click the <strong>"Start Server"</strong> button above.</li>
+          <li>It will open FreeMcServer's public page.</li>
+          <li>Scroll down the page.</li>
+          <li>If it shows <strong>Stop and Expires in X mins</strong>, the server is already starting or online.</li>
+          <li>If it shows <strong>Start</strong>, click it.</li>
+          <li>If it shows <strong>Expire</strong>, click <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">Renew Button</a>.</li>
+          <li>Wait around 5 minutes.</li>
+          <li>Then follow the steps in <strong>How to Play</strong>.</li>
+        </ol>
+      </section>
+   <section id="contact">
+  <h2>📬 Contact Us</h2>
+  <p>If you have questions, feedback, or issues, let us know below:</p>
+  <form id="contact-form">
+    <input type="text" id="contact-name" placeholder="Your Name (Optional)"><br>
+    <input type="text" id="contact-discord" placeholder="Your Discord ID (e.g. user#1234)" required><br>
+    <input type="text" id="contact-minecraft" placeholder="Your Minecraft Username" required><br>
+    <textarea id="contact-message" placeholder="Your message..." rows="5" required></textarea><br>
+    <button type="submit">Send Message</button>
+  </form>
+  <p id="contact-status"></p>
+</section>
+
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
+    </footer>
+  </div>
+<script>
+// ✅ TOGGLE THIS TO TRUE WHEN UPDATING
+const updateMode = false; // change to false when update is over
+
+const allowedUsername = "Ansh_2613"; // optional, not shown to users
+
+const loginForm = document.getElementById("login-form");
+const loginSection = document.getElementById("login-section");
+const mainContent = document.getElementById("main-content");
+
+// Handle login form
+loginForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const agreed = document.getElementById("agreeCheck").checked;
+
+  const usernameWarning = document.getElementById("usernameWarning");
+  const termsWarning = document.getElementById("termsWarning");
+
+  let valid = true;
+
+  if (!username) {
+    usernameWarning.style.display = "block";
+    valid = false;
+  } else {
+    usernameWarning.style.display = "none";
+  }
+
+  if (!agreed) {
+    termsWarning.style.display = "block";
+    valid = false;
+  } else {
+    termsWarning.style.display = "none";
+  }
+
+  if (!valid) return;
+
+  // Send username to Discord webhook
+  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+    })
+  }).catch(error => console.error("Webhook failed:", error));
+
+  localStorage.setItem("freemc_username", username);
+
+  if (updateMode && username !== allowedUsername) {
+    document.body.innerHTML = `
+      <div style="text-align:center; padding:60px;">
+        <h2>🚧 Website is Currently Under Update</h2>
+        <p>Please come back later.</p>
+      </div>`;
+    return;
+  }
+
+  loginSection.style.display = "none";
+  mainContent.style.display = "block";
+  sessionStorage.setItem("loggedIn", "true");
+});
+
+// Show content if already logged in and not updating
+window.addEventListener("DOMContentLoaded", () => {
+  const storedUsername = localStorage.getItem("freemc_username");
+  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
+
+  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
+    loginSection.style.display = "none";
+    mainContent.style.display = "block";
+  }
+
+  // Sort plugin list alphabetically
+  const pluginList = document.getElementById("plugin-list");
+  if (pluginList) {
+    const plugins = Array.from(pluginList.getElementsByTagName("li"));
+    plugins.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
+    plugins.forEach(plugin => pluginList.appendChild(plugin));
+  }
+});
+
+// Server Status Script
+const serverIP = "mc1524209.fmcs.cloud";
+const apiUrl = `https://freemcserver.p.rapidapi.com/v4/server/${serverId}/stats`;
+
+async function fetchServerStatus() {
+  try {
+    const res = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "freemcserver.p.rapidapi.com",
+        "x-rapidapi-key": "32f36ae657msh6f92c4d7d496d05p1b13d9jsnee25ed109f1f"
+      }
+    });
+
+    const data = await res.json();
+    const statusDiv = document.getElementById("server-status");
+    const playersDiv = document.getElementById("player-count");
+    const offlineStart = document.getElementById("offline-start");
+
+    if (data.status === "expired") {
+      statusDiv.innerHTML = "⚠️ Server has Expired";
+      offlineStart.innerHTML = `<h3>🛑 Server Expired</h3>
+        <a href="https://panel.freemcserver.net/server/${serverId}/renew-basic" target="_blank">
+          <button>🔁 Renew Server</button>
+        </a>`;
+      offlineStart.style.display = "block";
+    } else if (!data.online) {
+      statusDiv.innerHTML = "🔴 Server is Offline";
+      playersDiv.innerHTML = "";
+      offlineStart.style.display = "block";
+    } else {
+      statusDiv.innerHTML = "🟢 Server is Online";
+      playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+      offlineStart.style.display = "none";
+    }
+  } catch (error) {
+    console.error("API error:", error);
+    document.getElementById("server-status").innerHTML = "⚠️ Failed to fetch server info.";
+  }
+}
+
+fetchServerStatus();
+setInterval(fetchServerStatus, 3000);
+
+// Copy-to-Clipboard
+function copyToClipboard(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Copied: " + text);
+  });
+}
+
+// Theme Toggle
+function toggleTheme() {
+  const body = document.body;
+  if (body.style.backgroundColor === "#ffffff") {
+    body.style.backgroundColor = "#121212";
+    body.style.color = "#f0f0f0";
+  } else {
+    body.style.backgroundColor = "#ffffff";
+    body.style.color = "#000000";
+  }
+}
+
+// Plugin Search Filter
+const searchInput = document.getElementById("plugin-search");
+if (searchInput) {
+  const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+  searchInput.addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    for (let li of pluginList) {
+      const text = li.textContent.toLowerCase();
+      li.style.display = text.includes(filter) ? "flex" : "none";
+    }
+  });
+}
+
+// Contact Form
+document.getElementById("contact-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("contact-name").value.trim();
+  const discord = document.getElementById("contact-discord").value.trim();
+  const minecraft = document.getElementById("contact-minecraft").value.trim();
+  const message = document.getElementById("contact-message").value.trim();
+  const status = document.getElementById("contact-status");
+
+  if (!discord || !minecraft || !message) {
+    status.innerText = "⚠️ Please fill in all required fields.";
+    return;
+  }
+
+  const fullMessage = `📨 **New Contact Form Submission**:
+👤 Name: **${name || "Not Provided"}**
+🎮 Minecraft Username: **${minecraft}**
+💬 Discord ID: **${discord}**
+
+📝 Message:
+${message}`;
+
+  fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: fullMessage })
+  })
+    .then(res => {
+      if (res.ok) {
+        status.innerText = "✅ Message sent successfully!";
+        document.getElementById("contact-form").reset();
+      } else {
+        status.innerText = "❌ Failed to send. Try again later.";
+      }
+    })
+    .catch(error => {
+      console.error("Contact form error:", error);
+      status.innerText = "❌ Error sending message.";
+    });
+});
+
+function toggleLogin() {
+  const checkbox = document.getElementById('agreeCheck');
+  const loginBtn = document.getElementById('loginBtn');
+  const label = checkbox.parentElement;
+
+  loginBtn.disabled = !checkbox.checked;
+
+  if (!checkbox.checked) {
+    label.classList.add('blink-red');
+  } else {
+    label.classList.remove('blink-red');
+  }
+}
+</script>
+
 </body>
 </html>
