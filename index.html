@@ -300,7 +300,7 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch("YOUR_DISCORD_WEBHOOK_URL_HERE", {
+  fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -320,6 +320,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 </script>
+<section id="contact">
+  <h2>📬 Contact Us</h2>
+  <p>If you have questions, feedback, or issues, let us know below:</p>
+  <form id="contact-form">
+    <input type="text" id="contact-name" placeholder="Your Name or Username" required><br>
+    <textarea id="contact-message" placeholder="Your message..." rows="5" required></textarea><br>
+    <button type="submit">Send Message</button>
+  </form>
+  <p id="contact-status"></p>
+</section>
 
 
 </body>
