@@ -47,6 +47,19 @@
     #main-content {
       display: none;
     }
+  /* ... your existing styles ... */
+
+  @keyframes glowBlink {
+    0%, 100% { box-shadow: 0 0 0px red; }
+    25%, 75% { box-shadow: 0 0 8px rgba(255, 0, 0, 0.5); }
+    50% { box-shadow: 0 0 14px rgba(255, 0, 0, 0.6); }
+  }
+
+  #rule-wrapper.blink-warning {
+    animation: glowBlink 1.5s ease-in-out;
+    border-radius: 6px;
+    padding: 4px;
+  }
   </style>
 </head>
 <body>
@@ -183,28 +196,28 @@
     const loginSection = document.getElementById("login-section");
     const mainContent = document.getElementById("main-content");
 
-    loginForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const username = document.getElementById("username").value.trim();
-      if (!username) return alert("Please enter a username.");
+  loginForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  if (!username) return alert("Please enter a username.");
 
-      fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `🧑 New login: **${username}** just accessed the Minecraft server site.` })
-      });
+  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: `🧑 New login: **${username}** just accessed the Minecraft server site.` })
+  });
 
-      localStorage.setItem("freemc_username", username);
-      sessionStorage.setItem("loggedIn", "true");
+  localStorage.setItem("freemc_username", username);
+  sessionStorage.setItem("loggedIn", "true");
 
-      if (updateMode && username !== allowedUsername) {
-        document.body.innerHTML = `<div style="text-align:center; padding:60px;"><h2>🚧 Website is Currently Under Update</h2><p>Please come back later.</p></div>`;
-        return;
-      }
+  if (updateMode && username !== allowedUsername) {
+    document.body.innerHTML = `<div style="text-align:center; padding:60px;"><h2>🚧 Website is Currently Under Update</h2><p>Please come back later.</p></div>`;
+    return;
+  }
 
-      loginSection.style.display = "none";
-      mainContent.style.display = "block";
-    });
+  loginSection.style.display = "none";
+  mainContent.style.display = "block";
+});
 
     window.addEventListener("DOMContentLoaded", () => {
       const storedUsername = localStorage.getItem("freemc_username");
