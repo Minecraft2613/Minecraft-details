@@ -101,23 +101,7 @@
     </header>
   </div>
 
-  <script>
-    const loginForm = document.getElementById('login-form');
-    const loginBtn = document.getElementById('loginBtn');
-    const agreeCheck = document.getElementById('agreeCheck');
-    const rulesLabel = document.getElementById('rulesLabel');
 
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (!agreeCheck.checked) {
-        rulesLabel.classList.add('glow-warning');
-      } else {
-        rulesLabel.classList.remove('glow-warning');
-        document.getElementById('main-content').style.display = 'block';
-        document.getElementById('login-section').style.display = 'none';
-      }
-    });
-  </script>
     <main>
       <section id="about">
         <h2>🌍 Server Info</h2>
