@@ -275,6 +275,20 @@ searchInput.addEventListener("input", function () {
     li.style.display = text.includes(filter) ? "flex" : "none";
   }
 });
+  // Sort plugin list alphabetically on page load
+window.addEventListener("DOMContentLoaded", () => {
+  const pluginList = document.getElementById("plugin-list");
+  const plugins = Array.from(pluginList.getElementsByTagName("li"));
+
+  plugins.sort((a, b) => {
+    const nameA = a.textContent.trim().toLowerCase();
+    const nameB = b.textContent.trim().toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  plugins.forEach(plugin => pluginList.appendChild(plugin));
+});
+
 </script>
 
 
