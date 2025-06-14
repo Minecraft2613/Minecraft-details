@@ -52,15 +52,6 @@
     #main-content {
       display: none;
     }
-    .blink-red {
-  animation: blinkRed 0.5s ease-in-out 3;
-}
-
-@keyframes blinkRed {
-  0%, 100% { color: red; text-shadow: 0 0 5px red; }
-  50% { color: #ff4d4d; text-shadow: 0 0 10px #ff0000; }
-}
-
   </style>
 </head>
 <body>
@@ -77,10 +68,16 @@
     I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
   </label>
 </div>
-<p id="usernameWarning" style="display:none; color: red;">⚠️ Please enter your username.</p>
-<p id="termsWarning" style="display:none; color: red;">⚠️ You must agree to the rules.</p>
 
 <button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
+
+<script>
+  function toggleLogin() {
+    const checkbox = document.getElementById('agreeCheck');
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.disabled = !checkbox.checked;
+  }
+</script>
     </form> 
     <p>Don't have a FreeMcServer account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a> and return to enter your username.</p>
 
@@ -210,25 +207,21 @@ loginForm.addEventListener("submit", function (e) {
   const termsWarning = document.getElementById("termsWarning");
 
   let valid = true;
-if (!username) {
-  usernameWarning.style.display = "block";
-  usernameWarning.classList.add("blink-red");
-  valid = false;
-} else {
-  usernameWarning.style.display = "none";
-  usernameWarning.classList.remove("blink-red");
-}
 
-if (!agreed) {
-  termsWarning.style.display = "block";
-  termsWarning.classList.add("blink-red");
-  valid = false;
-} else {
-  termsWarning.style.display = "none";
-  termsWarning.classList.remove("blink-red");
-}
+  if (!username) {
+    usernameWarning.style.display = "block";
+    valid = false;
+  } else {
+    usernameWarning.style.display = "none";
+  }
 
-  
+  if (!agreed) {
+    termsWarning.style.display = "block";
+    valid = false;
+  } else {
+    termsWarning.style.display = "none";
+  }
+
   if (!valid) return;
 
   // Send username to Discord webhook
