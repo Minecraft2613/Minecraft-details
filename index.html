@@ -7,26 +7,38 @@
   <link rel="stylesheet" href="style.css">
   <style>
      body {
-      font-family: sans-serif;
-      background: #111;
+      background: #0e0e0e;
       color: #fff;
+      font-family: sans-serif;
       text-align: center;
-      padding-top: 100px;
+      padding-top: 50px;
     }
 
-    #loginBtn {
-      padding: 12px 24px;
-      font-size: 18px;
+    #loginSection, #serverSection {
+      margin-top: 30px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #444;
+      color: #fff;
       border: none;
       border-radius: 8px;
-      background-color: #444;
-      color: white;
+      margin-top: 10px;
       cursor: pointer;
     }
 
-    #loginBtn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    #serverSection {
+      display: none;
+      margin-top: 40px;
     }
 
     @keyframes red-blink {
