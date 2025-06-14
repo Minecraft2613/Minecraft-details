@@ -60,6 +60,7 @@
 .blink-warning {
   animation: red-blink 0.3s ease-in-out 5;
 }
+
   </style>
 </head>
 <body>
@@ -203,47 +204,45 @@ const allowedUsername = "Ansh_2613"; // optional, not shown to users
 const loginForm = document.getElementById("login-form");
 const loginSection = document.getElementById("login-section");
 const mainContent = document.getElementById("main-content");
-
+<script>
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
+
   const usernameInput = document.getElementById("username");
-  const checkbox = document.getElementById('agreeCheck');
-  const label = checkbox.parentElement;
+  const checkbox = document.getElementById("agreeCheck");
+  const checkboxLabel = checkbox.parentElement;
 
   const username = usernameInput.value.trim();
+  let showUsernameWarning = false;
+  let showCheckboxWarning = false;
 
-  let hasError = false;
-
+  // Check for errors
   if (!username) {
+    showUsernameWarning = true;
     usernameInput.classList.add("blink-warning");
-    hasError = true;
   }
-
   if (!checkbox.checked) {
-    label.classList.add("blink-warning");
-    hasError = true;
+    showCheckboxWarning = true;
+    checkboxLabel.classList.add("blink-warning");
   }
 
-  if (hasError) {
+  // Remove warnings after 1.5 sec
+  if (showUsernameWarning || showCheckboxWarning) {
     setTimeout(() => {
       usernameInput.classList.remove("blink-warning");
-      label.classList.remove("blink-warning");
+      checkboxLabel.classList.remove("blink-warning");
     }, 1500);
     return;
   }
 
-  // ✅ Send username to Discord webhook
+  // No warnings: proceed
   fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
     })
-  }).catch(error => {
-    console.error("Webhook failed:", error);
-  });
+  }).catch(error => console.error("Webhook failed:", error));
 
   localStorage.setItem("freemc_username", username);
 
@@ -259,7 +258,7 @@ loginForm.addEventListener("submit", function (e) {
   loginSection.style.display = "none";
   mainContent.style.display = "block";
 });
-
+</script>
 
 // Server Status Script
 const serverIP = "mc1524209.fmcs.cloud";
