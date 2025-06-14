@@ -52,6 +52,17 @@
     #main-content {
       display: none;
     }
+
+    /* Glowing red warning for unchecked rules */
+    .glow-warning {
+      color: red;
+      animation: glow-blink 0.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow-blink {
+      from { text-shadow: 0 0 5px red; }
+      to { text-shadow: 0 0 20px red; }
+    }
   </style>
 </head>
 <body>
@@ -62,25 +73,18 @@
     <p>Enter your FreeMcServer username to access the site:</p>
     <form id="login-form">
       <input type="text" id="username" placeholder="Enter username" required>
+
       <div style="margin-top: 20px;">
-  <label style="font-size: 0.95em;">
-    <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
-    I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
-  </label>
-</div>
+        <label id="rulesLabel" style="font-size: 0.95em;">
+          <input type="checkbox" id="agreeCheck" />
+          I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
+        </label>
+      </div>
 
-<button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
+      <button id="loginBtn" type="submit" style="margin-top: 10px;">Login</button>
+    </form>
 
-<script>
-  function toggleLogin() {
-    const checkbox = document.getElementById('agreeCheck');
-    const loginBtn = document.getElementById('loginBtn');
-    loginBtn.disabled = !checkbox.checked;
-  }
-</script>
-    </form> 
     <p>Don't have a FreeMcServer account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a> and return to enter your username.</p>
-
   </section>
 
   <div id="main-content">
@@ -95,7 +99,25 @@
         <a href="#contact-">Contact us</a>
       </nav>
     </header>
+  </div>
 
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const loginBtn = document.getElementById('loginBtn');
+    const agreeCheck = document.getElementById('agreeCheck');
+    const rulesLabel = document.getElementById('rulesLabel');
+
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!agreeCheck.checked) {
+        rulesLabel.classList.add('glow-warning');
+      } else {
+        rulesLabel.classList.remove('glow-warning');
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('login-section').style.display = 'none';
+      }
+    });
+  </script>
     <main>
       <section id="about">
         <h2>🌍 Server Info</h2>
