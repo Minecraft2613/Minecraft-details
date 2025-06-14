@@ -288,7 +288,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   plugins.forEach(plugin => pluginList.appendChild(plugin));
 });
-  document.getElementById("contact-form").addEventListener("submit", function (e) {
+ document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const name = document.getElementById("contact-name").value.trim();
@@ -296,7 +296,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("contact-status");
 
   if (!name || !message) {
-    status.textContent = "❗ Please fill in both fields.";
+    status.style.color = "red";
+    status.textContent = "❗ Please fill out both fields.";
     return;
   }
 
@@ -304,19 +305,20 @@ window.addEventListener("DOMContentLoaded", () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      content: `📩 **New Contact Form Message**\n👤 Name: \`${name}\`\n📝 Message: ${message}\n⏰ Time: ${new Date().toLocaleString()}`
+      content: `📬 **New Message from Login Page**\n👤 Name: \`${name}\`\n📝 Message: ${message}\n⏰ ${new Date().toLocaleString()}`
     })
   })
     .then(() => {
       status.style.color = "#42f56c";
-      status.textContent = "✅ Message sent successfully!";
+      status.textContent = "✅ Message sent!";
       document.getElementById("contact-form").reset();
     })
     .catch(() => {
       status.style.color = "red";
-      status.textContent = "❌ Failed to send message. Please try again.";
+      status.textContent = "❌ Failed to send. Try again.";
     });
 });
+
 
 
 </script>
