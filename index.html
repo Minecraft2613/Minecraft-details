@@ -151,11 +151,13 @@
           <li>Then follow the steps in <strong>How to Play</strong>.</li>
         </ol>
       </section>
-      <section id="contact">
+    <section id="contact">
   <h2>📬 Contact Us</h2>
   <p>If you have questions, feedback, or issues, let us know below:</p>
   <form id="contact-form">
-    <input type="text" id="contact-name" placeholder="Your Name or Username" required><br>
+    <input type="text" id="contact-name" placeholder="Your Name or Website Username" required><br>
+    <input type="text" id="contact-discord" placeholder="Your Discord ID (e.g. user#1234)" required><br>
+    <input type="text" id="contact-minecraft" placeholder="Your Minecraft Username" required><br>
     <textarea id="contact-message" placeholder="Your message..." rows="5" required></textarea><br>
     <button type="submit">Send Message</button>
   </form>
@@ -301,28 +303,34 @@ window.addEventListener("DOMContentLoaded", () => {
 
   plugins.forEach(plugin => pluginList.appendChild(plugin));
 });
-
-// CONTACT FORM: Send message to Discord webhook
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const name = document.getElementById("contact-name").value.trim();
+  const discord = document.getElementById("contact-discord").value.trim();
+  const minecraft = document.getElementById("contact-minecraft").value.trim();
   const message = document.getElementById("contact-message").value.trim();
   const status = document.getElementById("contact-status");
 
-  if (!name || !message) {
+  if (!name || !discord || !minecraft || !message) {
     status.innerText = "⚠️ Please fill in all fields.";
     return;
   }
+
+  const fullMessage = `📨 **New Contact Form Submission**:
+👤 Name/Username: **${name}**
+🎮 Minecraft Username: **${minecraft}**
+💬 Discord ID: **${discord}**
+
+📝 Message:
+${message}`;
 
   fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      content: `📨 New contact message from **${name}**:\n\n${message}`
-    })
+    body: JSON.stringify({ content: fullMessage })
   })
   .then(res => {
     if (res.ok) {
@@ -337,6 +345,8 @@ document.getElementById("contact-form").addEventListener("submit", function (e) 
     status.innerText = "❌ Error sending message.";
   });
 });
+// CONTACT FORM: Send message to Discord webhook
+
 </script>
 
 </body>
