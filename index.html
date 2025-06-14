@@ -151,11 +151,11 @@
           <li>Then follow the steps in <strong>How to Play</strong>.</li>
         </ol>
       </section>
-    <section id="contact">
+   <section id="contact">
   <h2>📬 Contact Us</h2>
   <p>If you have questions, feedback, or issues, let us know below:</p>
   <form id="contact-form">
-    <input type="text" id="contact-name" placeholder="Your Name or Website Username" required><br>
+    <input type="text" id="contact-name" placeholder="Your Name (Optional)"><br>
     <input type="text" id="contact-discord" placeholder="Your Discord ID (e.g. user#1234)" required><br>
     <input type="text" id="contact-minecraft" placeholder="Your Minecraft Username" required><br>
     <textarea id="contact-message" placeholder="Your message..." rows="5" required></textarea><br>
@@ -303,6 +303,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   plugins.forEach(plugin => pluginList.appendChild(plugin));
 });
+
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -312,13 +313,13 @@ document.getElementById("contact-form").addEventListener("submit", function (e) 
   const message = document.getElementById("contact-message").value.trim();
   const status = document.getElementById("contact-status");
 
-  if (!name || !discord || !minecraft || !message) {
-    status.innerText = "⚠️ Please fill in all fields.";
+  if (!discord || !minecraft || !message) {
+    status.innerText = "⚠️ Please fill in all required fields.";
     return;
   }
 
   const fullMessage = `📨 **New Contact Form Submission**:
-👤 Name/Username: **${name}**
+👤 Name: **${name || "Not Provided"}**
 🎮 Minecraft Username: **${minecraft}**
 💬 Discord ID: **${discord}**
 
@@ -345,8 +346,6 @@ ${message}`;
     status.innerText = "❌ Error sending message.";
   });
 });
-// CONTACT FORM: Send message to Discord webhook
-
 </script>
 
 </body>
