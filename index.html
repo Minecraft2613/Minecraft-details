@@ -200,6 +200,8 @@ fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN
 });
 
   localStorage.setItem("freemc_username", username);
+  sessionStorage.setItem("loggedIn", "true");
+
 
  if (updateMode && username !== allowedUsername) {
   document.body.innerHTML = `
