@@ -188,66 +188,58 @@
   </div>
 <script>
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
-const updateMode = false; // change to false when update is over
+<script>
+  document.getElementById("login-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-const allowedUsername = "Ansh_2613"; // optional, not shown to users
+    const username = document.getElementById("username").value.trim();
+    const agreed = document.getElementById("agreeCheck").checked;
 
-const loginForm = document.getElementById("login-form");
-const loginSection = document.getElementById("login-section");
-const mainContent = document.getElementById("main-content");
+    if (!username) {
+      alert("Please enter your username.");
+      return;
+    }
 
-// Handle login form
-loginForm.addEventListener("submit", function (e) {
-  e.preventDefault();
+    if (!agreed) {
+      alert("You must agree to the server rules.");
+      return;
+    }
 
-  const username = document.getElementById("username").value.trim();
-  const agreed = document.getElementById("agreeCheck").checked;
+    // Optional: Update mode block
+    const updateMode = false;
+    const allowedUsername = "Ansh_2613";
+    if (updateMode && username !== allowedUsername) {
+      document.body.innerHTML = `
+        <div style="text-align:center; padding:60px;">
+          <h2>🚧 Website is Currently Under Update</h2>
+          <p>Please come back later.</p>
+        </div>`;
+      return;
+    }
 
-  const usernameWarning = document.getElementById("usernameWarning");
-  const termsWarning = document.getElementById("termsWarning");
+    // Store session
+    localStorage.setItem("freemc_username", username);
+    sessionStorage.setItem("loggedIn", "true");
 
-  let valid = true;
+    // Send webhook
+    try {
+      await fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+        })
+      });
+    } catch (err) {
+      console.error("Webhook failed:", err);
+    }
 
-  if (!username) {
-    usernameWarning.style.display = "block";
-    valid = false;
-  } else {
-    usernameWarning.style.display = "none";
-  }
+    // Show main content
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+  });
+</script>
 
-  if (!agreed) {
-    termsWarning.style.display = "block";
-    valid = false;
-  } else {
-    termsWarning.style.display = "none";
-  }
-
-  if (!valid) return;
-
-  // Send username to Discord webhook
-  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
-    })
-  }).catch(error => console.error("Webhook failed:", error));
-
-  localStorage.setItem("freemc_username", username);
-
-  if (updateMode && username !== allowedUsername) {
-    document.body.innerHTML = `
-      <div style="text-align:center; padding:60px;">
-        <h2>🚧 Website is Currently Under Update</h2>
-        <p>Please come back later.</p>
-      </div>`;
-    return;
-  }
-
-  loginSection.style.display = "none";
-  mainContent.style.display = "block";
-  sessionStorage.setItem("loggedIn", "true");
-});
 
 // Show content if already logged in and not updating
 window.addEventListener("DOMContentLoaded", () => {
