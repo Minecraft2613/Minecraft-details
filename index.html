@@ -249,15 +249,23 @@ loginForm.addEventListener("submit", function (e) {
   sessionStorage.setItem("loggedIn", "true");
 });
 
-// Show content if already logged in and not updating
+// Force login every time page loads (disable session reuse)
 window.addEventListener("DOMContentLoaded", () => {
-  const storedUsername = localStorage.getItem("freemc_username");
-  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
+  localStorage.removeItem("freemc_username");
+  sessionStorage.removeItem("loggedIn");
 
-  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
-    loginSection.style.display = "none";
-    mainContent.style.display = "block";
+  loginSection.style.display = "block";
+  mainContent.style.display = "none";
+
+  // Sort plugin list alphabetically
+  const pluginList = document.getElementById("plugin-list");
+  if (pluginList) {
+    const plugins = Array.from(pluginList.getElementsByTagName("li"));
+    plugins.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
+    plugins.forEach(plugin => pluginList.appendChild(plugin));
   }
+});
+
 
   // Sort plugin list alphabetically
   const pluginList = document.getElementById("plugin-list");
