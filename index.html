@@ -289,38 +289,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   plugins.forEach(plugin => pluginList.appendChild(plugin));
 });
- document.getElementById("contact-form").addEventListener("submit", function (e) {
-  e.preventDefault();
+const username = localStorage.getItem("fmc_username");
 
-  const name = document.getElementById("contact-name").value.trim();
-  const message = document.getElementById("contact-message").value.trim();
-  const status = document.getElementById("contact-status");
-
-  if (!name || !message) {
-    status.style.color = "red";
-    status.textContent = "❗ Please fill out both fields.";
-    return;
-  }
-
-  fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content: `📬 **New Message from Login Page**\n👤 Name: \`${name}\`\n📝 Message: ${message}\n⏰ ${new Date().toLocaleString()}`
-    })
-  })
-    .then(() => {
-      status.style.color = "#42f56c";
-      status.textContent = "✅ Message sent!";
-      document.getElementById("contact-form").reset();
-    })
-    .catch(() => {
-      status.style.color = "red";
-      status.textContent = "❌ Failed to send. Try again.";
-    });
-});
-
-
+if (username) {
+  document.getElementById("login-section").style.display = "none";
+  document.getElementById("main-content").style.display = "block";
+} else {
+  document.getElementById("login-section").style.display = "block";
+  document.getElementById("main-content").style.display = "none";
+}
 
 </script>
 <section id="contact">
