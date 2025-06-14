@@ -362,6 +362,19 @@ ${message}`;
     status.innerText = "❌ Error sending message.";
   });
 });
+  function toggleLogin() {
+    const checkbox = document.getElementById('agreeCheck');
+    const loginBtn = document.getElementById('loginBtn');
+    const label = checkbox.parentElement;
+
+    loginBtn.disabled = !checkbox.checked;
+
+    if (!checkbox.checked) {
+      label.classList.add('blink-red');
+    } else {
+      label.classList.remove('blink-red');
+    }
+  }
 </script>
 
 </body>
