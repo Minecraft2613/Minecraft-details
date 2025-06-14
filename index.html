@@ -6,60 +6,37 @@
   <title>Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    @media (max-width: 600px) {
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 6px 12px;
-      background-color: #444;
+     body {
+      font-family: sans-serif;
+      background: #111;
       color: #fff;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    #loginBtn {
+      padding: 12px 24px;
+      font-size: 18px;
       border: none;
       border-radius: 8px;
+      background-color: #444;
+      color: white;
       cursor: pointer;
     }
-    #plugin-search {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background-color: #1f1f1f;
-      color: #f0f0f0;
-    }
-    #login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 300px;
-      margin: 50px auto;
-    }
-    #login-section {
-      text-align: center;
-    }
-    #main-content {
-      display: none;
-    }
-@keyframes red-blink {
-  0%, 100% { box-shadow: 0 0 8px 4px red; }
-  50% { box-shadow: 0 0 12px 6px crimson; }
-}
 
-.blink-warning {
-  animation: red-blink 0.3s ease-in-out 5;
-}
+    #loginBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @keyframes red-blink {
+      0%, 100% { box-shadow: 0 0 8px 4px red; }
+      50% { box-shadow: 0 0 14px 7px crimson; }
+    }
+
+    .blink-warning {
+      animation: red-blink 0.3s ease-in-out 5;
+    }
   </style>
 </head>
 <body>
