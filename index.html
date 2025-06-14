@@ -204,61 +204,60 @@ const loginForm = document.getElementById("login-form");
 const loginSection = document.getElementById("login-section");
 const mainContent = document.getElementById("main-content");
 
-// Handle login form
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  const username = document.getElementById("username").value.trim();
- if (!username) {
   const usernameInput = document.getElementById("username");
-  usernameInput.classList.add("blink-warning");
+  const checkbox = document.getElementById('agreeCheck');
+  const label = checkbox.parentElement;
 
-  // Remove the class after the blink animation completes (1.5s for 5 blinks)
-  setTimeout(() => {
-    usernameInput.classList.remove("blink-warning");
-  }, 1500);
+  const username = usernameInput.value.trim();
 
-  return;
-}
+  let hasError = false;
 
-// Send username to Discord webhook
-fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
-  })
-}).catch(error => {
-  console.error("Webhook failed:", error);
-});
+  if (!username) {
+    usernameInput.classList.add("blink-warning");
+    hasError = true;
+  }
+
+  if (!checkbox.checked) {
+    label.classList.add("blink-warning");
+    hasError = true;
+  }
+
+  if (hasError) {
+    setTimeout(() => {
+      usernameInput.classList.remove("blink-warning");
+      label.classList.remove("blink-warning");
+    }, 1500);
+    return;
+  }
+
+  // ✅ Send username to Discord webhook
+  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+    })
+  }).catch(error => {
+    console.error("Webhook failed:", error);
+  });
 
   localStorage.setItem("freemc_username", username);
 
-
- if (updateMode && username !== allowedUsername) {
-  document.body.innerHTML = `
-    <div style="text-align:center; padding:60px;">
-      <h2>🚧 Website is Currently Under Update</h2>
-      <p>Please come back later.</p>
-    </div>`;
-  return;
-}
-
+  if (updateMode && username !== allowedUsername) {
+    document.body.innerHTML = `
+      <div style="text-align:center; padding:60px;">
+        <h2>🚧 Website is Currently Under Update</h2>
+        <p>Please come back later.</p>
+      </div>`;
+    return;
+  }
 
   loginSection.style.display = "none";
   mainContent.style.display = "block";
-});
-
-// Show content if already logged in and not updating
-window.addEventListener("DOMContentLoaded", () => {
-  const storedUsername = localStorage.getItem("freemc_username");
-  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
-
-  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
-    loginSection.style.display = "none";
-    mainContent.style.display = "block";
-  }
 });
 
 
