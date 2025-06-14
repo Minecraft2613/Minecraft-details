@@ -280,46 +280,63 @@ window.addEventListener("DOMContentLoaded", () => {
       opacity: 0;
     }
   }
+   .blink-expire {
+    animation: blink 1s infinite;
+    color: red;
+    font-weight: bold;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
 </style>
 
-<script>
-// Server Status Script with Expire System
-const serverIP = "mc1524209.fmcs.cloud";
+const apiKey = "32f36ae657msh6f692c4d7d496d05p1b13d9snee25ed109f1f"; // replace if you regenerate
+const serverId = "1524209";
 
 async function fetchServerStatus() {
-  const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-  const data = await res.json();
   const statusDiv = document.getElementById("server-status");
   const playersDiv = document.getElementById("player-count");
   const offlineStart = document.getElementById("offline-start");
 
-  if (!data || typeof data.online === "undefined") {
-    // Treat as expired if response is empty or invalid
-    statusDiv.innerHTML = "❌ Server Expired";
-    statusDiv.classList.add("blink-expire");
-    playersDiv.innerHTML = "";
-    offlineStart.style.display = "block";
-    return;
-  }
+  try {
+    const res = await fetch(`https://freemcserver.p.rapidapi.com/v4/server/${serverId}/stats`, {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey,
+        'X-RapidAPI-Host': 'freemcserver.p.rapidapi.com'
+      }
+    });
 
-  if (!data.online) {
-    statusDiv.innerHTML = "🔴 Server is Offline";
-    statusDiv.classList.remove("blink-expire");
-    playersDiv.innerHTML = "";
-    offlineStart.style.display = "block";
-  } else {
-    // Expire condition if motd or version is missing
-    if (!data.motd || !data.version) {
+    const data = await res.json();
+
+    if (data.expired) {
       statusDiv.innerHTML = "❌ Server Expired";
       statusDiv.classList.add("blink-expire");
       playersDiv.innerHTML = "";
       offlineStart.style.display = "block";
-    } else {
+    } else if (data.status === "offline") {
+      statusDiv.innerHTML = "🔴 Server is Offline";
+      statusDiv.classList.remove("blink-expire");
+      playersDiv.innerHTML = "";
+      offlineStart.style.display = "block";
+    } else if (data.status === "online") {
       statusDiv.innerHTML = "🟢 Server is Online";
       statusDiv.classList.remove("blink-expire");
       playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
       offlineStart.style.display = "none";
+    } else {
+      statusDiv.innerHTML = "⚠️ Unknown status";
+      playersDiv.innerHTML = "";
+      offlineStart.style.display = "block";
     }
+  } catch (error) {
+    statusDiv.innerHTML = "⚠️ Error fetching server data";
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "block";
+    console.error(error);
   }
 }
 
