@@ -268,8 +268,24 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Server Status Script
+<style>
+  .blink-expire {
+    animation: blink 1s infinite;
+    color: red;
+    font-weight: bold;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+// Server Status Script with Expire System
 const serverIP = "mc1524209.fmcs.cloud";
+
 async function fetchServerStatus() {
   const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
   const data = await res.json();
@@ -278,7 +294,9 @@ async function fetchServerStatus() {
   const offlineStart = document.getElementById("offline-start");
 
   if (!data || typeof data.online === "undefined") {
-    statusDiv.innerHTML = "⚠️ Error checking server status.";
+    // Treat as expired if response is empty or invalid
+    statusDiv.innerHTML = "❌ Server Expired";
+    statusDiv.classList.add("blink-expire");
     playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
     return;
@@ -286,24 +304,27 @@ async function fetchServerStatus() {
 
   if (!data.online) {
     statusDiv.innerHTML = "🔴 Server is Offline";
+    statusDiv.classList.remove("blink-expire");
     playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
   } else {
-    statusDiv.innerHTML = "🟢 Server is Online";
-    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-    offlineStart.style.display = "none";
+    // Expire condition if motd or version is missing
+    if (!data.motd || !data.version) {
+      statusDiv.innerHTML = "❌ Server Expired";
+      statusDiv.classList.add("blink-expire");
+      playersDiv.innerHTML = "";
+      offlineStart.style.display = "block";
+    } else {
+      statusDiv.innerHTML = "🟢 Server is Online";
+      statusDiv.classList.remove("blink-expire");
+      playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+      offlineStart.style.display = "none";
+    }
   }
 }
+
 fetchServerStatus();
 setInterval(fetchServerStatus, 3000);
-
-// Copy-to-Clipboard
-function copyToClipboard(id) {
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Copied: " + text);
-  });
-}
 
 // Theme Toggle
 function toggleTheme() {
