@@ -199,73 +199,49 @@ const mainContent = document.getElementById("main-content");
 // Handle login form
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
-sessionStorage.setItem("loggedIn", "true");
-
   const username = document.getElementById("username").value.trim();
-  const agreed = document.getElementById("agreeCheck").checked;
-
-  const usernameWarning = document.getElementById("usernameWarning");
-  const termsWarning = document.getElementById("termsWarning");
-
-  let valid = true;
-
   if (!username) {
-    usernameWarning.style.display = "block";
-    valid = false;
-  } else {
-    usernameWarning.style.display = "none";
+    alert("Please enter a username.");
+    return;
   }
-
-  if (!agreed) {
-    termsWarning.style.display = "block";
-    valid = false;
-  } else {
-    termsWarning.style.display = "none";
-  }
-
-  if (!valid) return;
-
-  // Send username to Discord webhook
-  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
-    })
-  }).catch(error => console.error("Webhook failed:", error));
+// Send username to Discord webhook
+fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+  })
+}).catch(error => {
+  console.error("Webhook failed:", error);
+});
 
   localStorage.setItem("freemc_username", username);
 
-  if (updateMode && username !== allowedUsername) {
-    document.body.innerHTML = `
-      <div style="text-align:center; padding:60px;">
-        <h2>🚧 Website is Currently Under Update</h2>
-        <p>Please come back later.</p>
-      </div>`;
-    return;
-  }
+
+ if (updateMode && username !== allowedUsername) {
+  document.body.innerHTML = `
+    <div style="text-align:center; padding:60px;">
+      <h2>🚧 Website is Currently Under Update</h2>
+      <p>Please come back later.</p>
+    </div>`;
+  return;
+}
+
 
   loginSection.style.display = "none";
   mainContent.style.display = "block";
-  sessionStorage.setItem("loggedIn", "true");
 });
 
-// Force login every time page loads (disable session reuse)
+// Show content if already logged in and not updating
 window.addEventListener("DOMContentLoaded", () => {
-  // 🔴 Always show login form after refresh
-  loginSection.style.display = "block";
-  mainContent.style.display = "none";
+  const storedUsername = localStorage.getItem("freemc_username");
+  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
 
-  // 🔄 Clear previous login state
-  localStorage.removeItem("freemc_username");
-  sessionStorage.removeItem("loggedIn");
-
-  // ✅ Optional: Sort plugin list alphabetically
-  const pluginList = document.getElementById("plugin-list");
-  if (pluginList) {
-    const plugins = Array.from(pluginList.getElementsByTagName("li"));
-    plugins.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
-    plugins.forEach(plugin => pluginList.appendChild(plugin));
+  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
+    loginSection.style.display = "none";
+    mainContent.style.display = "block";
   }
 });
 
@@ -321,18 +297,29 @@ function toggleTheme() {
 
 // Plugin Search Filter
 const searchInput = document.getElementById("plugin-search");
-if (searchInput) {
-  const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-  searchInput.addEventListener("input", function () {
-    const filter = this.value.toLowerCase();
-    for (let li of pluginList) {
-      const text = li.textContent.toLowerCase();
-      li.style.display = text.includes(filter) ? "flex" : "none";
-    }
-  });
-}
+const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
 
-// Contact Form
+searchInput.addEventListener("input", function () {
+  const filter = this.value.toLowerCase();
+  for (let li of pluginList) {
+    const text = li.textContent.toLowerCase();
+    li.style.display = text.includes(filter) ? "flex" : "none";
+  }
+});
+  // Sort plugin list alphabetically on page load
+window.addEventListener("DOMContentLoaded", () => {
+  const pluginList = document.getElementById("plugin-list");
+  const plugins = Array.from(pluginList.getElementsByTagName("li"));
+
+  plugins.sort((a, b) => {
+    const nameA = a.textContent.trim().toLowerCase();
+    const nameB = b.textContent.trim().toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  plugins.forEach(plugin => pluginList.appendChild(plugin));
+});
+
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -357,36 +344,37 @@ ${message}`;
 
   fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ content: fullMessage })
   })
-    .then(res => {
-      if (res.ok) {
-        status.innerText = "✅ Message sent successfully!";
-        document.getElementById("contact-form").reset();
-      } else {
-        status.innerText = "❌ Failed to send. Try again later.";
-      }
-    })
-    .catch(error => {
-      console.error("Contact form error:", error);
-      status.innerText = "❌ Error sending message.";
-    });
+  .then(res => {
+    if (res.ok) {
+      status.innerText = "✅ Message sent successfully!";
+      document.getElementById("contact-form").reset();
+    } else {
+      status.innerText = "❌ Failed to send. Try again later.";
+    }
+  })
+  .catch(error => {
+    console.error("Contact form error:", error);
+    status.innerText = "❌ Error sending message.";
+  });
 });
+  function toggleLogin() {
+    const checkbox = document.getElementById('agreeCheck');
+    const loginBtn = document.getElementById('loginBtn');
+    const label = checkbox.parentElement;
 
-function toggleLogin() {
-  const checkbox = document.getElementById('agreeCheck');
-  const loginBtn = document.getElementById('loginBtn');
-  const label = checkbox.parentElement;
+    loginBtn.disabled = !checkbox.checked;
 
-  loginBtn.disabled = !checkbox.checked;
-
-  if (!checkbox.checked) {
-    label.classList.add('blink-red');
-  } else {
-    label.classList.remove('blink-red');
+    if (!checkbox.checked) {
+      label.classList.add('blink-red');
+    } else {
+      label.classList.remove('blink-red');
+    }
   }
-}
 </script>
 
 </body>
