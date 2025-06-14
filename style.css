@@ -33,6 +33,38 @@ header h1 {
   0%, 100% { text-shadow: 0 0 10px #00ffe1; }
   50% { text-shadow: 0 0 20px #00ffe1, 0 0 30px #00ffe1; }
 }
+#contact-form {
+  max-width: 400px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#contact-form input,
+#contact-form textarea {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+#contact-form button {
+  padding: 10px;
+  border: none;
+  background-color: #42a5f5;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#contact-form button:hover {
+  background-color: #2196f3;
+}
+#contact-status {
+  text-align: center;
+  margin-top: 10px;
+  color: #42f56c;
+}
+
 
 /* Nav */
 nav {
