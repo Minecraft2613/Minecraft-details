@@ -199,6 +199,7 @@ const mainContent = document.getElementById("main-content");
 // Handle login form
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
+sessionStorage.setItem("loggedIn", "true");
 
   const username = document.getElementById("username").value.trim();
   const agreed = document.getElementById("agreeCheck").checked;
@@ -251,23 +252,15 @@ loginForm.addEventListener("submit", function (e) {
 
 // Force login every time page loads (disable session reuse)
 window.addEventListener("DOMContentLoaded", () => {
-  localStorage.removeItem("freemc_username");
-  sessionStorage.removeItem("loggedIn");
-
+  // 🔴 Always show login form after refresh
   loginSection.style.display = "block";
   mainContent.style.display = "none";
 
-  // Sort plugin list alphabetically
-  const pluginList = document.getElementById("plugin-list");
-  if (pluginList) {
-    const plugins = Array.from(pluginList.getElementsByTagName("li"));
-    plugins.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
-    plugins.forEach(plugin => pluginList.appendChild(plugin));
-  }
-});
+  // 🔄 Clear previous login state
+  localStorage.removeItem("freemc_username");
+  sessionStorage.removeItem("loggedIn");
 
-
-  // Sort plugin list alphabetically
+  // ✅ Optional: Sort plugin list alphabetically
   const pluginList = document.getElementById("plugin-list");
   if (pluginList) {
     const plugins = Array.from(pluginList.getElementsByTagName("li"));
