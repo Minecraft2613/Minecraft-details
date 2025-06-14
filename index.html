@@ -52,6 +52,14 @@
     #main-content {
       display: none;
     }
+@keyframes red-blink {
+  0%, 100% { box-shadow: 0 0 8px 4px red; }
+  50% { box-shadow: 0 0 12px 6px crimson; }
+}
+
+.blink-warning {
+  animation: red-blink 0.3s ease-in-out 5;
+}
   </style>
 </head>
 <body>
