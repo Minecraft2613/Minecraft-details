@@ -4,130 +4,201 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Minecraft Server</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
-    html { scroll-behavior: smooth; }
-    @media (max-width: 600px) {
-      nav a { display: block; margin: 10px 0; }
-    }
-    .plugin-link {
-      float: right;
-      font-size: 0.9em;
-    }
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 6px 12px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #plugin-search {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background-color: #1f1f1f;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
       color: #f0f0f0;
     }
-    #login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 300px;
-      margin: 50px auto;
-    }
-    #login-section {
-      text-align: center;
-    }
-    #main-content {
-      display: none;
+
+    #login-section, #main-content {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
 
-    @keyframes glowBlink {
-      0%, 100% { box-shadow: 0 0 0px red; }
-      25%, 75% { box-shadow: 0 0 8px rgba(255, 0, 0, 0.5); }
-      50% { box-shadow: 0 0 14px rgba(255, 0, 0, 0.6); }
+    .hidden { display: none; }
+
+    .blink-warning {
+      animation: blink 1s step-start 3;
     }
 
-    #rule-wrapper.blink-warning {
-      animation: glowBlink 1.5s ease-in-out;
+    @keyframes blink {
+      50% { background-color: rgba(255, 0, 0, 0.2); }
+      100% { background-color: transparent; }
+    }
+
+    .plugin-list li {
+      padding: 8px;
+      background: #1e1e1e;
+      margin: 4px 0;
       border-radius: 6px;
-      padding: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .copy-btn {
+      cursor: pointer;
+      background: #333;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #fff;
+      margin-left: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #555;
+      background: #1c1c1c;
+      color: #fff;
+    }
+
+    button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    h1, h2, h3 {
+      color: #00ffcc;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    #plugin-search {
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+
+    .status-box {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      background: #1e1e1e;
     }
   </style>
 </head>
 <body>
-  <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
 
-  <!-- Login Section -->
-  <section id="login-section">
-    <h2>🔐 Login Required</h2>
-    <p>Enter your FreeMcServer username to access the site:</p>
+  <div id="login-section">
+    <h1>Welcome to Our Minecraft Server</h1>
     <form id="login-form">
-      <input type="text" id="username" placeholder="Enter username" required />
-      <div style="margin-top: 20px;">
-        <div id="rule-wrapper" style="font-size: 0.95em;">
-          <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
-          <label for="agreeCheck">
-            I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
-          </label>
-        </div>
-      </div>
-      <button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
-    </form>
-    <p>Don't have a FreeMcServer account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a></p>
-  </section>
+      <label for="username">Enter your FreeMcServer Username:</label>
+      <input type="text" id="username" placeholder="Your Username" required>
 
-  <!-- Main Content -->
-  <div id="main-content">
-    <!-- Keep your full site here (same as provided) -->
-    <!-- Example: About, Plugins, Status, Contact, etc. -->
-    <!-- ✂️ Truncated for brevity – same sections as before -->
-    <h1>Welcome to the Minecraft Server Page!</h1>
-    <!-- Add all your content sections here -->
+      <div id="rule-wrapper">
+        <label>
+          <input type="checkbox" id="agreeCheck" />
+          I agree to the rules.
+        </label>
+      </div>
+
+      <button type="submit" id="loginBtn">Login</button>
+    </form>
+  </div>
+
+  <div id="main-content" class="hidden">
+    <h2>Server Information</h2>
+    <div class="status-box">
+      <p id="server-status">Checking status...</p>
+      <p id="player-count"></p>
+      <div id="offline-start" style="display:none;">
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          🔁 Start the server from FreeMcServer.net
+        </a>
+      </div>
+    </div>
+
+    <p><strong>Server IP:</strong> <span id="server-ip">mc1524209.fmcs.cloud</span>
+      <button class="copy-btn" onclick="copyToClipboard('server-ip')">Copy IP</button>
+    </p>
+
+    <button onclick="toggleTheme()">Toggle Theme</button>
+
+    <h2>Plugin List</h2>
+    <input type="text" id="plugin-search" placeholder="Search Plugins..."/>
+    <ul id="plugin-list" class="plugin-list">
+      <li>BeastLib</li>
+      <li>CoreProtect</li>
+      <li>EconomyShopGUI</li>
+      <li>EssentialsX</li>
+      <li>GSit</li>
+      <li>Geyser-Spigot</li>
+      <li>LuckPerms</li>
+      <li>OnlineTime</li>
+      <li>PicoJobs</li>
+      <li>SkinRestorer</li>
+      <li>Vault</li>
+      <li>ViaBackwards</li>
+      <li>ViaVersion</li>
+    </ul>
+
+    <h2>Contact Form</h2>
+    <form id="contact-form">
+      <input type="text" id="contact-name" placeholder="Your Name (Optional)" />
+      <input type="text" id="contact-discord" placeholder="Your Discord ID" required />
+      <input type="text" id="contact-minecraft" placeholder="Your Minecraft Username" required />
+      <textarea id="contact-message" rows="4" placeholder="Your message" required></textarea>
+      <button type="submit">Send Message</button>
+      <p id="contact-status"></p>
+    </form>
   </div>
 
   <script>
-    const updateMode = true; // 🔧 Set to true to enable maintenance mode
+    const updateMode = false; // ✅ Set to true for maintenance mode
     const allowedUsername = "Ansh_2613";
 
     const loginForm = document.getElementById("login-form");
     const loginSection = document.getElementById("login-section");
     const mainContent = document.getElementById("main-content");
+    const ruleWrapper = document.getElementById("rule-wrapper");
+    const usernameInput = document.getElementById("username");
+    const checkbox = document.getElementById("agreeCheck");
+    const loginBtn = document.getElementById("loginBtn");
 
-    function toggleLogin() {
-      const checkbox = document.getElementById('agreeCheck');
-      const loginBtn = document.getElementById('loginBtn');
-      loginBtn.disabled = !checkbox.checked;
-    }
+    sessionStorage.removeItem("loggedIn");
 
     loginForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      const username = document.getElementById("username").value.trim();
-      if (!username) return alert("Please enter a username.");
+      const username = usernameInput.value.trim();
 
-      // Send login to Discord
+      if (!username) {
+        alert("⚠️ Please enter a username.");
+        usernameInput.focus();
+        return;
+      }
+
+      if (!checkbox.checked) {
+        ruleWrapper.classList.add("blink-warning");
+        setTimeout(() => ruleWrapper.classList.remove("blink-warning"), 3000);
+        alert("⚠️ You must agree to the rules.");
+        return;
+      }
+
       fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `🧑 New login: **${username}** accessed the Minecraft server site.` })
+        body: JSON.stringify({
+          content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+        })
       });
 
       localStorage.setItem("freemc_username", username);
       sessionStorage.setItem("loggedIn", "true");
 
       if (updateMode && username !== allowedUsername) {
-        document.body.innerHTML = `
-          <div style="text-align:center; padding:60px;">
-            <h2>🚧 Website is Currently Under Update</h2>
-            <p>Only the admin can access the site during maintenance.</p>
-            <p>Return later when maintenance ends.</p>
-          </div>`;
+        document.body.innerHTML = `<div style="text-align:center; padding:60px;"><h2>🚧 Website is Currently Under Update</h2><p>Please come back later.</p></div>`;
         return;
       }
 
@@ -136,22 +207,42 @@
     });
 
     window.addEventListener("DOMContentLoaded", () => {
-      const storedUsername = localStorage.getItem("freemc_username");
-      const sessionLoggedIn = sessionStorage.getItem("loggedIn");
-
-      if (storedUsername && sessionLoggedIn === "true") {
-        if (updateMode && storedUsername !== allowedUsername) {
-          document.body.innerHTML = `
-            <div style="text-align:center; padding:60px;">
-              <h2>🚧 Website is Currently Under Update</h2>
-              <p>Only the admin can access the site during maintenance.</p>
-            </div>`;
-        } else {
-          loginSection.style.display = "none";
-          mainContent.style.display = "block";
-        }
+      const pluginList = document.getElementById("plugin-list");
+      if (pluginList) {
+        const plugins = Array.from(pluginList.getElementsByTagName("li"));
+        plugins.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
+        plugins.forEach(plugin => pluginList.appendChild(plugin));
       }
     });
+
+    async function fetchServerStatus() {
+      const res = await fetch(`https://api.mcsrvstat.us/2/mc1524209.fmcs.cloud`);
+      const data = await res.json();
+      const statusDiv = document.getElementById("server-status");
+      const playersDiv = document.getElementById("player-count");
+      const offlineStart = document.getElementById("offline-start");
+
+      if (!data || typeof data.online === "undefined") {
+        statusDiv.innerHTML = "⚠️ Error checking server status.";
+        offlineStart.style.display = "block"; return;
+      }
+
+      if (!data.online) {
+        statusDiv.innerHTML = "🔴 Server is Offline";
+        offlineStart.style.display = "block";
+      } else {
+        statusDiv.innerHTML = "🟢 Server is Online";
+        playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+        offlineStart.style.display = "none";
+      }
+    }
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 3000);
+
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => alert("Copied: " + text));
+    }
 
     function toggleTheme() {
       const body = document.body;
@@ -163,6 +254,54 @@
         body.style.color = "#000000";
       }
     }
+
+    const searchInput = document.getElementById("plugin-search");
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        const filter = this.value.toLowerCase();
+        const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+        for (let li of pluginList) {
+          li.style.display = li.textContent.toLowerCase().includes(filter) ? "flex" : "none";
+        }
+      });
+    }
+
+    document.getElementById("contact-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("contact-name").value.trim();
+      const discord = document.getElementById("contact-discord").value.trim();
+      const minecraft = document.getElementById("contact-minecraft").value.trim();
+      const message = document.getElementById("contact-message").value.trim();
+      const status = document.getElementById("contact-status");
+
+      if (!discord || !minecraft || !message) {
+        status.innerText = "⚠️ Please fill in all required fields.";
+        return;
+      }
+
+      const fullMessage = `📨 **New Contact Form Submission**:
+👤 Name: **${name || "Not Provided"}**
+🎮 Minecraft Username: **${minecraft}**
+💬 Discord ID: **${discord}**
+
+📝 Message:
+${message}`;
+
+      fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: fullMessage })
+      })
+        .then(res => {
+          status.innerText = res.ok ? "✅ Message sent successfully!" : "❌ Failed to send. Try again later.";
+          if (res.ok) this.reset();
+        })
+        .catch(() => {
+          status.innerText = "❌ Error sending message.";
+        });
+    });
   </script>
+
 </body>
 </html>
