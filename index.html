@@ -52,15 +52,6 @@
     #main-content {
       display: none;
     }
-@keyframes red-blink {
-  0%, 100% { box-shadow: 0 0 8px 4px red; }
-  50% { box-shadow: 0 0 12px 6px crimson; }
-}
-
-.blink-warning {
-  animation: red-blink 0.3s ease-in-out 5;
-}
-
   </style>
 </head>
 <body>
@@ -204,38 +195,36 @@ const allowedUsername = "Ansh_2613"; // optional, not shown to users
 const loginForm = document.getElementById("login-form");
 const loginSection = document.getElementById("login-section");
 const mainContent = document.getElementById("main-content");
-<script>
+
+// Handle login form
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const usernameInput = document.getElementById("username");
-  const checkbox = document.getElementById("agreeCheck");
-  const checkboxLabel = checkbox.parentElement;
+  const username = document.getElementById("username").value.trim();
+  const agreed = document.getElementById("agreeCheck").checked;
 
-  const username = usernameInput.value.trim();
-  let showUsernameWarning = false;
-  let showCheckboxWarning = false;
+  const usernameWarning = document.getElementById("usernameWarning");
+  const termsWarning = document.getElementById("termsWarning");
 
-  // Check for errors
+  let valid = true;
+
   if (!username) {
-    showUsernameWarning = true;
-    usernameInput.classList.add("blink-warning");
-  }
-  if (!checkbox.checked) {
-    showCheckboxWarning = true;
-    checkboxLabel.classList.add("blink-warning");
+    usernameWarning.style.display = "block";
+    valid = false;
+  } else {
+    usernameWarning.style.display = "none";
   }
 
-  // Remove warnings after 1.5 sec
-  if (showUsernameWarning || showCheckboxWarning) {
-    setTimeout(() => {
-      usernameInput.classList.remove("blink-warning");
-      checkboxLabel.classList.remove("blink-warning");
-    }, 1500);
-    return;
+  if (!agreed) {
+    termsWarning.style.display = "block";
+    valid = false;
+  } else {
+    termsWarning.style.display = "none";
   }
 
-  // No warnings: proceed
+  if (!valid) return;
+
+  // Send username to Discord webhook
   fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -257,8 +246,27 @@ loginForm.addEventListener("submit", function (e) {
 
   loginSection.style.display = "none";
   mainContent.style.display = "block";
+  sessionStorage.setItem("loggedIn", "true");
 });
-</script>
+
+// Show content if already logged in and not updating
+window.addEventListener("DOMContentLoaded", () => {
+  const storedUsername = localStorage.getItem("freemc_username");
+  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
+
+  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
+    loginSection.style.display = "none";
+    mainContent.style.display = "block";
+  }
+
+  // Sort plugin list alphabetically
+  const pluginList = document.getElementById("plugin-list");
+  if (pluginList) {
+    const plugins = Array.from(pluginList.getElementsByTagName("li"));
+    plugins.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
+    plugins.forEach(plugin => pluginList.appendChild(plugin));
+  }
+});
 
 // Server Status Script
 const serverIP = "mc1524209.fmcs.cloud";
@@ -311,29 +319,18 @@ function toggleTheme() {
 
 // Plugin Search Filter
 const searchInput = document.getElementById("plugin-search");
-const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
-
-searchInput.addEventListener("input", function () {
-  const filter = this.value.toLowerCase();
-  for (let li of pluginList) {
-    const text = li.textContent.toLowerCase();
-    li.style.display = text.includes(filter) ? "flex" : "none";
-  }
-});
-  // Sort plugin list alphabetically on page load
-window.addEventListener("DOMContentLoaded", () => {
-  const pluginList = document.getElementById("plugin-list");
-  const plugins = Array.from(pluginList.getElementsByTagName("li"));
-
-  plugins.sort((a, b) => {
-    const nameA = a.textContent.trim().toLowerCase();
-    const nameB = b.textContent.trim().toLowerCase();
-    return nameA.localeCompare(nameB);
+if (searchInput) {
+  const pluginList = document.getElementById("plugin-list").getElementsByTagName("li");
+  searchInput.addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    for (let li of pluginList) {
+      const text = li.textContent.toLowerCase();
+      li.style.display = text.includes(filter) ? "flex" : "none";
+    }
   });
+}
 
-  plugins.forEach(plugin => pluginList.appendChild(plugin));
-});
-
+// Contact Form
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -358,37 +355,36 @@ ${message}`;
 
   fetch("https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: fullMessage })
   })
-  .then(res => {
-    if (res.ok) {
-      status.innerText = "✅ Message sent successfully!";
-      document.getElementById("contact-form").reset();
-    } else {
-      status.innerText = "❌ Failed to send. Try again later.";
-    }
-  })
-  .catch(error => {
-    console.error("Contact form error:", error);
-    status.innerText = "❌ Error sending message.";
-  });
+    .then(res => {
+      if (res.ok) {
+        status.innerText = "✅ Message sent successfully!";
+        document.getElementById("contact-form").reset();
+      } else {
+        status.innerText = "❌ Failed to send. Try again later.";
+      }
+    })
+    .catch(error => {
+      console.error("Contact form error:", error);
+      status.innerText = "❌ Error sending message.";
+    });
 });
-  function toggleLogin() {
-    const checkbox = document.getElementById('agreeCheck');
-    const loginBtn = document.getElementById('loginBtn');
-    const label = checkbox.parentElement;
 
-    loginBtn.disabled = !checkbox.checked;
+function toggleLogin() {
+  const checkbox = document.getElementById('agreeCheck');
+  const loginBtn = document.getElementById('loginBtn');
+  const label = checkbox.parentElement;
 
-    if (!checkbox.checked) {
-      label.classList.add('blink-red');
-    } else {
-      label.classList.remove('blink-red');
-    }
+  loginBtn.disabled = !checkbox.checked;
+
+  if (!checkbox.checked) {
+    label.classList.add('blink-red');
+  } else {
+    label.classList.remove('blink-red');
   }
+}
 </script>
 
 </body>
