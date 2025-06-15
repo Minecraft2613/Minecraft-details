@@ -255,31 +255,49 @@ async function fetchServerStatus() {
   const playersDiv = document.getElementById("player-count");
   const offlineStart = document.getElementById("offline-start");
 
+  // Check if API failed
   if (!data || typeof data.online === "undefined") {
     statusDiv.innerHTML = "⚠️ Error checking server status.";
     playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
+    offlineStart.innerHTML = `
+      <h3>❌ Unable to fetch server status</h3>
+      <a href="https://freemcserver.net/server/1524209" target="_blank">
+        <button>Go to Server Page</button>
+      </a>`;
     return;
   }
 
+  // Check if server is offline
   if (!data.online) {
-    statusDiv.innerHTML = "🔴 Server is Offline";
+    const motdText = JSON.stringify(data.motd).toLowerCase();
+    const versionText = (data.version || "").toLowerCase();
 
-    // Check for Expired status
-    const expireDetected = data.motd && JSON.stringify(data.motd).toLowerCase().includes("expired");
-    if (expireDetected) {
+    const isExpired = motdText.includes("expire") || versionText.includes("expire");
+
+    if (isExpired) {
       statusDiv.innerHTML = "⛔ Server Expired";
       playersDiv.innerHTML = "";
       offlineStart.innerHTML = `
         <h3>⏳ Server Expired</h3>
         <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-          <button>🔁 Renew Server</button>
+          <button style="background-color:#d32f2f; color:white; padding:10px 20px; border:none; border-radius:6px;">
+            🔁 Renew Server
+          </button>
+        </a>`;
+    } else {
+      statusDiv.innerHTML = "🔴 Server is Offline";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <h3>🛠 Server is Offline</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>Start Server</button>
         </a>`;
     }
 
-    playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
   } else {
+    // Server is online
     statusDiv.innerHTML = "🟢 Server is Online";
     playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
     offlineStart.style.display = "none";
@@ -287,8 +305,7 @@ async function fetchServerStatus() {
 }
 
 fetchServerStatus();
-setInterval(fetchServerStatus, 5000); // Update every 5 seconds
-
+setInterval(fetchServerStatus, 2000); // Update every 2 seconds
 
 // Copy-to-Clipboard
 function copyToClipboard(id) {
