@@ -247,8 +247,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 // Server Status Script
-const serverIP = "mc1524209.fmcs.cloud";
 async function fetchServerStatus() {
+  const serverIP = "mc1524209.fmcs.cloud";
   const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
   const data = await res.json();
   const statusDiv = document.getElementById("server-status");
@@ -264,6 +264,19 @@ async function fetchServerStatus() {
 
   if (!data.online) {
     statusDiv.innerHTML = "🔴 Server is Offline";
+
+    // Check for Expired status
+    const expireDetected = data.motd && JSON.stringify(data.motd).toLowerCase().includes("expired");
+    if (expireDetected) {
+      statusDiv.innerHTML = "⛔ Server Expired";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <h3>⏳ Server Expired</h3>
+        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
+          <button>🔁 Renew Server</button>
+        </a>`;
+    }
+
     playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
   } else {
@@ -272,34 +285,10 @@ async function fetchServerStatus() {
     offlineStart.style.display = "none";
   }
 }
+
 fetchServerStatus();
- setInterval(fetchServerStatus, 3000);
-async function fetchFreeMcServerDetails() {
-  const serverRapidId = "1524209"; // your FreeMcServer ID
-  const rapidApiKey = "32f36ae657msh6f92c4d7d496d05p1b13d9jsnee25ed1091ff";
+setInterval(fetchServerStatus, 5000); // Update every 5 seconds
 
-  try {
-    const res = await fetch(`https://freemcserver.p.rapidapi.com/v4/server/${serverRapidId}/stats`, {
-      method: "GET",
-      headers: {
-        "x-rapidapi-host": "freemcserver.p.rapidapi.com",
-        "x-rapidapi-key": rapidApiKey
-      }
-    });
-    const data = await res.json();
-
-    if (data.expired) {
-      const statusDiv = document.getElementById("server-status");
-      statusDiv.innerHTML = `
-        ❌ <strong>Server Expired</strong><br>
-        <a href="https://panel.freemcserver.net/server/${serverRapidId}/renew-basic" target="_blank">
-          <button style="margin-top:10px;">🔁 Renew Server</button>
-        </a>`;
-    }
-  } catch (err) {
-    console.error("RapidAPI fetch failed:", err);
-  }
-}
 
 // Copy-to-Clipboard
 function copyToClipboard(id) {
