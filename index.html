@@ -273,13 +273,10 @@ async function fetchServerStatus() {
   }
 }
 fetchServerStatus();
-checkExpireStatus(); // 👈 Added to check expiry
-
-const rapidApiKey = "32f36ae657msh6f92c4d7d496d05p1b13d9jsnee25ed1091ff"; // Your real API key
-const serverRapidId = "MJ4yMsWo0CoMsAwMDowM43DXD3D"; // Replace with your server ID
-
-async function checkExpireStatus() {
-  const statusDiv = document.getElementById("server-status");
+ setInterval(fetchServerStatus, 3000);
+async function fetchFreeMcServerDetails() {
+  const serverRapidId = "1524209"; // your FreeMcServer ID
+  const rapidApiKey = "32f36ae657msh6f92c4d7d496d05p1b13d9jsnee25ed1091ff";
 
   try {
     const res = await fetch(`https://freemcserver.p.rapidapi.com/v4/server/${serverRapidId}/stats`, {
@@ -289,21 +286,20 @@ async function checkExpireStatus() {
         "x-rapidapi-key": rapidApiKey
       }
     });
-
     const data = await res.json();
 
     if (data.expired) {
+      const statusDiv = document.getElementById("server-status");
       statusDiv.innerHTML = `
-        🔴 <strong>Server Expired</strong><br>
-        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-          <button style="margin-top:10px;">🔄 Renew Server</button>
+        ❌ <strong>Server Expired</strong><br>
+        <a href="https://panel.freemcserver.net/server/${serverRapidId}/renew-basic" target="_blank">
+          <button style="margin-top:10px;">🔁 Renew Server</button>
         </a>`;
     }
   } catch (err) {
-    console.error("Expire API error:", err);
+    console.error("RapidAPI fetch failed:", err);
   }
 }
-setInterval(fetchServerStatus, 3000);
 
 // Copy-to-Clipboard
 function copyToClipboard(id) {
