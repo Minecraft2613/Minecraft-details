@@ -187,51 +187,10 @@
     </footer>
   </div>
 <script>
- // Server Status Script
-async function fetchServerStatus() {
-  const serverIP = "mc1524209.fmcs.cloud";
-  const statusDiv = document.getElementById("server-status");
-  const playersDiv = document.getElementById("player-count");
-  const offlineStart = document.getElementById("offline-start");
-
-  try {
-    const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
-    const data = await res.json();
-
-    if (!data || typeof data.online === "undefined") {
-      throw new Error("Invalid API response");
-    }
-
-    if (!data.online) {
-      // Server is offline
-      statusDiv.innerHTML = "🔴 Server is Offline";
-      playersDiv.innerHTML = "";
-      offlineStart.innerHTML = `
-        <a href="https://freemcserver.net/server/1524209" target="_blank">
-          <button>▶️ Start Server</button>
-        </a>`;
-      offlineStart.style.display = "block";
-    } else {
-      // Server is online
-      statusDiv.innerHTML = "🟢 Server is Online";
-      playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-      offlineStart.style.display = "none";
-    }
-
-  } catch (err) {
-    console.error("Status check error:", err);
-    statusDiv.innerHTML = "⚠️ Error checking server status.";
-    playersDiv.innerHTML = "";
-    offlineStart.style.display = "block";
-  }
-}
-
-fetchServerStatus();
-setInterval(fetchServerStatus, 5000);
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
 const updateMode = false; // change to false when update is over
 
-const allowedUsername = "26"; // optional, not shown to users
+const allowedUsername = "Ansh_2613"; // optional, not shown to users
 
 const loginForm = document.getElementById("login-form");
 const loginSection = document.getElementById("login-section");
@@ -245,13 +204,6 @@ loginForm.addEventListener("submit", function (e) {
     alert("Please enter a username.");
     return;
   }
-  // Copy-to-Clipboard
-function copyToClipboard(id) {
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Copied: " + text);
-  });
-}
 // Send username to Discord webhook
 fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
   method: "POST",
@@ -291,6 +243,77 @@ window.addEventListener("DOMContentLoaded", () => {
     mainContent.style.display = "block";
   }
 });
+
+
+
+// Server Status Script
+async function fetchServerStatus() {
+  const serverIP = "mc1524209.fmcs.cloud";
+  const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
+  const data = await res.json();
+  const statusDiv = document.getElementById("server-status");
+  const playersDiv = document.getElementById("player-count");
+  const offlineStart = document.getElementById("offline-start");
+
+  // Check if API failed
+  if (!data || typeof data.online === "undefined") {
+    statusDiv.innerHTML = "⚠️ Error checking server status.";
+    playersDiv.innerHTML = "";
+    offlineStart.style.display = "block";
+    offlineStart.innerHTML = `
+      <h3>❌ Unable to fetch server status</h3>
+      <a href="https://freemcserver.net/server/1524209" target="_blank">
+        <button>Go to Server Page</button>
+      </a>`;
+    return;
+  }
+
+  // Check if server is offline
+  if (!data.online) {
+    const motdText = JSON.stringify(data.motd).toLowerCase();
+    const versionText = (data.version || "").toLowerCase();
+
+    const isExpired = motdText.includes("expire") || versionText.includes("expire");
+
+    if (isExpired) {
+      statusDiv.innerHTML = "⛔ Server Expired";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <h3>⏳ Server Expired</h3>
+        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
+          <button style="background-color:#d32f2f; color:white; padding:10px 20px; border:none; border-radius:6px;">
+            🔁 Renew Server
+          </button>
+        </a>`;
+    } else {
+      statusDiv.innerHTML = "🔴 Server is Offline";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <h3>🛠 Server is Offline</h3>
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>Start Server</button>
+        </a>`;
+    }
+
+    offlineStart.style.display = "block";
+  } else {
+    // Server is online
+    statusDiv.innerHTML = "🟢 Server is Online";
+    playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
+    offlineStart.style.display = "none";
+  }
+}
+
+fetchServerStatus();
+setInterval(fetchServerStatus, 2000); // Update every 2 seconds
+
+// Copy-to-Clipboard
+function copyToClipboard(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Copied: " + text);
+  });
+}
 
 // Theme Toggle
 function toggleTheme() {
