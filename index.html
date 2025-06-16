@@ -198,7 +198,7 @@ async function fetchServerStatus() {
     const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
     const data = await res.json();
 
-    // FIRST: Check if server is expired
+    // 🔍 Check if expired FIRST
     const isExpired = await checkIfExpiredByHTML();
     if (isExpired) {
       statusDiv.innerHTML = "⛔ Server Expired";
@@ -211,10 +211,13 @@ async function fetchServerStatus() {
       return;
     }
 
-    // NEXT: If not expired, check online status
     if (!data || typeof data.online === "undefined") {
       statusDiv.innerHTML = "⚠️ Error checking server status.";
       playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>▶️ Start Server</button>
+        </a>`;
       offlineStart.style.display = "block";
       return;
     }
@@ -232,13 +235,34 @@ async function fetchServerStatus() {
       playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
       offlineStart.style.display = "none";
     }
+
   } catch (err) {
     console.error("Status check error:", err);
+
+    // ✅ Retry expired check even on error
+    const isExpired = await checkIfExpiredByHTML();
+    if (isExpired) {
+      statusDiv.innerHTML = "⛔ Server Expired";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
+          <button>🔁 Renew Server</button>
+        </a>`;
+      offlineStart.style.display = "block";
+      return;
+    }
+
+    // If not expired, fallback
     statusDiv.innerHTML = "⚠️ Error checking server status.";
     playersDiv.innerHTML = "";
+    offlineStart.innerHTML = `
+      <a href="https://freemcserver.net/server/1524209" target="_blank">
+        <button>▶️ Start Server</button>
+      </a>`;
     offlineStart.style.display = "block";
   }
 }
+
 fetchServerStatus();
 setInterval(fetchServerStatus, 5000);
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
