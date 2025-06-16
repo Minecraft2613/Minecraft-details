@@ -187,6 +187,12 @@
     </footer>
   </div>
 <script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("formSuccess") === "yes") {
+      alert("✅ Your form has been successfully submitted!");
+      localStorage.removeItem("formSuccess"); // So it only shows once
+    }
+  });
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
 const updateMode = false; // change to false when update is over
 
