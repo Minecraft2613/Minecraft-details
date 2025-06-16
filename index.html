@@ -198,31 +198,21 @@ async function fetchServerStatus() {
     const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
     const data = await res.json();
 
-    // 🔍 Check if expired FIRST
-    const isExpired = await checkIfExpiredByHTML();
-    if (isExpired) {
-      statusDiv.innerHTML = "⛔ Server Expired";
-      playersDiv.innerHTML = "";
-      offlineStart.innerHTML = `
-        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-          <button>🔁 Renew Server</button>
-        </a>`;
-      offlineStart.style.display = "block";
-      return;
-    }
-
-    if (!data || typeof data.online === "undefined") {
-      statusDiv.innerHTML = "⚠️ Error checking server status.";
-      playersDiv.innerHTML = "";
-      offlineStart.innerHTML = `
-        <a href="https://freemcserver.net/server/1524209" target="_blank">
-          <button>▶️ Start Server</button>
-        </a>`;
-      offlineStart.style.display = "block";
-      return;
-    }
+    if (!data || typeof data.online === "undefined") throw new Error("Invalid data from API");
 
     if (!data.online) {
+      const isExpired = await checkIfExpiredByHTML();
+      if (isExpired) {
+        statusDiv.innerHTML = "⛔ Server Expired";
+        playersDiv.innerHTML = "";
+        offlineStart.innerHTML = `
+          <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
+            <button style="background-color: red; color: white;">🔁 Renew Server</button>
+          </a>`;
+        offlineStart.style.display = "block";
+        return;
+      }
+
       statusDiv.innerHTML = "🔴 Server is Offline";
       playersDiv.innerHTML = "";
       offlineStart.innerHTML = `
@@ -237,29 +227,37 @@ async function fetchServerStatus() {
     }
 
   } catch (err) {
-    console.error("Status check error:", err);
+    console.warn("Status check failed:", err);
 
-    // ✅ Retry expired check even on error
     const isExpired = await checkIfExpiredByHTML();
     if (isExpired) {
       statusDiv.innerHTML = "⛔ Server Expired";
       playersDiv.innerHTML = "";
       offlineStart.innerHTML = `
         <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-          <button>🔁 Renew Server</button>
+          <button style="background-color: red; color: white;">🔁 Renew Server</button>
         </a>`;
       offlineStart.style.display = "block";
-      return;
+    } else {
+      statusDiv.innerHTML = "⚠️ Error checking server status.";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <a href="https://freemcserver.net/server/1524209" target="_blank">
+          <button>▶️ Start Server</button>
+        </a>`;
+      offlineStart.style.display = "block";
     }
+  }
+}
 
-    // If not expired, fallback
-    statusDiv.innerHTML = "⚠️ Error checking server status.";
-    playersDiv.innerHTML = "";
-    offlineStart.innerHTML = `
-      <a href="https://freemcserver.net/server/1524209" target="_blank">
-        <button>▶️ Start Server</button>
-      </a>`;
-    offlineStart.style.display = "block";
+async function checkIfExpiredByHTML() {
+  try {
+    const res = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
+    const html = await res.text();
+    return html.includes(">Start<"); // Expired servers show this
+  } catch (err) {
+    console.warn("Expire check failed:", err);
+    return false;
   }
 }
 
