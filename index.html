@@ -243,9 +243,6 @@ window.addEventListener("DOMContentLoaded", () => {
     mainContent.style.display = "block";
   }
 });
-
-
-
 // Server Status Script
 async function fetchServerStatus() {
   const serverIP = "mc1524209.fmcs.cloud";
@@ -256,7 +253,6 @@ async function fetchServerStatus() {
   try {
     const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
     const data = await res.json();
-    console.log("Server API Response:", data); // 🔍 Debug log
 
     if (!data || typeof data.online === "undefined") {
       statusDiv.innerHTML = "⚠️ Error checking server status.";
@@ -267,43 +263,37 @@ async function fetchServerStatus() {
 
     if (!data.online) {
       statusDiv.innerHTML = "🔴 Server is Offline";
-
-      const expired = data.motd && JSON.stringify(data.motd).toLowerCase().includes("expire");
-      if (expired) {
-        offlineStart.innerHTML = `
-          <h3>⛔ Server Expired</h3>
-          <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-            <button>🔁 Renew Server</button>
-          </a>`;
-      }
-
       playersDiv.innerHTML = "";
       offlineStart.style.display = "block";
+
+      // Check if server is expired (fallback)
+      checkIfExpiredByHTML();
     } else {
       statusDiv.innerHTML = "🟢 Server is Online";
       playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
       offlineStart.style.display = "none";
     }
-  } catch (error) {
-    console.error("❌ Failed to fetch server status:", error);
-    statusDiv.innerHTML = "❌ Could not check status.";
+  } catch (err) {
+    console.error("Server status fetch error:", err);
+    statusDiv.innerHTML = "⚠️ Error checking server status.";
     playersDiv.innerHTML = "";
     offlineStart.style.display = "block";
+
+    // Fallback to expire check if API fails
+    checkIfExpiredByHTML();
   }
 }
 
-fetchServerStatus();
-setInterval(fetchServerStatus, 5000);
-  async function checkIfExpired() {
+// Expired Status Check via HTML
+async function checkIfExpiredByHTML() {
+  const statusDiv = document.getElementById("server-status");
+  const offlineStart = document.getElementById("offline-start");
+
   try {
-    const response = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
-    const html = await response.text();
+    const htmlRes = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
+    const htmlText = await htmlRes.text();
 
-    if (html.includes("Start")) {
-      // Assume expired if we see "Start" and status API said it's offline
-      const statusDiv = document.getElementById("server-status");
-      const offlineStart = document.getElementById("offline-start");
-
+    if (htmlText.includes(">Start<")) {
       statusDiv.innerHTML = "⛔ Server Expired";
       offlineStart.innerHTML = `
         <h3>⏳ Server Expired</h3>
@@ -314,12 +304,13 @@ setInterval(fetchServerStatus, 5000);
       offlineStart.style.display = "block";
     }
   } catch (err) {
-    console.error("Expire check failed:", err);
+    console.warn("Expire check failed:", err);
   }
 }
-checkIfExpired();
 
-
+// Run status check
+fetchServerStatus();
+setInterval(fetchServerStatus, 5000);
 // Copy-to-Clipboard
 function copyToClipboard(id) {
   const text = document.getElementById(id).innerText;
