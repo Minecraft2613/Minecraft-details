@@ -198,6 +198,20 @@ async function fetchServerStatus() {
     const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
     const data = await res.json();
 
+    // FIRST: Check if server is expired
+    const isExpired = await checkIfExpiredByHTML();
+    if (isExpired) {
+      statusDiv.innerHTML = "⛔ Server Expired";
+      playersDiv.innerHTML = "";
+      offlineStart.innerHTML = `
+        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
+          <button>🔁 Renew Server</button>
+        </a>`;
+      offlineStart.style.display = "block";
+      return;
+    }
+
+    // NEXT: If not expired, check online status
     if (!data || typeof data.online === "undefined") {
       statusDiv.innerHTML = "⚠️ Error checking server status.";
       playersDiv.innerHTML = "";
@@ -206,20 +220,6 @@ async function fetchServerStatus() {
     }
 
     if (!data.online) {
-      // Check if expired
-      const isExpired = await checkIfExpiredByHTML();
-      if (isExpired) {
-        statusDiv.innerHTML = "";
-        playersDiv.innerHTML = "";
-        offlineStart.innerHTML = `
-          <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-            <button>🔁 Renew Server</button>
-          </a>`;
-        offlineStart.style.display = "block";
-        return;
-      }
-
-      // Just offline
       statusDiv.innerHTML = "🔴 Server is Offline";
       playersDiv.innerHTML = "";
       offlineStart.innerHTML = `
@@ -228,7 +228,6 @@ async function fetchServerStatus() {
         </a>`;
       offlineStart.style.display = "block";
     } else {
-      // Online
       statusDiv.innerHTML = "🟢 Server is Online";
       playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
       offlineStart.style.display = "none";
@@ -240,18 +239,6 @@ async function fetchServerStatus() {
     offlineStart.style.display = "block";
   }
 }
-
-async function checkIfExpiredByHTML() {
-  try {
-    const res = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
-    const html = await res.text();
-    return html.includes(">Start<"); // if Start appears, it's expired
-  } catch (err) {
-    console.warn("Expire check failed:", err);
-    return false;
-  }
-}
-
 fetchServerStatus();
 setInterval(fetchServerStatus, 5000);
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
