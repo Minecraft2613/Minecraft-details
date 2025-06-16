@@ -237,13 +237,13 @@ fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN
 // Show content if already logged in and not updating
 window.addEventListener("DOMContentLoaded", () => {
   const storedUsername = localStorage.getItem("freemc_username");
+  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
 
-  if (storedUsername && !updateMode) {
+  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
     loginSection.style.display = "none";
     mainContent.style.display = "block";
   }
 });
-
 
 
 // Server Status Script
