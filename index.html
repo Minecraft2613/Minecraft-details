@@ -222,7 +222,7 @@ fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN
 }).catch(error => {
   console.error("Webhook failed:", error);
 });
-
+sessionStorage.setItem("loggedIn", "true");
   localStorage.setItem("freemc_username", username);
 
 
