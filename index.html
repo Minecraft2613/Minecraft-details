@@ -203,21 +203,7 @@ async function fetchServerStatus() {
     }
 
     if (!data.online) {
-      const isExpired = await checkIfExpiredByHTML();
-
-      if (isExpired) {
-        statusDiv.innerHTML = "⛔ Server Expired";
-        playersDiv.innerHTML = "";
-        offlineStart.innerHTML = `
-          <h3>⏳ Server Expired</h3>
-          <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
-            <button style="background:red; color:white;">🔁 Renew Server</button>
-          </a>`;
-        offlineStart.style.display = "block";
-        return;
-      }
-
-      // Just offline
+      // Server is offline
       statusDiv.innerHTML = "🔴 Server is Offline";
       playersDiv.innerHTML = "";
       offlineStart.innerHTML = `
@@ -226,7 +212,7 @@ async function fetchServerStatus() {
         </a>`;
       offlineStart.style.display = "block";
     } else {
-      // Online
+      // Server is online
       statusDiv.innerHTML = "🟢 Server is Online";
       playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
       offlineStart.style.display = "none";
@@ -240,25 +226,12 @@ async function fetchServerStatus() {
   }
 }
 
-// Enhanced Expiry Detection from FreeMcServer HTML
-async function checkIfExpiredByHTML() {
-  try {
-    const res = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
-    const html = await res.text();
-    return html.includes("Renew") || html.includes("expired") || html.includes(">Start<");
-  } catch (err) {
-    console.warn("Expire check failed:", err);
-    return false;
-  }
-}
-
 fetchServerStatus();
 setInterval(fetchServerStatus, 5000);
-
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
-const updateMode = true; // change to false when update is over
+const updateMode = false; // change to false when update is over
 
-const allowedUsername = "Ansh_2613"; // optional, not shown to users
+const allowedUsername = "26"; // optional, not shown to users
 
 const loginForm = document.getElementById("login-form");
 const loginSection = document.getElementById("login-section");
