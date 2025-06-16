@@ -253,7 +253,7 @@ async function checkIfExpiredByHTML() {
   try {
     const res = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
     const html = await res.text();
-    return html.includes(">Start<");
+ return html.includes("Renew") || html.includes("expired") || html.includes(">Start<");
   } catch (err) {
     console.warn("Expire check failed:", err);
     return false;
