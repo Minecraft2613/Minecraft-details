@@ -294,6 +294,31 @@ async function fetchServerStatus() {
 
 fetchServerStatus();
 setInterval(fetchServerStatus, 5000);
+  async function checkIfExpired() {
+  try {
+    const response = await fetch("https://corsproxy.io/?https://freemcserver.net/server/1524209");
+    const html = await response.text();
+
+    if (html.includes("Start")) {
+      // Assume expired if we see "Start" and status API said it's offline
+      const statusDiv = document.getElementById("server-status");
+      const offlineStart = document.getElementById("offline-start");
+
+      statusDiv.innerHTML = "⛔ Server Expired";
+      offlineStart.innerHTML = `
+        <h3>⏳ Server Expired</h3>
+        <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">
+          <button>🔁 Renew Server</button>
+        </a>
+      `;
+      offlineStart.style.display = "block";
+    }
+  } catch (err) {
+    console.error("Expire check failed:", err);
+  }
+}
+checkIfExpired();
+
 
 // Copy-to-Clipboard
 function copyToClipboard(id) {
