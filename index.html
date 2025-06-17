@@ -52,39 +52,58 @@
     #main-content {
       display: none;
     }
-    .top-bar {
-  text-align: right;
-  margin-top: 10px;
-  margin-right: 20px;
+    :root {
+  --box-color: #1e1e1e;
+  --glow-color: transparent;
+  --glow-speed: 3s;
+  --glow-brightness: 0.6;
+  --bg-theme: linear-gradient(-45deg, #1e1e1e, #292929, #1b1b1b, #121212);
+  --glow-enabled: true;
+}
+@keyframes glowBox {
+  0% {
+    box-shadow: 0 0 calc(15px * var(--glow-brightness)) var(--glow-color),
+                0 0 calc(30px * var(--glow-brightness)) var(--glow-color);
+  }
+  100% {
+    box-shadow: 0 0 calc(30px * var(--glow-brightness)) var(--glow-color),
+                0 0 calc(60px * var(--glow-brightness)) var(--glow-color);
+  }
+}
+body {
+  background: var(--bg-theme);
 }
 
-#changeThemeBtn {
-  background-color: #00ffcc;
-  color: #000;
-  font-weight: bold;
-  padding: 10px 18px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#changeThemeBtn:hover {
-  background-color: #00ccb3;
+.yourFormClass, .infoBox {
+  background: var(--box-color);
+  box-shadow:
+    0 0 calc(25px * var(--glow-brightness)) var(--glow-color),
+    0 0 calc(50px * var(--glow-brightness)) var(--glow-color);
+  animation: glowBox var(--glow-speed) ease-in-out infinite alternate;
 }
 
   </style>
 </head>
 <body>
-<div class="top-bar">
-  <button id="changeThemeBtn" onclick="toggleThemePanel()">🎨 Change Theme</button>
-</div>
-<div id="themePanel" style="display:none; margin-top: 10px; background: #1e1e1e; border: 2px solid #00ffcc; border-radius: 10px; padding: 15px;">
-  <label>Box Color</label><input type="color" id="boxColor"><br>
-  <label>Glow Color</label><input type="color" id="glowColor"><br>
-  <label>Glow Speed</label><input type="range" id="glowSpeed" min="1" max="10"><br>
-  <label>Glow Brightness</label><input type="range" id="glowBrightness" min="0" max="1" step="0.1"><br>
-  <label>Background Theme</label><input type="text" id="bgTheme" placeholder="linear-gradient(...) or image URL"><br>
+<button class="theme-btn" onclick="toggleThemePanel()">🎨 Change Theme</button>
+<div id="themePanel" style="display:none;">
+  <label>Box Color</label>
+  <input type="color" id="boxColor"><br>
+
+  <label>Glow Color</label>
+  <input type="color" id="glowColor"><br>
+
+  <label><input type="checkbox" id="glowToggle" checked> Enable Glow</label><br>
+
+  <label>Glow Speed</label>
+  <input type="range" id="glowSpeed" min="1" max="10"><br>
+
+  <label>Glow Brightness</label>
+  <input type="range" id="glowBrightness" min="0" max="1" step="0.1"><br>
+
+  <label>Background Theme</label>
+  <input type="text" id="bgTheme" placeholder="e.g. linear-gradient(...) or image URL"><br>
+
   <button onclick="saveTheme()">💾 Save</button>
   <button onclick="resetTheme()">🔄 Reset</button>
 </div>
@@ -231,6 +250,72 @@ function toggleThemePanel() {
   const panel = document.getElementById("themePanel");
   panel.style.display = panel.style.display === "block" ? "none" : "block";
 }
+
+// Apply saved theme settings from localStorage
+function applyTheme() {
+  const settings = [
+    'box-color',
+    'glow-color',
+    'glow-speed',
+    'glow-brightness',
+    'bg-theme',
+    'glow-enabled'
+  ];
+
+  settings.forEach(key => {
+    const value = localStorage.getItem('--' + key);
+    if (value !== null) {
+      document.documentElement.style.setProperty('--' + key, value);
+    }
+  });
+
+  // Set checkbox state based on saved glow status
+  const glowEnabled = localStorage.getItem('--glow-enabled') !== 'false';
+  document.getElementById("glowToggle").checked = glowEnabled;
+}
+
+// Save theme to localStorage
+function saveTheme() {
+  const box = document.getElementById("boxColor").value;
+  const glow = document.getElementById("glowColor").value;
+  const speed = document.getElementById("glowSpeed").value + "s";
+  const bright = document.getElementById("glowBrightness").value;
+  const bg = document.getElementById("bgTheme").value;
+  const noGlow = !document.getElementById("glowToggle").checked;
+
+  localStorage.setItem('--box-color', box);
+  localStorage.setItem('--glow-color', noGlow ? 'transparent' : glow);
+  localStorage.setItem('--glow-speed', speed);
+  localStorage.setItem('--glow-brightness', bright);
+  localStorage.setItem('--bg-theme', bg.startsWith("http") ? `url(${bg})` : bg);
+  localStorage.setItem('--glow-enabled', String(!noGlow));
+
+  applyTheme();
+  alert("🎨 Theme saved!");
+}
+
+// Reset all to default and remove saved settings
+function resetTheme() {
+  const defaults = {
+    '--box-color': '#1e1e1e',
+    '--glow-color': 'transparent',
+    '--glow-speed': '3s',
+    '--glow-brightness': '0.6',
+    '--bg-theme': 'linear-gradient(-45deg, #1e1e1e, #292929, #1b1b1b, #121212)',
+    '--glow-enabled': 'false'
+  };
+
+  for (let key in defaults) {
+    document.documentElement.style.setProperty(key, defaults[key]);
+    localStorage.setItem(key, defaults[key]);
+  }
+
+  document.getElementById("glowToggle").checked = false;
+
+  alert("🔄 Theme reset to default and glow disabled.");
+}
+
+window.onload = applyTheme;
   window.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem("formSuccess") === "yes") {
       alert("✅ Your form has been successfully submitted!");
