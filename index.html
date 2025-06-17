@@ -85,29 +85,6 @@ body {
   </style>
 </head>
 <body>
-<button class="theme-btn" onclick="toggleThemePanel()">🎨 Change Theme</button>
-<div id="themePanel" style="display:none;">
-  <label>Box Color</label>
-  <input type="color" id="boxColor"><br>
-
-  <label>Glow Color</label>
-  <input type="color" id="glowColor"><br>
-
-  <label><input type="checkbox" id="glowToggle" checked> Enable Glow</label><br>
-
-  <label>Glow Speed</label>
-  <input type="range" id="glowSpeed" min="1" max="10"><br>
-
-  <label>Glow Brightness</label>
-  <input type="range" id="glowBrightness" min="0" max="1" step="0.1"><br>
-
-  <label>Background Theme</label>
-  <input type="text" id="bgTheme" placeholder="e.g. linear-gradient(...) or image URL"><br>
-
-  <button onclick="saveTheme()">💾 Save</button>
-  <button onclick="resetTheme()">🔄 Reset</button>
-</div>
-
   <section id="login-section">
     <h2>🔐 Login Required</h2>
     <p>Enter your FreeMcServer username to access the site:</p>
@@ -133,6 +110,28 @@ body {
     <p>Don't have a FreeMcServer account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a> and return to enter your username.</p>
 
   </section>
+<button class="theme-btn" onclick="toggleThemePanel()">🎨 Change Theme</button>
+<div id="themePanel" style="display:none;">
+  <label>Box Color</label>
+  <input type="color" id="boxColor"><br>
+
+  <label>Glow Color</label>
+  <input type="color" id="glowColor"><br>
+
+  <label><input type="checkbox" id="glowToggle" checked> Enable Glow</label><br>
+
+  <label>Glow Speed</label>
+  <input type="range" id="glowSpeed" min="1" max="10"><br>
+
+  <label>Glow Brightness</label>
+  <input type="range" id="glowBrightness" min="0" max="1" step="0.1"><br>
+
+  <label>Background Theme</label>
+  <input type="text" id="bgTheme" placeholder="e.g. linear-gradient(...) or image URL"><br>
+
+  <button onclick="saveTheme()">💾 Save</button>
+  <button onclick="resetTheme()">🔄 Reset</button>
+</div>
 
   <div id="main-content">
     <header>
