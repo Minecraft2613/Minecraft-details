@@ -343,62 +343,73 @@ function resetTheme() {
 
 window.addEventListener("DOMContentLoaded", applyTheme);
 // ✅ TOGGLE THIS TO TRUE WHEN UPDATING
-const updateMode = false; // change to false when update is over
-
-const allowedUsername = "26"; // optional, not shown to users
+<script>
+const updateMode = false; // Set to true during maintenance
+const allowedUsername = "26"; // Only allowed when updateMode = true
 
 const loginForm = document.getElementById("login-form");
 const loginSection = document.getElementById("login-section");
 const mainContent = document.getElementById("main-content");
 
-// Handle login form
+// Login Handling
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const username = document.getElementById("username").value.trim();
   if (!username) {
-    alert("Please enter a username.");
+    alert("Please enter your FreeMcServer username.");
     return;
   }
-// Send username to Discord webhook
-fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
-  })
-}).catch(error => {
-  console.error("Webhook failed:", error);
-});
-sessionStorage.setItem("loggedIn", "true");
+
   localStorage.setItem("freemc_username", username);
+  sessionStorage.setItem("loggedIn", "true");
 
+  // Webhook
+  fetch("https://discordapp.com/api/webhooks/1382996204715118622/gre3gq6QYSua-80NN7U6jZZtNZLVbTXq7fcoLcKpoLqkEwh-qHJyQa67-xYqeo2Ed4MZ", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: `🧑 New login: **${username}** just accessed the Minecraft server site.`
+    })
+  });
 
- if (updateMode && username !== allowedUsername) {
-  document.body.innerHTML = `
-    <div style="text-align:center; padding:60px;">
-      <h2>🚧 Website is Currently Under Update</h2>
-      <p>Please come back later.</p>
-    </div>`;
-  return;
-}
+  if (updateMode && username !== allowedUsername) {
+    document.body.innerHTML = `
+      <div style="text-align:center; padding:60px;">
+        <h2>🚧 Website is Under Maintenance</h2>
+        <p>Please check back later.</p>
+      </div>`;
+    return;
+  }
 
-
+  // Show content
   loginSection.style.display = "none";
   mainContent.style.display = "block";
 });
 
-// Show content if already logged in and not updating
+// Auto-login if allowed
 window.addEventListener("DOMContentLoaded", () => {
-  const storedUsername = localStorage.getItem("freemc_username");
-  const sessionLoggedIn = sessionStorage.getItem("loggedIn");
+  const username = localStorage.getItem("freemc_username");
+  const loggedIn = sessionStorage.getItem("loggedIn");
 
-  if (storedUsername && sessionLoggedIn === "true" && !updateMode) {
+  if (updateMode && username !== allowedUsername) {
+    document.body.innerHTML = `
+      <div style="text-align:center; padding:60px;">
+        <h2>🚧 Website is Under Maintenance</h2>
+        <p>Only staff can view this site right now.</p>
+      </div>`;
+    return;
+  }
+
+  if (username && loggedIn === "true") {
     loginSection.style.display = "none";
     mainContent.style.display = "block";
+  } else {
+    loginSection.style.display = "block";
+    mainContent.style.display = "none";
   }
 });
+</script>
+
 
 
 // Server Status Script
