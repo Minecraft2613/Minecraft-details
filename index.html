@@ -1,223 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minecraft Server</title>
-  <link rel="stylesheet" href="style.css">
-<style>
-:root {
-  --box-color: #1e1e1e;
-  --glow-color: transparent;
-  --glow-speed: 3s;
-  --glow-brightness: 0.6;
-  --bg-theme: linear-gradient(-45deg, #1e1e1e, #292929, #1b1b1b, #121212);
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modern Minecraft Server Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-@keyframes glowBox {
-  0% {
-    box-shadow: 0 0 calc(15px * var(--glow-brightness)) var(--glow-color),
-                0 0 calc(30px * var(--glow-brightness)) var(--glow-color);
-  }
-  100% {
-    box-shadow: 0 0 calc(30px * var(--glow-brightness)) var(--glow-color),
-                0 0 calc(60px * var(--glow-brightness)) var(--glow-color);
-  }
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: #fff;
+      padding: 30px;
+      overflow-x: hidden;
+    }
 
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+    /* Loader */
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0f0f0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeOut 1s ease 5s forwards;
+    }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--bg-theme);
-  background-size: 400% 400%;
-  animation: gradientBG 12s ease infinite;
-  color: white;
-  padding: 20px;
-}
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
 
-html {
-  scroll-behavior: smooth;
-}
+    .spinner {
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #00fff7;
+      border-radius: 50%;
+      width: 60px; height: 60px;
+      animation: spin 1s linear infinite;
+    }
 
-@media (max-width: 600px) {
-  nav a {
-    display: block;
-    margin: 10px 0;
-  }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-  #plugin-list li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    /* Container Sections */
+    .section {
+      background: rgba(30, 30, 30, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 30px auto;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      max-width: 850px;
+      transition: transform 0.3s ease;
+    }
 
-  .plugin-link {
-    margin-top: 6px;
-  }
-}
+    .section:hover {
+      transform: scale(1.01);
+    }
 
-.theme-btn {
-  float: right;
-  background-color: #00ffcc;
-  color: #000;
-  font-weight: bold;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
+    h1, h2 {
+      color: #00fff7;
+      text-align: center;
+      margin-bottom: 16px;
+    }
 
-.theme-btn:hover {
-  background-color: #00ccb3;
-}
+    p {
+      color: #ccc;
+      text-align: center;
+    }
 
-#themePanel {
-  display: none;
-  background: #1a1a1a;
-  border: 2px solid #00ffcc;
-  border-radius: 10px;
-  padding: 16px;
-  max-width: 300px;
-  margin: 0 auto 30px auto;
-}
+    iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
 
-#themePanel label {
-  font-size: 14px;
-  color: #ddd;
-  display: block;
-  margin-top: 10px;
-}
+    /* Contact Form */
+    #contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 600px;
+      margin: auto;
+    }
 
-#themePanel input[type="color"],
-#themePanel input[type="range"],
-#themePanel input[type="text"] {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #2a2a2a;
-  color: #fff;
-}
+    #contact-form input,
+    #contact-form textarea {
+      background: rgba(40, 40, 40, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      resize: vertical;
+    }
 
-#themePanel button {
-  width: 48%;
-  margin: 5px 1%;
-  padding: 8px;
-  font-weight: bold;
-  background: #00ffcc;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: black;
-}
+    #contact-form button {
+      background: linear-gradient(135deg, #00fff7, #00b7ff);
+      color: #000;
+      padding: 12px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
 
-#themePanel button:hover {
-  background: #00ddbb;
-}
+    #contact-form button:hover {
+      background: linear-gradient(135deg, #00eae0, #00bfff);
+    }
 
-/* Glow effect applied to important boxes */
-section,
-form,
-.infoBox,
-.glowTarget {
-  background: var(--box-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow:
-    0 0 calc(25px * var(--glow-brightness)) var(--glow-color),
-    0 0 calc(50px * var(--glow-brightness)) var(--glow-color);
-  animation: glowBox var(--glow-speed) ease-in-out infinite alternate;
-}
-
-/* Plugin list layout */
-#plugin-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #2a2a2a;
-  padding: 10px 15px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-#plugin-list li:hover {
-  background: #333;
-}
-
-.plugin-link {
-  color: #00ffcc;
-  text-decoration: none;
-  font-size: 0.9em;
-  white-space: nowrap;
-}
-
-.plugin-link:hover {
-  text-decoration: underline;
-}
-
-/* Other UI elements */
-.toggle-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 6px 12px;
-  background-color: #444;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#plugin-search {
-  width: 100%;
-  margin-bottom: 15px;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background-color: #1f1f1f;
-  color: #f0f0f0;
-}
-
-#login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 300px;
-  margin: 50px auto;
-}
-
-#login-section {
-  text-align: center;
-}
-
-#main-content {
-  display: none;
-}
-</style>
-
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #888;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
-  <section id="login-section">
-    <h2>🔐 Login Required</h2>
-    <p>Enter your FreeMcServer username to access the site:</p>
-    <form id="login-form">
-      <input type="text" id="username" placeholder="Enter username" required>
-      <div style="margin-top: 20px;">
-  <label style="font-size: 0.95em;">
-    <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
-    I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
-  </label>
-</div>
 
-<button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="section">
+    <h1>🚀 Welcome to Our Minecraft Server</h1>
+    <p>Everything you need – plugins, status, support, and more!</p>
+  </div>
+
+  <!-- HOW TO START -->
+  <div class="section">
+    <h2>🧭 How to Start</h2>
+    <p>Join using <strong>mc1524209.fmcs.cloud</strong> (Java & Bedrock supported via GeyserMC)</p>
+    <p>Need help? Contact us via the form below.</p>
+  </div>
+
+  <!-- TAX PANEL IFRAME -->
+  <div class="section">
+    <h2>💰 View Your Player Tax</h2>
+    <iframe src="https://minecraft2613.github.io/taxess/"></iframe>
+  </div>
+
+  <!-- CONTACT FORM -->
+  <div class="section">
+    <h2>📬 Contact / Feedback</h2>
+    <form id="contact-form">
+      <input type="text" placeholder="Your Minecraft Username" required />
+      <input type="text" placeholder="Your Discord or Instagram ID" required />
+      <textarea rows="5" placeholder="Your message..." required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <footer>
+    &copy; 2025 Minecraft Server. Built with ❤️ for the community.
+  </footer>
+
+  <!-- Optional: Script for fade removal -->
+  <script>
+    setTimeout(() => {
+      document.getElementById('loader').style.display = 'none';
+    }, 5000);
+  </script>
 
 <script>
   function toggleLogin() {
@@ -625,6 +582,5 @@ ${message}`;
     }
   }
 </script>
-
 </body>
 </html>
