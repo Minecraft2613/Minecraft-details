@@ -112,7 +112,13 @@
   <input type="text" id="username-input" placeholder="Enter your FreeMcServer username" />
   <button onclick="submitUsername()">Continue</button>
 </div>
-
+<script>
+  function toggleLogin() {
+    const checkbox = document.getElementById('agreeCheck');
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.disabled = !checkbox.checked;
+  }
+</script>
 <div id="main-content" class="hidden">
   <div class="section">
     <h1>🔥 Minecraft Server</h1>
