@@ -1,117 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Minecraft Server Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(120deg, #1f1f2e, #121212);
-      color: #e0e0e0;
-      padding: 20px;
-    }
-    .hidden { display: none; }
-    .section {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 25px;
-      margin: 20px auto;
-      max-width: 950px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-    h1, h2 {
-      text-align: center;
-      color: #00fff7;
-      text-shadow: 0 0 10px #00fff7;
-      margin-bottom: 15px;
-    }
-    p, ul, li { color: #ccc; line-height: 1.6; }
-    a { color: #00ccff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    button {
-      background: #00fff7;
-      color: #000;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-    }
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 12px #00fff7;
-    }
-    .glow-btn {
-      background: linear-gradient(135deg, #00fff7, #00b7ff);
-      color: #000;
-      text-align: center;
-      display: block;
-      margin: 15px auto;
-      padding: 12px 22px;
-      font-size: 1.1rem;
-      border-radius: 12px;
-      width: fit-content;
-    }
-    input[type="text"] {
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #444;
-      border-radius: 8px;
-      padding: 10px;
-      width: 100%;
-      margin-bottom: 15px;
-    }
-    #contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 600px;
-      margin: auto;
-    }
-    #contact-form input,
-    #contact-form textarea {
-      background: #1a1a1a;
-      border: 1px solid #444;
-      color: #eee;
-      padding: 12px;
-      border-radius: 10px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #888;
-      font-size: 0.9em;
-    }
-    ul { list-style: none; padding-left: 0; }
-    li {
-      background: #2a2a2a;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 6px;
-    }
-    #server-status-text {
-      text-align: center;
-      font-size: 1.2rem;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    .online { color: #42f56c; }
-    .offline { color: #f54242; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Server</title>
+  <link rel="stylesheet" href="style.css">
+<style>
+:root {
+  --box-color: #1e1e1e;
+  --glow-color: transparent;
+  --glow-speed: 3s;
+  --glow-brightness: 0.6;
+  --bg-theme: linear-gradient(-45deg, #1e1e1e, #292929, #1b1b1b, #121212);
+}
+
+@keyframes glowBox {
+  0% {
+    box-shadow: 0 0 calc(15px * var(--glow-brightness)) var(--glow-color),
+                0 0 calc(30px * var(--glow-brightness)) var(--glow-color);
+  }
+  100% {
+    box-shadow: 0 0 calc(30px * var(--glow-brightness)) var(--glow-color),
+                0 0 calc(60px * var(--glow-brightness)) var(--glow-color);
+  }
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg-theme);
+  background-size: 400% 400%;
+  animation: gradientBG 12s ease infinite;
+  color: white;
+  padding: 20px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 600px) {
+  nav a {
+    display: block;
+    margin: 10px 0;
+  }
+
+  #plugin-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .plugin-link {
+    margin-top: 6px;
+  }
+}
+
+.theme-btn {
+  float: right;
+  background-color: #00ffcc;
+  color: #000;
+  font-weight: bold;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.theme-btn:hover {
+  background-color: #00ccb3;
+}
+
+#themePanel {
+  display: none;
+  background: #1a1a1a;
+  border: 2px solid #00ffcc;
+  border-radius: 10px;
+  padding: 16px;
+  max-width: 300px;
+  margin: 0 auto 30px auto;
+}
+
+#themePanel label {
+  font-size: 14px;
+  color: #ddd;
+  display: block;
+  margin-top: 10px;
+}
+
+#themePanel input[type="color"],
+#themePanel input[type="range"],
+#themePanel input[type="text"] {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+#themePanel button {
+  width: 48%;
+  margin: 5px 1%;
+  padding: 8px;
+  font-weight: bold;
+  background: #00ffcc;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: black;
+}
+
+#themePanel button:hover {
+  background: #00ddbb;
+}
+
+/* Glow effect applied to important boxes */
+section,
+form,
+.infoBox,
+.glowTarget {
+  background: var(--box-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow:
+    0 0 calc(25px * var(--glow-brightness)) var(--glow-color),
+    0 0 calc(50px * var(--glow-brightness)) var(--glow-color);
+  animation: glowBox var(--glow-speed) ease-in-out infinite alternate;
+}
+
+/* Plugin list layout */
+#plugin-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2a2a2a;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+#plugin-list li:hover {
+  background: #333;
+}
+
+.plugin-link {
+  color: #00ffcc;
+  text-decoration: none;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.plugin-link:hover {
+  text-decoration: underline;
+}
+
+/* Other UI elements */
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 12px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#plugin-search {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 50px auto;
+}
+
+#login-section {
+  text-align: center;
+}
+
+#main-content {
+  display: none;
+}
+</style>
+
 </head>
 <body>
-
-<div id="login-section" class="section">
-  <h2>🔐 Enter Your Username</h2>
-  <input type="text" id="username-input" placeholder="Enter your FreeMcServer username" />
-  <button onclick="submitUsername()">Continue</button>
+  <section id="login-section">
+    <h2>🔐 Login Required</h2>
+    <p>Enter your FreeMcServer username to access the site:</p>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Enter username" required>
+      <div style="margin-top: 20px;">
+  <label style="font-size: 0.95em;">
+    <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
+    I have read and agree to the <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
+  </label>
 </div>
+
+<button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
+
 <script>
   function toggleLogin() {
     const checkbox = document.getElementById('agreeCheck');
@@ -119,70 +226,148 @@
     loginBtn.disabled = !checkbox.checked;
   }
 </script>
-<div id="main-content" class="hidden">
-  <div class="section">
-    <h1>🔥 Minecraft Server</h1>
-    <p><strong>Java & Bedrock IP:</strong> mc1524209.fmcs.cloud</p>
-    <p><strong>Port:</strong> 38762 <button>Copy</button></p>
-    <p><strong>Quick Join (Bedrock):</strong> <button>Connect with Bedrock</button></p>
-    <p><strong>Version:</strong> Java 1.21.4-1.7 / Bedrock 1.21.70–1.21.81 (via Geyser)</p>
-  </div>
+    </form> 
+    <p>Don't have a FreeMcServer account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a> and return to enter your username.</p>
 
-  <div class="section">
-    <h2>📶 Server Status</h2>
-    <div id="server-status-text">Checking...</div>
-  </div>
+  </section>
+<button class="theme-btn" onclick="toggleThemePanel()">🎨 Change Theme</button>
 
-  <div class="section">
-    <h2>🧩 Plugins</h2>
-    <ul>
-      <li><a href="https://modrinth.com/plugin/skinrestorer" target="_blank">SkinRestorer</a></li>
-      <li><a href="https://modrinth.com/plugin/viaversion" target="_blank">ViaVersion</a></li>
-      <li><a href="https://modrinth.com/plugin/luckperms" target="_blank">LuckPerms</a></li>
-      <li><a href="https://modrinth.com/plugin/vault" target="_blank">Vault</a></li>
-      <li><a href="https://modrinth.com/plugin/coreprotect" target="_blank">CoreProtect</a></li>
-      <li><a href="https://modrinth.com/plugin/onlinetime" target="_blank">OnlineTime</a></li>
-      <li><a href="https://modrinth.com/plugin/picojobs" target="_blank">PicoJobs</a></li>
-      <li><a href="https://modrinth.com/plugin/gsit" target="_blank">GSit</a></li>
-      <li><a href="https://modrinth.com/plugin/economyshopgui" target="_blank">EconomyShopGUI</a></li>
-      <li><a href="https://modrinth.com/plugin/beastlib" target="_blank">BeastLib</a></li>
-      <li><a href="https://modrinth.com/plugin/geyser" target="_blank">Geyser-Spigot</a></li>
-      <li><a href="https://modrinth.com/plugin/viabackwards" target="_blank">ViaBackwards</a></li>
-      <li><a href="https://modrinth.com/plugin/essentialsx" target="_blank">EssentialsX</a></li>
-      <li><a href="#">Bedogate</a></li>
-      <li><a href="#">HalfPlayerSleep</a></li>
-    </ul>
-  </div>
+<div id="themePanel">
+  <label>Box Background Color</label>
+  <input type="color" id="boxColor">
 
-  <div class="section">
-    <h2>🎮 How to Join The Server</h2>
-    <p>1. Open Minecraft (Bedrock users click Connect with Bedrock).</p>
-    <p>2. Click on Multiplayer → Add Server.</p>
-    <p>3. Enter IP: <strong>mc1524209.fmcs.cloud</strong></p>
-    <p>4. Port: <strong>47112</strong> (Java & Bedrock)</p>
-    <p>5. Click Join Server and enjoy!</p>
-  </div>
+  <label>Glow Color</label>
+  <input type="color" id="glowColor">
 
-  <div class="section">
-    <h2>💰 View Your Tax Portal</h2>
-    <button class="glow-btn" onclick="window.open('https://minecraft2613.github.io/taxess/', '_blank')">🚀 View Your Tax</button>
-  </div>
+  <label><input type="checkbox" id="glowToggle" checked> Enable Glow</label>
 
-  <div class="section">
-    <h2>📬 Contact / Feedback</h2>
-    <form id="contact-form">
-      <input type="text" placeholder="Your Minecraft Username" required />
-      <input type="text" placeholder="Your Discord or Instagram ID" required />
-      <textarea rows="5" placeholder="Your message..." required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-  </div>
+  <label>Glow Speed</label>
+  <input type="range" id="glowSpeed" min="1" max="10" value="3">
 
-  <footer>
-    &copy; 2025 Minecraft Server. Built with ❤️ for the community.
-  </footer>
+  <label>Glow Brightness</label>
+  <input type="range" id="glowBrightness" min="0" max="1" step="0.1" value="0.6">
+
+  <label>Background Theme</label>
+  <input type="text" id="bgTheme" placeholder="e.g. linear-gradient(...) or image URL">
+
+  <div style="text-align:center;">
+    <button onclick="saveTheme()">💾 Save</button>
+    <button onclick="resetTheme()">🔄 Reset</button>
+  </div>
 </div>
 
+
+  <div id="main-content">
+    <header>
+      <h1>🔥 Minecraft Server</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#plugins">Plugins</a>
+        <a href="#status">Status</a>
+        <a href="#how-to-play">How to Join</a>
+        <a href="#how-to-start">How to Start Server</a>
+        <a href="#Form">Form for Joining Bonus</a> 
+        <a href="#contact-">Contact us</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="about">
+        <h2>🌍 Server Info</h2>
+        <p><strong>Java & Bedrock IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
+        <p><strong>Port:</strong> <span id="server-port">38762</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
+        <p>
+          <strong>Quick Join (Bedrock):</strong>
+          <a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112">
+            <button>📲 Connect with Bedrock</button>
+          </a>
+        </p>
+        <p><strong>Version:</strong> Java 1.21.4-1.7(via backward) / Bedrock 1.21.70-1.211.81(via Geyser)</p>
+        <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
+      </section>
+
+      <section id="status">
+        <h2>📊 Server Status</h2>
+        <div id="server-status">Checking status...</div>
+        <div id="player-count"></div>
+        <div id="offline-start" style="display: none;">
+          <h3>🛠 Server is Offline</h3>
+          <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Start Server</button></a>
+        </div>
+      </section>
+
+      <section id="plugins">
+        <h2>🔌 Plugins</h2>
+        <input type="text" id="plugin-search" placeholder="Search plugins...">
+        <ul id="plugin-list">
+          <li>SkinRestorer <a class="plugin-link" href="https://modrinth.com/plugin/skinrestorer" target="_blank">Details ↗</a></li>
+          <li>ViaVersion <a class="plugin-link" href="https://modrinth.com/plugin/viaversion" target="_blank">Details ↗</a></li>
+          <li>LuckPerms <a class="plugin-link" href="https://modrinth.com/plugin/luckperms" target="_blank">Details ↗</a></li>
+          <li>Vault <a class="plugin-link" href="https://www.spigotmc.org/resources/vault.34315/" target="_blank">Details ↗</a></li>
+          <li>CoreProtect <a class="plugin-link" href="https://modrinth.com/plugin/coreprotect" target="_blank">Details ↗</a></li>
+          <li>OnlineTime <a class="plugin-link" href="https://www.spigotmc.org/resources/onlinetime.67087/" target="_blank">Details ↗</a></li>
+          <li>PicoJobs <a class="plugin-link" href="https://www.spigotmc.org/resources/picojobs.79207/" target="_blank">Details ↗</a></li>
+          <li>GSit <a class="plugin-link" href="https://modrinth.com/plugin/gsit" target="_blank">Details ↗</a></li>
+          <li>EconomyShopGUI <a class="plugin-link" href="https://modrinth.com/plugin/economyshopgui" target="_blank">Details ↗</a></li>
+          <li>BeastLib <a class="plugin-link" href="https://modrinth.com/plugin/beastlib" target="_blank">Details ↗</a></li>
+          <li>Geyser-Spigot <a class="plugin-link" href="https://modrinth.com/plugin/geyser" target="_blank">Details ↗</a></li>
+          <li>ViaBackwards <a class="plugin-link" href="https://modrinth.com/plugin/viabackwards" target="_blank">Details ↗</a></li>
+          <li>EssentialsX <a class="plugin-link" href="https://essentialsx.net/" target="_blank">Details ↗</a></li>
+          <li>Floodgate<a class="plugin-link" href="https://hangar.papermc.io/GeyserMC/Floodgate" target="_blank">Details ↗</a></li>
+          <li>HalfPlayerSleep<a class="plugin-link" href="https://www.spigotmc.org/resources/halfserversleep.85606/" target="_blank">Details ↗</a></li>
+        </ul>
+      </section>
+
+      <section id="how-to-play">
+        <h2>🎮 How to Join The Server</h2>
+        <ol>
+          <li>Open Minecraft (Bedrock users click on the Connect with Bedrock button above).</li>
+          <li>Click on <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
+          <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
+          <li>Use Port: <strong>47112</strong> (Java & Bedrock)</li>
+          <li>Click <strong>Join Server</strong> and enjoy!</li>
+        </ol>
+      </section>
+
+      <section id="how-to-start">
+        <h2>🛠 How to Start Server if Offline  Or Expired</h2>
+        <ol>
+          <li>Click the <strong>"Start Server"</strong> button above.</li>
+          <li>It will open FreeMcServer's public page.</li>
+          <li>Scroll down the page.</li>
+          <li>If it shows <strong>Stop and Expires in X mins</strong>, the server is already starting or online.</li>
+          <li>If it shows <strong>Start</strong>, click it.</li>
+          <li>If it shows <strong>Expire</strong>, click <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">Renew Button and follow step 5</a>.</li>
+          <li>Wait around 5 minutes.</li>
+          <li>Then follow the steps in <strong>How to Play</strong>.</li>
+        </ol>
+      </section>
+   <section id="Form">
+     <h2 style="text-align: center; margin-top: 40px;">Form for Joining Bonus</h2>
+<div style="text-align: center; margin-top: 10px;">
+<a href="https://minecraft2613.github.io/joining-form/" style="font-size: 18px; background-color: #28a745; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">Fill Form</a>
+
+</div>
+   </section>
+   <section id="contact">
+  <h2>📬 Contact Us</h2>
+  <p>If you have questions, feedback, or issues, let us know below:</p>
+  <form id="contact-form">
+    <input type="text" id="contact-name" placeholder="Your Name (Optional)"><br>
+    <input type="text" id="contact-discord" placeholder="Your Discord ID (e.g. user#1234)" required><br>
+    <input type="text" id="contact-minecraft" placeholder="Your Minecraft Username" required><br>
+    <textarea id="contact-message" placeholder="Your message..." rows="5" required></textarea><br>
+    <button type="submit">Send Message</button>
+  </form>
+  <p id="contact-status"></p>
+</section>
+
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Minecraft Server. Hosted via <a href="https://freemcserver.net">FreeMcServer.net</a></p>
+    </footer>
+  </div>
 <script>
 function toggleThemePanel() {
   const panel = document.getElementById("themePanel");
