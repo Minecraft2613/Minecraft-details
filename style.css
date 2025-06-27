@@ -4,31 +4,24 @@
   --glow-speed: 3s;
   --glow-brightness: 0.6;
   --bg-theme: linear-gradient(-45deg, #1e1e1e, #292929, #1b1b1b, #121212);
+  --glow-enabled: true;
 }
 
 html {
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  background: #000;
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: var(--bg-theme);
+  background: #121212;
+  background-image: var(--bg-theme);
   background-size: 400% 400%;
   animation: gradientBG 12s ease infinite;
   color: #f0f0f0;
   padding: 20px;
   min-height: 100vh;
   overflow-x: hidden;
-}
-
-body::after {
-  content: "";
-  display: block;
-  height: 60px;
 }
 
 @keyframes gradientBG {
@@ -49,10 +42,7 @@ body::after {
 section,
 form,
 header,
-footer,
-#themePanel,
-#Form,
-#tax-link-box {
+footer {
   background: var(--box-color);
   border-radius: 12px;
   padding: 20px;
@@ -70,14 +60,12 @@ nav {
   text-align: center;
   margin-top: 10px;
 }
-
 nav a {
   color: #ccc;
   text-decoration: none;
   margin: 0 12px;
   font-weight: bold;
 }
-
 nav a:hover {
   color: #00ffe1;
 }
@@ -86,7 +74,6 @@ nav a:hover {
   list-style: none;
   padding: 0;
 }
-
 #plugin-list li {
   display: flex;
   justify-content: space-between;
@@ -97,24 +84,20 @@ nav a:hover {
   margin-bottom: 10px;
   transition: background 0.3s;
 }
-
 #plugin-list li:hover {
   background: #3a3a3a;
 }
-
 .plugin-link {
   color: #00ffe1;
   font-size: 0.85rem;
   text-decoration: none;
 }
-
 .plugin-link:hover {
   text-decoration: underline;
 }
 
 .theme-btn,
-button,
-.form-btn {
+button {
   background: #00ffe1;
   color: #000;
   font-weight: bold;
@@ -122,21 +105,10 @@ button,
   border-radius: 6px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  transition: background 0.3s;
 }
-
-button:hover,
-.form-btn:hover {
+button:hover {
   background-color: #00ccb3;
-  transform: scale(1.05);
-  box-shadow: 0 0 10px var(--glow-color);
-}
-
-.form-btn {
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-  min-width: 140px;
 }
 
 form input,
@@ -157,30 +129,46 @@ footer {
   color: #aaa;
 }
 
+/* Theme panel fix */
+#themePanel {
+  max-width: 400px;
+  margin: 20px auto;
+  overflow-y: auto;
+  max-height: 80vh;
+  padding: 16px;
+  border: 2px solid #00ffe1;
+  background: rgba(30, 30, 30, 0.95);
+  box-shadow: 0 0 20px #00ffe1;
+  border-radius: 10px;
+  display: none;
+}
+
 #themePanel label {
   font-size: 14px;
   color: #ddd;
   display: block;
-  margin-top: 10px;
+  margin-top: 12px;
 }
-
 #themePanel input[type="color"],
 #themePanel input[type="range"],
 #themePanel input[type="text"] {
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding: 6px;
   border-radius: 6px;
   border: 1px solid #444;
   background: #2a2a2a;
   color: #fff;
 }
-
 #themePanel button {
   width: 48%;
   margin: 5px 1%;
+  background: #00ffe1;
+  color: #000;
+  font-weight: bold;
 }
 
+/* Login form */
 #login-form {
   display: flex;
   flex-direction: column;
@@ -188,73 +176,54 @@ footer {
   max-width: 300px;
   margin: 0 auto;
 }
-
 #login-section {
   text-align: center;
 }
-
 #main-content {
   display: none;
 }
 
-/* Blink red checkbox warning */
+/* Side-by-side sections */
+.side-by-side-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.side-box {
+  flex: 1;
+  min-width: 280px;
+  background: var(--box-color);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 225, 0.2);
+}
+
 .blink-red {
-  animation: blinkRed 0.8s infinite;
+  animation: blinkRed 1s infinite;
 }
-
 @keyframes blinkRed {
-  0%, 100% { color: red; }
-  50% { color: #f00; background: #300; }
+  0% { color: red; }
+  50% { color: yellow; }
+  100% { color: red; }
 }
 
-/* Contact section enhancements */
-#contact-form textarea {
-  resize: vertical;
-}
-
-#player-count, #players {
-  text-align: center;
-  margin-top: 10px;
-  color: #0f0;
-  font-weight: bold;
-}
-
-#offline-start {
-  text-align: center;
-}
-
-#Form, #tax-link-box {
-  margin-bottom: 0;
-}
-
-/* Layout for bonus + tax */
-#Form h2, #tax-link-box h2 {
-  margin-bottom: 10px;
-}
-
-#Form a.form-btn,
-#tax-link-box a.form-btn {
-  background: #28a745;
-}
-
-#tax-link-box a.form-btn {
-  background: #ff9800;
-}
-
-/* Responsive Flexbox */
 @media (max-width: 768px) {
+  .side-by-side-section {
+    flex-direction: column;
+  }
   #plugin-list li {
     flex-direction: column;
     align-items: flex-start;
   }
-
   nav a {
     display: inline-block;
     margin: 8px;
-  }
-
-  #Form, #tax-link-box {
-    width: 100%;
-    margin-bottom: 20px;
   }
 }
