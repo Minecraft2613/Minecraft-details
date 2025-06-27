@@ -161,7 +161,7 @@ footer {
   margin: 5px 1%;
 }
 
-/* Login */
+/* Login Section */
 #login-form {
   display: flex;
   flex-direction: column;
@@ -195,6 +195,7 @@ footer {
 }
 .side-box {
   flex: 1;
+  min-height: 350px;
   min-width: 300px;
   background: var(--box-color);
   border-radius: 12px;
@@ -204,6 +205,12 @@ footer {
   display: flex;
   flex-direction: column;
 }
+
+/* JS Hooks (for ind.js / scr.js) */
+.js-toggle-login { cursor: pointer; }
+.js-theme-input,
+.js-theme-btn,
+.js-plugin-filter { outline: none; }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
