@@ -2,128 +2,149 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Minecraft Server</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- Login Section -->
-<section id="login-section">
-  <h2>🔐 Login Required</h2>
-  <p>Enter your FreeMcServer username to access the site:</p>
-  <form id="login-form">
-    <input type="text" id="username" placeholder="Enter username" required />
-    <div style="margin-top: 20px;">
-      <label style="font-size: 0.95em;">
-        <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
-        I have read and agree to the
-        <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
-      </label>
+  <section id="login-section">
+    <h2>🔐 Login Required</h2>
+    <p>Enter your FreeMcServer username to access the site:</p>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Enter username" required />
+      <div style="margin-top: 20px;">
+        <label style="font-size: 0.95em;">
+          <input type="checkbox" id="agreeCheck" onclick="toggleLogin()" />
+          I agree to the
+          <a href="https://minecraft2613.github.io/Minecarft-2613-Rules/" target="_blank" style="color: #00ffff; text-decoration: underline;">Server Rules</a>.
+        </label>
+      </div>
+      <button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
+<script>
+  function toggleLogin() {
+    const checkbox = document.getElementById('agreeCheck');
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.disabled = !checkbox.checked;
+  }
+</script>
+    </form>
+    
+    <p>Don't have an account? <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one</a></p>
+  </section>
+
+  <button class="theme-btn" onclick="toggleThemePanel()">🎨 Change Theme</button>
+
+  <div id="themePanel">
+    <label>Box Background Color</label>
+    <input type="color" id="boxColor" />
+    
+    <label>Glow Color</label>
+    <input type="color" id="glowColor" />
+
+    <label><input type="checkbox" id="glowToggle" checked /> Enable Glow</label>
+
+    <label>Glow Speed</label>
+    <input type="range" id="glowSpeed" min="1" max="10" value="3" />
+
+    <label>Glow Brightness</label>
+    <input type="range" id="glowBrightness" min="0" max="1" step="0.1" value="0.6" />
+
+    <label>Background Theme</label>
+    <input type="text" id="bgTheme" placeholder="e.g. linear-gradient(...) or image URL" />
+
+    <div style="text-align:center;">
+      <button onclick="saveTheme()">💾 Save</button>
+      <button onclick="resetTheme()">🔄 Reset</button>
     </div>
-    <button id="loginBtn" type="submit" disabled style="margin-top: 10px;">Login</button>
-  </form>
-  <p>Don't have a FreeMcServer account?
-    <a href="https://freemcserver.net" target="_blank" style="color: #42a5f5;">Create one here</a>.
-  </p>
-</section>
-
-<!-- Theme Button -->
-<button class="theme-btn" onclick="toggleThemePanel()">🎨 Change Theme</button>
-
-<!-- Theme Customization Panel -->
-<div id="themePanel">
-  <label>Box Background Color</label>
-  <input type="color" id="boxColor" />
-
-  <label>Glow Color</label>
-  <input type="color" id="glowColor" />
-
-  <label><input type="checkbox" id="glowToggle" checked /> Enable Glow</label>
-
-  <label>Glow Speed</label>
-  <input type="range" id="glowSpeed" min="1" max="10" value="3" />
-
-  <label>Glow Brightness</label>
-  <input type="range" id="glowBrightness" min="0" max="1" step="0.1" value="0.6" />
-
-  <label>Background Theme</label>
-  <input type="text" id="bgTheme" placeholder="e.g. linear-gradient(...) or image URL" />
-
-  <div style="text-align: center;">
-    <button onclick="saveTheme()">💾 Save</button>
-    <button onclick="resetTheme()">🔄 Reset</button>
   </div>
-</div>
 
-<!-- Main Content -->
-<div id="main-content">
-  <header>
-    <h1>🔥 Minecraft Server</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#plugins">Plugins</a>
-      <a href="#status">Status</a>
-      <a href="#how-to-play">How to Join</a>
-      <a href="#how-to-start">Start Server</a>
-      <a href="#Form">Joining Bonus</a>
-      <a href="#tax-link-box">Tax Portal</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <div id="main-content">
+    <header>
+      <h1>🔥 Minecraft Server</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#plugins">Plugins</a>
+        <a href="#status">Status</a>
+        <a href="#how-to-play">How to Join</a>
+        <a href="#how-to-start">How to Start</a>
+        <a href="#Form">Join Bonus</a>
+        <a href="#tax">View Your Tax</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
 
-  <main>
-
-    <!-- Server Info + Status -->
-    <section style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-      <!-- Server Info -->
-      <div id="about" style="flex: 1; min-width: 300px;">
+    <!-- Server Info & Status -->
+    <section class="side-by-side-section">
+      <div class="side-box" id="about">
         <h2>🌍 Server Info</h2>
-        <p><strong>Java & Bedrock IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span> <button onclick="copyToClipboard('java-ip')">📋 Copy</button></p>
-        <p><strong>Port:</strong> <span id="server-port">38762</span> <button onclick="copyToClipboard('server-port')">📋 Copy</button></p>
+        <p><strong>IP:</strong> <span id="java-ip">mc1524209.fmcs.cloud</span></p>
+        <p><strong>Port:</strong> <span id="server-port">38762</span></p>
         <p>
-          <strong>Quick Join (Bedrock):</strong>
+          <strong>Bedrock Quick Join:</strong>
           <a href="minecraft://?addExternalServer=MyServer|mc1524209.fmcs.cloud:47112">
-            <button>📲 Connect with Bedrock</button>
+            <button>📲 Join with Bedrock</button>
           </a>
         </p>
-        <p><strong>Version:</strong> Java 1.21.4-1.7 / Bedrock 1.21.70-1.21.81</p>
-        <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View Server</a></p>
+        <p><strong>Version:</strong> Java 1.21.4-1.7 / Bedrock 1.21.70+ (via Geyser)</p>
+        <p><strong>Public Page:</strong> <a href="https://freemcserver.net/server/1524209" target="_blank">View</a></p>
       </div>
 
-      <!-- Server Status -->
-      <div id="status" style="flex: 1; min-width: 300px;">
+      <div class="side-box" id="status">
         <h2>📊 Server Status</h2>
         <div id="server-status">Checking status...</div>
         <div id="player-count"></div>
-        <ul id="players" style="margin-top: 10px; padding-left: 20px;"></ul>
         <div id="offline-start" style="display: none;">
           <h3>🛠 Server is Offline</h3>
-          <a href="https://freemcserver.net/server/1524209" target="_blank"><button>Start Server</button></a>
+          <a href="https://freemcserver.net/server/1524209" target="_blank">
+            <button>Start Server</button>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- Bonus Form + Tax Portal -->
-    <section style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: stretch;">
-      <!-- Joining Bonus Form -->
-      <div style="flex: 1; min-width: 280px;" id="Form">
-        <h2 style="text-align: center;">🎁 Joining Bonus</h2>
-        <div style="text-align: center;">
-          <a href="https://minecraft2613.github.io/joining-form/" class="form-btn">Fill Form</a>
-        </div>
+    <!-- Form & Tax Portal -->
+    <section class="side-by-side-section">
+      <div class="side-box" id="Form">
+        <h2>🎁 Join Bonus Form</h2>
+        <p>Submit your Minecraft info to claim your bonus:</p>
+        <a href="https://minecraft2613.github.io/joining-form/" target="_blank">
+          <button>📝 Fill Bonus Form</button>
+        </a>
       </div>
 
-      <!-- Tax Portal -->
-      <div style="flex: 1; min-width: 280px;" id="tax-link-box">
-        <h2 style="text-align: center;">💰 View Your Tax</h2>
-        <div style="text-align: center;">
-          <a href="https://minecraft2613.github.io/taxess/" class="form-btn" style="background-color: #ff9800;">Go to Tax Portal</a>
-        </div>
+      <div class="side-box" id="tax">
+        <h2>💰 View Your Tax</h2>
+        <p>Check how much tax you owe or paid.</p>
+        <a href="https://minecraft2613.github.io/taxess/" target="_blank">
+          <button>📊 Go to Tax Portal</button>
+        </a>
       </div>
     </section>
 
-    <!-- Plugin Section -->
+    <!-- How to Join -->
+    <section id="how-to-play">
+      <h2>🎮 How to Join the Server</h2>
+      <ol>
+        <li>Open Minecraft (Java or Bedrock)</li>
+        <li>Add server IP: <strong>mc1524209.fmcs.cloud</strong></li>
+        <li>Use Port: <strong>47112</strong></li>
+        <li>Join and start playing!</li>
+      </ol>
+    </section>
+
+    <!-- How to Start Server -->
+    <section id="how-to-start">
+      <h2>🛠 How to Start Server if Offline</h2>
+      <ol>
+        <li>Click the Start Server button in the Status box above.</li>
+        <li>Visit the FreeMcServer page.</li>
+        <li>If expired, click Renew then Start.</li>
+        <li>Wait 2–5 mins, then join.</li>
+      </ol>
+    </section>
+
+    <!-- Plugin List -->
     <section id="plugins">
       <h2>🔌 Plugins</h2>
       <input type="text" id="plugin-search" placeholder="Search plugins..." />
@@ -146,35 +167,9 @@
       </ul>
     </section>
 
-    <!-- How to Join -->
-    <section id="how-to-play">
-      <h2>🎮 How to Join The Server</h2>
-      <ol>
-        <li>Open Minecraft (Bedrock users click the Connect button above).</li>
-        <li>Click <strong>Multiplayer → Add Server</strong>.</li>
-        <li>Enter IP: <strong>mc1524209.fmcs.cloud</strong></li>
-        <li>Use Port: <strong>47112</strong></li>
-        <li>Click <strong>Join Server</strong> and enjoy!</li>
-      </ol>
-    </section>
-
-    <!-- How to Start -->
-    <section id="how-to-start">
-      <h2>🛠 How to Start Server if Offline</h2>
-      <ol>
-        <li>Click the <strong>Start Server</strong> button above.</li>
-        <li>Scroll down the FreeMcServer page.</li>
-        <li>If you see <strong>Stop and Expires</strong>, it's already online.</li>
-        <li>If it says <strong>Start</strong>, click to start it.</li>
-        <li>If it says <strong>Expire</strong>, click <a href="https://panel.freemcserver.net/server/1524209/renew-basic" target="_blank">Renew</a>.</li>
-        <li>Wait ~5 minutes, then try joining again.</li>
-      </ol>
-    </section>
-
-    <!-- Contact Section -->
+    <!-- Contact Form -->
     <section id="contact">
       <h2>📬 Contact Us</h2>
-      <p>If you have questions or issues, fill the form below:</p>
       <form id="contact-form">
         <input type="text" id="contact-name" placeholder="Your Name (Optional)" />
         <input type="text" id="contact-discord" placeholder="Your Discord ID (e.g. user#1234)" required />
@@ -185,12 +180,10 @@
       <p id="contact-status"></p>
     </section>
 
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Minecraft Server. Hosted via <a href="https://freemcserver.net" target="_blank">FreeMcServer.net</a></p>
-  </footer>
-</div>
+    <footer>
+      <p>&copy; 2025 Minecraft Server. Hosted on <a href="https://freemcserver.net" target="_blank">FreeMcServer.net</a></p>
+    </footer>
+  </div>
 <script>
 function toggleThemePanel() {
   const panel = document.getElementById("themePanel");
