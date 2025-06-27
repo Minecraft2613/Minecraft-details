@@ -1,4 +1,4 @@
-
+//script.js
 function toggleThemePanel() {
   const panel = document.getElementById("themePanel");
   panel.style.display = panel.style.display === "block" ? "none" : "block";
