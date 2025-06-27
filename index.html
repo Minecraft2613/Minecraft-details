@@ -321,13 +321,16 @@ async function fetchServerStatus() {
 
     const statusDiv = document.getElementById("server-status");
     const playersDiv = document.getElementById("player-count");
-    const playersList = document.getElementById("players");
     const offlineStart = document.getElementById("offline-start");
+
+    if (!statusDiv || !playersDiv || !offlineStart) {
+      console.error("Status error: Missing elements");
+      return;
+    }
 
     if (!data || typeof data.online === "undefined") {
       statusDiv.innerHTML = "⚠️ Error checking server status.";
       playersDiv.innerHTML = "";
-      playersList.innerHTML = "";
       offlineStart.style.display = "block";
       return;
     }
@@ -335,34 +338,26 @@ async function fetchServerStatus() {
     if (!data.online) {
       statusDiv.innerHTML = "🔴 Server is Offline";
       playersDiv.innerHTML = "";
-      playersList.innerHTML = "";
       offlineStart.style.display = "block";
     } else {
       statusDiv.innerHTML = "🟢 Server is Online";
-      playersDiv.innerHTML = `👥 ${data.players.online}/${data.players.max} Players`;
-      offlineStart.style.display = "none";
+      playersDiv.innerHTML = `👥 ${data.players.online} / ${data.players.max} Players`;
 
-      // Show player names
-      playersList.innerHTML = "";
-      if (data.players.list && data.players.list.length > 0) {
-        data.players.list.forEach(name => {
-          const li = document.createElement("li");
-          li.textContent = `• ${name}`;
-          playersList.appendChild(li);
-        });
-      } else {
-        const li = document.createElement("li");
-        li.textContent = "No players currently online.";
-        playersList.appendChild(li);
+      // Show player names if available
+      if (data.players.list && Array.isArray(data.players.list)) {
+        playersDiv.innerHTML += `<br>👤 Players: ${data.players.list.join(", ")}`;
       }
+
+      offlineStart.style.display = "none";
     }
   } catch (err) {
     console.error("Status error:", err);
-    document.getElementById("server-status").innerHTML = "⚠️ Error checking server status.";
   }
 }
-fetchServerStatus();
-setInterval(fetchServerStatus, 3000);
+window.addEventListener("DOMContentLoaded", () => {
+  fetchServerStatus();
+  setInterval(fetchServerStatus, 3000);
+});
 
 // Copy-to-Clipboard
 function copyToClipboard(id) {
