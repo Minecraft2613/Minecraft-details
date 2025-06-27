@@ -4,18 +4,19 @@
   --glow-speed: 3s;
   --glow-brightness: 0.6;
   --bg-theme: linear-gradient(-45deg, #1e1e1e, #292929, #1b1b1b, #121212);
-  --glow-enabled: true;
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  background: #000;
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #121212;
-  background-image: var(--bg-theme);
+  background: var(--bg-theme);
   background-size: 400% 400%;
   animation: gradientBG 12s ease infinite;
   color: #f0f0f0;
@@ -39,10 +40,12 @@ body {
   }
 }
 
+/* Shared Section Styling */
 section,
 form,
 header,
-footer {
+footer,
+#themePanel {
   background: var(--box-color);
   border-radius: 12px;
   padding: 20px;
@@ -51,6 +54,7 @@ footer {
   margin-bottom: 20px;
 }
 
+/* Headings */
 h1, h2 {
   color: #00ffe1;
   text-align: center;
@@ -70,6 +74,7 @@ nav a:hover {
   color: #00ffe1;
 }
 
+/* Plugin List */
 #plugin-list {
   list-style: none;
   padding: 0;
@@ -96,6 +101,7 @@ nav a:hover {
   text-decoration: underline;
 }
 
+/* Buttons */
 .theme-btn,
 button {
   background: #00ffe1;
@@ -105,12 +111,14 @@ button {
   border-radius: 6px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
 }
 button:hover {
   background-color: #00ccb3;
+  transform: scale(1.05);
 }
 
+/* Inputs */
 form input,
 form textarea,
 #plugin-search {
@@ -123,37 +131,25 @@ form textarea,
   color: #f0f0f0;
 }
 
+/* Footer */
 footer {
   text-align: center;
   font-size: 0.9rem;
   color: #aaa;
 }
 
-/* Theme panel fix */
-#themePanel {
-  max-width: 400px;
-  margin: 20px auto;
-  overflow-y: auto;
-  max-height: 80vh;
-  padding: 16px;
-  border: 2px solid #00ffe1;
-  background: rgba(30, 30, 30, 0.95);
-  box-shadow: 0 0 20px #00ffe1;
-  border-radius: 10px;
-  display: none;
-}
-
+/* Theme Panel */
 #themePanel label {
   font-size: 14px;
   color: #ddd;
   display: block;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 #themePanel input[type="color"],
 #themePanel input[type="range"],
 #themePanel input[type="text"] {
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   padding: 6px;
   border-radius: 6px;
   border: 1px solid #444;
@@ -163,12 +159,9 @@ footer {
 #themePanel button {
   width: 48%;
   margin: 5px 1%;
-  background: #00ffe1;
-  color: #000;
-  font-weight: bold;
 }
 
-/* Login form */
+/* Login */
 #login-form {
   display: flex;
   flex-direction: column;
@@ -183,47 +176,48 @@ footer {
   display: none;
 }
 
-/* Side-by-side sections */
+/* Blinking warning for rule checkbox */
+.blink-red {
+  animation: blinkRed 1s infinite;
+  color: red !important;
+}
+@keyframes blinkRed {
+  0%, 100% { color: red; }
+  50% { color: #fff; }
+}
+
+/* Side-by-side layout */
 .side-by-side-section {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
-  align-items: flex-start;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 20px;
-  border-radius: 12px;
   margin-bottom: 20px;
 }
-
 .side-box {
   flex: 1;
-  min-width: 280px;
+  min-width: 300px;
   background: var(--box-color);
-  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 255, 225, 0.2);
+  padding: 20px;
+  box-shadow: 0 0 25px var(--glow-color);
+  animation: glowBox var(--glow-speed) ease-in-out infinite alternate;
+  display: flex;
+  flex-direction: column;
 }
 
-.blink-red {
-  animation: blinkRed 1s infinite;
-}
-@keyframes blinkRed {
-  0% { color: red; }
-  50% { color: yellow; }
-  100% { color: red; }
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .side-by-side-section {
-    flex-direction: column;
-  }
   #plugin-list li {
     flex-direction: column;
     align-items: flex-start;
   }
+
   nav a {
     display: inline-block;
     margin: 8px;
+  }
+
+  .side-by-side-section {
+    flex-direction: column;
   }
 }
