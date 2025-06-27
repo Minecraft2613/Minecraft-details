@@ -28,7 +28,7 @@ body {
 body::after {
   content: "";
   display: block;
-  height: 80px; /* Avoid white gap on mobile */
+  height: 60px;
 }
 
 @keyframes gradientBG {
@@ -46,13 +46,36 @@ body::after {
   }
 }
 
-section, .glowTarget, form, header, footer {
+section,
+form,
+header,
+footer,
+#themePanel {
   background: var(--box-color);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 0 25px var(--glow-color);
   animation: glowBox var(--glow-speed) ease-in-out infinite alternate;
   margin-bottom: 20px;
+}
+
+h1, h2 {
+  color: #00ffe1;
+  text-align: center;
+}
+
+nav {
+  text-align: center;
+  margin-top: 10px;
+}
+nav a {
+  color: #ccc;
+  text-decoration: none;
+  margin: 0 12px;
+  font-weight: bold;
+}
+nav a:hover {
+  color: #00ffe1;
 }
 
 #plugin-list {
@@ -63,14 +86,14 @@ section, .glowTarget, form, header, footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
-  background-color: #2a2a2a;
+  background: #2a2a2a;
+  padding: 10px 15px;
   border-radius: 8px;
   margin-bottom: 10px;
-  transition: background 0.2s;
+  transition: background 0.3s;
 }
 #plugin-list li:hover {
-  background-color: #3a3a3a;
+  background: #3a3a3a;
 }
 .plugin-link {
   color: #00ffe1;
@@ -81,7 +104,8 @@ section, .glowTarget, form, header, footer {
   text-decoration: underline;
 }
 
-.theme-btn, button {
+.theme-btn,
+button {
   background: #00ffe1;
   color: #000;
   font-weight: bold;
@@ -89,15 +113,18 @@ section, .glowTarget, form, header, footer {
   border-radius: 6px;
   padding: 10px 16px;
   cursor: pointer;
+  transition: background 0.3s;
 }
 button:hover {
   background-color: #00ccb3;
 }
 
-form input, form textarea {
+form input,
+form textarea,
+#plugin-search {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border-radius: 6px;
   border: 1px solid #333;
   background-color: #1f1f1f;
@@ -110,15 +137,52 @@ footer {
   color: #aaa;
 }
 
+#themePanel label {
+  font-size: 14px;
+  color: #ddd;
+  display: block;
+  margin-top: 10px;
+}
+
+#themePanel input[type="color"],
+#themePanel input[type="range"],
+#themePanel input[type="text"] {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+#themePanel button {
+  width: 48%;
+  margin: 5px 1%;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+#login-section {
+  text-align: center;
+}
+
+#main-content {
+  display: none;
+}
+
 @media (max-width: 768px) {
   #plugin-list li {
     flex-direction: column;
     align-items: flex-start;
   }
-  nav {
-    text-align: center;
-    margin-top: 10px;
-  }
+
   nav a {
     display: inline-block;
     margin: 8px;
