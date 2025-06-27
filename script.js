@@ -1,5 +1,4 @@
 
-<script>
 function toggleThemePanel() {
   const panel = document.getElementById("themePanel");
   panel.style.display = panel.style.display === "block" ? "none" : "block";
@@ -275,4 +274,4 @@ ${message}`;
       label.classList.remove('blink-red');
     }
   }
-</script>
+
