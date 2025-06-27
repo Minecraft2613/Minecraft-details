@@ -311,7 +311,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// === Server Status + Players ===
 const serverIP = "mc1524209.fmcs.cloud";
 
 async function fetchServerStatus() {
@@ -323,10 +322,7 @@ async function fetchServerStatus() {
     const playersDiv = document.getElementById("player-count");
     const offlineStart = document.getElementById("offline-start");
 
-    if (!statusDiv || !playersDiv || !offlineStart) {
-      console.error("Status error: Missing elements");
-      return;
-    }
+    if (!statusDiv || !playersDiv || !offlineStart) return;
 
     if (!data || typeof data.online === "undefined") {
       statusDiv.innerHTML = "⚠️ Error checking server status.";
@@ -341,23 +337,28 @@ async function fetchServerStatus() {
       offlineStart.style.display = "block";
     } else {
       statusDiv.innerHTML = "🟢 Server is Online";
-      playersDiv.innerHTML = `👥 ${data.players.online} / ${data.players.max} Players`;
+      const online = data.players?.online || 0;
+      const max = data.players?.max || "?";
+      let html = `👥 ${online} / ${max} Players`;
 
-      // Show player names if available
-      if (data.players.list && Array.isArray(data.players.list)) {
-        playersDiv.innerHTML += `<br>👤 Players: ${data.players.list.join(", ")}`;
+      // ✅ Add player list if available
+      if (Array.isArray(data.players?.list)) {
+        html += `<br><strong>Players:</strong> ${data.players.list.join(", ")}`;
       }
 
+      playersDiv.innerHTML = html;
       offlineStart.style.display = "none";
     }
   } catch (err) {
     console.error("Status error:", err);
   }
 }
+
 window.addEventListener("DOMContentLoaded", () => {
   fetchServerStatus();
   setInterval(fetchServerStatus, 3000);
 });
+
 
 // Copy-to-Clipboard
 function copyToClipboard(id) {
