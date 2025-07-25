@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minecraft Server - Dynamic Dashboard</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <title>Minecraft Server - Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --primary-color: #00ffcc;
-  --background-color: #121212;
-  --box-background: rgba(20, 20, 20, 0.7);
+  --background-start: #121212;
+  --background-end: #1a2a3a;
+  --box-background: rgba(20, 20, 20, 0.75);
   --box-border-color: rgba(0, 255, 204, 0.5);
   --text-color: #f0f0f0;
   --glow-color: #00ffcc;
@@ -22,17 +22,16 @@ body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   color: var(--text-color);
-  background-color: var(--background-color);
+  background: linear-gradient(-45deg, var(--background-start), var(--background-end), var(--primary-color));
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   overflow-x: hidden;
 }
 
-#three-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 #main-content, #login-section {
@@ -45,24 +44,23 @@ body {
 
 section {
   background: var(--box-background);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--box-border-color);
   border-radius: 16px;
   padding: 25px;
   margin-bottom: 30px;
-  box-shadow: 0 0 20px rgba(0, 255, 204, 0.1), 0 0 40px rgba(0, 255, 204, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+  transition: transform 0.3s ease;
 }
 
 section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 30px rgba(0, 255, 204, 0.2), 0 0 50px rgba(0, 255, 204, 0.1);
+    transform: translateY(-3px);
 }
 
 h1, h2 {
   color: var(--primary-color);
-  text-shadow: 0 0 10px var(--glow-color);
+  text-shadow: 0 0 8px var(--glow-color);
 }
 
 h1 {
@@ -84,10 +82,9 @@ a {
 
 a:hover {
   color: #fff;
-  text-decoration: underline;
 }
 
-button, input[type="submit"] {
+button, button[type="submit"] {
   background-color: var(--primary-color);
   color: #000;
   font-weight: bold;
@@ -98,7 +95,7 @@ button, input[type="submit"] {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover, input[type="submit"]:hover {
+button:hover, button[type="submit"]:hover {
   background-color: #fff;
   transform: scale(1.05);
 }
@@ -109,9 +106,9 @@ button:disabled {
     transform: none;
 }
 
-input[type="text"], input[type="color"], input[type="range"], textarea {
+input[type="text"], textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
     border: 1px solid #444;
     background: #2a2a2a;
@@ -155,6 +152,11 @@ input[type="text"], input[type="color"], input[type="range"], textarea {
     display: block;
 }
 
+#plugin-list {
+    list-style: none;
+    padding: 0;
+}
+
 #plugin-list li {
   display: flex;
   justify-content: space-between;
@@ -196,10 +198,14 @@ header nav a {
     font-weight: bold;
 }
 
+#contact-status {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
 </style>
 </head>
 <body>
-  <div id="three-bg"></div>
 
   <section id="login-section">
     <h2>🔐 Login Required</h2>
@@ -219,12 +225,12 @@ header nav a {
 
   <div id="main-content">
     <header>
-      <h1>🔥 Minecraft Server Dashboard 🔥</h1>
+      <h1>🚀 Minecraft Server Dashboard</h1>
       <nav>
         <a href="#about">About</a>
         <a href="#status">Status</a>
         <a href="#plugins">Plugins</a>
-        <a href="#how-to-play">How to Join</a>
+        <a href="#contact">Contact</a>
       </nav>
     </header>
 
@@ -255,14 +261,16 @@ header nav a {
         </ul>
       </section>
 
-      <section id="how-to-play">
-        <h2>🎮 How to Join</h2>
-        <ol>
-          <li>Open Minecraft.</li>
-          <li>Click on <strong>Multiplayer</strong> → <strong>Add Server</strong>.</li>
-          <li>Enter the Server IP: <strong>mc1524209.fmcs.cloud</strong></li>
-          <li>Click <strong>Join Server</strong> and enjoy!</li>
-        </ol>
+      <section id="contact">
+        <h2>📬 Contact Us</h2>
+        <p>If you have questions, feedback, or issues, let us know.</p>
+        <form id="contact-form">
+          <input type="text" id="contact-discord" placeholder="Your Discord ID (e.g. user#1234)" required>
+          <input type="text" id="contact-minecraft" placeholder="Your Minecraft Username" required>
+          <textarea id="contact-message" placeholder="Your message..." rows="5" required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+        <p id="contact-status"></p>
       </section>
     </main>
 
@@ -272,73 +280,6 @@ header nav a {
   </div>
 
 <script>
-// Three.js Background
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById('three-bg').appendChild(renderer.domElement);
-
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshStandardMaterial({
-    color: 0x00ffcc,
-    metalness: 0.9,
-    roughness: 0.2,
-    emissive: 0x00ffcc,
-    emissiveIntensity: 0.2
-});
-
-const cubes = [];
-for (let i = 0; i < 60; i++) {
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.x = (Math.random() - 0.5) * 25;
-    cube.position.y = (Math.random() - 0.5) * 25;
-    cube.position.z = (Math.random() - 0.5) * 25;
-    cube.rotation.x = Math.random() * 2 * Math.PI;
-    cube.rotation.y = Math.random() * 2 * Math.PI;
-    const scale = Math.random() * 0.5 + 0.2;
-    cube.scale.set(scale, scale, scale);
-    scene.add(cube);
-    cubes.push({mesh: cube, speed: Math.random() * 0.01 + 0.002});
-}
-
-const light = new THREE.DirectionalLight(0xffffff, 1.5);
-light.position.set(5, 10, 7);
-scene.add(light);
-
-const ambientLight = new THREE.AmbientLight(0x404040, 2);
-scene.add(ambientLight);
-
-camera.position.z = 10;
-
-let mouseX = 0, mouseY = 0;
-document.addEventListener('mousemove', (event) => {
-    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-});
-
-function animate() {
-    requestAnimationFrame(animate);
-    camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
-    camera.position.y += (mouseY * 2 - camera.position.y) * 0.05;
-    camera.lookAt(scene.position);
-
-    cubes.forEach(cubeObj => {
-        cubeObj.mesh.rotation.x += cubeObj.speed;
-        cubeObj.mesh.rotation.y += cubeObj.speed;
-    });
-
-    renderer.render(scene, camera);
-}
-animate();
-
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-
 // --- App Logic ---
 const serverIP = "mc1524209.fmcs.cloud";
 const loginForm = document.getElementById("login-form");
@@ -362,7 +303,7 @@ loginForm.addEventListener("submit", function (e) {
     loginSection.style.display = "none";
     mainContent.style.display = "block";
     fetchServerStatus();
-    setInterval(fetchServerStatus, 15000); // Check every 15 seconds
+    setInterval(fetchServerStatus, 20000); // Check every 20 seconds
 });
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -370,9 +311,10 @@ window.addEventListener("DOMContentLoaded", () => {
         loginSection.style.display = "none";
         mainContent.style.display = "block";
         fetchServerStatus();
-        setInterval(fetchServerStatus, 15000);
+        setInterval(fetchServerStatus, 20000);
     }
     populatePlugins();
+    setupContactForm();
 });
 
 async function fetchServerStatus() {
@@ -382,10 +324,11 @@ async function fetchServerStatus() {
     const lastUpdated = document.getElementById("last-updated");
 
     try {
-        const res = await fetch(`https://api.mcsrvstat.us/3/${serverIP}`);
+        // Using API version 2 for better offline/online accuracy
+        const res = await fetch(`https://api.mcsrvstat.us/2/${serverIP}`);
         const data = await res.json();
 
-        if (data.online) {
+        if (data.online === true) {
             statusDiv.innerHTML = '<span class="status-dot online"></span> Server is Online';
             playersDiv.innerHTML = `👥 ${data.players.online} / ${data.players.max} Players`;
             offlineStart.style.display = "none";
@@ -441,6 +384,55 @@ function populatePlugins() {
         for (let li of lis) {
             li.style.display = li.textContent.toLowerCase().includes(filter) ? "flex" : "none";
         }
+    });
+}
+
+function setupContactForm() {
+    const contactForm = document.getElementById("contact-form");
+    contactForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const discord = document.getElementById("contact-discord").value.trim();
+        const minecraft = document.getElementById("contact-minecraft").value.trim();
+        const message = document.getElementById("contact-message").value.trim();
+        const status = document.getElementById("contact-status");
+
+        if (!discord || !minecraft || !message) {
+            status.innerText = "⚠️ Please fill in all required fields.";
+            status.style.color = "#ff9800";
+            return;
+        }
+
+        const webhookURL = "https://discordapp.com/api/webhooks/1383347956182290462/b1k7PVanxmP6InWfH9k4Npj7WNP9dUM-nD6xXRZGZwFOsODahyDoBnxlmNdGCCyLDetz";
+        const fullMessage = `📨 **New Contact Form Submission**:
+💬 Discord ID: **${discord}**
+🎮 Minecraft Username: **${minecraft}**
+
+📝 Message:
+${message}`;
+
+        status.innerText = "Sending...";
+        status.style.color = "#00ffcc";
+
+        fetch(webhookURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: fullMessage })
+        })
+        .then(res => {
+            if (res.ok) {
+                status.innerText = "✅ Message sent successfully!";
+                status.style.color = "#4caf50";
+                contactForm.reset();
+            } else {
+                status.innerText = "❌ Failed to send. Please try again later.";
+                status.style.color = "#f44336";
+            }
+        })
+        .catch(error => {
+            console.error("Contact form error:", error);
+            status.innerText = "❌ Error sending message.";
+            status.style.color = "#f44336";
+        });
     });
 }
 </script>
